@@ -22,3 +22,6 @@ def login(request):
     c = template.Context({'allsettings':allsettings})
     respon = HttpResponse(html.render(c))
     return HttpResponse(respon)
+
+def tasks(request):
+    

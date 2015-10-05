@@ -12,5 +12,6 @@ class Setting(models.Model):
     settingid = models.IntegerField()
 
 
+class 
 
 
