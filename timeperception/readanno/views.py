@@ -23,5 +23,6 @@ def login(request):
     respon = HttpResponse(html.render(c))
     return HttpResponse(respon)
 
-def tasks(request):
+def tasks(request,settingId):
+    
     
