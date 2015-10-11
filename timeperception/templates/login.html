@@ -20,9 +20,9 @@
             }
             else if ((pass.value == "a") && (!isNaN(username.value))) {
                 obj=document.getElementById("tasktype")
-                 var index = obj.selectedIndex;
+                var index = obj.selectedIndex;
                 var expType = obj.options[index].value;
-                window.location.href='/tasks/'+username.value+'/'+expType
+                window.location.href='/tasks/'+username.value
                 return;
             }
             else {

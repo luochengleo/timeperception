@@ -11,10 +11,12 @@ class Document( models.Model):
     task = models.ForeignKey(Task)
     docid = models.IntegerField()
     relevance = models.IntegerField()
+    title =  models.CharField(max_length = 200) 
     content = models.CharField(max_length=30000)
 
 class Setting(models.Model):
     settingid = models.IntegerField()
+
 
 class SettingUnit(models.Model):
 	settingid = models.IntegerField()
@@ -40,3 +42,4 @@ class TimeEstimation(models.Model):
     task_id = models.IntegerField()
     time = models.CharField(max_length=5000)
     content = models.CharField(max_length=5000)
+

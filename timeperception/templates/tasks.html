@@ -12,7 +12,7 @@
     <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
     <script type="text/javascript" src="/static/conf/anno_log.js"></script>
     <script type="text/javascript" src="http://mediaplayer.yahoo.com/js"></script>
-    <title>所有搜索任务</title>
+    <title>所有阅读任务</title>
 </head>
 <body>
 
@@ -83,6 +83,31 @@
         对于每一个问题，我们为你找到了几篇相关或者比较相关的文档，你需要阅读这些文档，找到有用的信息，并估计你在阅读过程中花费的时间。</p>
 </div>
 <div class="annotation_list">
+
+
+        <div class="annotation_cell">
+            <img class="check" src="/static/conf/img/check.jpg">
+
+            <div>
+                <h2> 训练任务</h2>
+                <span>任务描述：</span>任务描述<span>
+                <audio controls="controls">
+                <source src="/{{ item.2 }}" type="audio/mp3"/>
+                </audio>
+            </span>
+            <span>
+                <audio controls="controls">
+                <source src="/{{ item.2 }}" type="audio/mp3"/>
+                </audio>
+            </span>
+            <div><a class="annotation_link"
+                        href='/search/{{ item.0 }}/{{ item.3 }}/{{ item.4 }}/{{ item.1 }}/1/'
+                        target="_blank" onclick="resetTime();">点击这里开始</a></div>
+            </div>
+
+        </div>
+
+
     {% for item in tasks %}
         <div class="annotation_cell">
             <img class="check" src="/static/conf/img/check.jpg">

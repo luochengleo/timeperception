@@ -24,5 +24,16 @@ def login(request):
     return HttpResponse(respon)
 
 def tasks(request,settingId):
-    
-    
+    pass
+
+
+def calibrate(request, settingId):
+    pass
+
+def read(request,taskid,docid):
+    pass
+
+def feedback(request,taskid,docid):
+    pass
+
+
