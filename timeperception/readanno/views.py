@@ -24,16 +24,17 @@ def login(request):
     return HttpResponse(respon)
 
 def tasks(request,settingId):
-    pass
+    return HttpResponse(open('templates/tasks.html').read())
 
 
-def calibrate(request, settingId):
-    pass
+def calibrate(request, taskid):
+    return HttpResponse(open('templates/calibrate.html').read())
 
 def read(request,taskid,docid):
-    pass
+    return HttpResponse(open('templates/read.html').read())
 
-def feedback(request,taskid,docid):
-    pass
+def feedback(request,taskid):
+    return HttpResponse(open('templates/feedback.html').read())
+
 
 

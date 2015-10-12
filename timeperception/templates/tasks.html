@@ -89,19 +89,10 @@
             <img class="check" src="/static/conf/img/check.jpg">
 
             <div>
-                <h2> 训练任务</h2>
-                <span>任务描述：</span>任务描述<span>
-                <audio controls="controls">
-                <source src="/{{ item.2 }}" type="audio/mp3"/>
-                </audio>
-            </span>
-            <span>
-                <audio controls="controls">
-                <source src="/{{ item.2 }}" type="audio/mp3"/>
-                </audio>
-            </span>
+                <h2>训练任务</h2>
+                <span>任务描述：历史上有哪些伟大的人物道德上劣迹斑斑？</span>
             <div><a class="annotation_link"
-                        href='/search/{{ item.0 }}/{{ item.3 }}/{{ item.4 }}/{{ item.1 }}/1/'
+                        href='/calibrate/0/'
                         target="_blank" onclick="resetTime();">点击这里开始</a></div>
             </div>
 
@@ -114,19 +105,9 @@
 
             <div>
                 <h2> 第 {{ forloop.counter }} 个搜索任务</h2>
-                <p>查询： {{ item.1 }}</p>
-                <span>任务描述：</span><span>
-                <audio controls="controls">
-                <source src="/{{ item.2 }}" type="audio/mp3"/>
-                </audio>
-            </span>
-            <span>
-                <audio controls="controls">
-                <source src="/{{ item.2 }}" type="audio/mp3"/>
-                </audio>
-            </span>
+                <span>任务描述：{{ item.1} }}</span>
             <div><a class="annotation_link"
-                        href='/search/{{ item.0 }}/{{ item.3 }}/{{ item.4 }}/{{ item.1 }}/1/'
+                        href='/calibrate/{{item.0}}/'
                         target="_blank" onclick="resetTime();">点击这里开始</a></div>
             </div>
 
