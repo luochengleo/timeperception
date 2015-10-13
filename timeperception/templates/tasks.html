@@ -49,19 +49,19 @@
         // store cookie value with optional details as needed
         function setCookie(name, value, expires, path, domain, secure) {
             document.cookie = name + "=" + escape(value) +
-            ((expires) ? "; expires=" + expires : "") +
-            ((path) ? "; path=" + path : "") +
-            ((domain) ? "; domain=" + domain : "") +
-            ((secure) ? "; secure" : "");
+                    ((expires) ? "; expires=" + expires : "") +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    ((secure) ? "; secure" : "");
         }
 
         // remove the cookie by setting ancient expiration date
         function deleteCookie(name, path, domain) {
             if (getCookie(name)) {
                 document.cookie = name + "=" +
-                ((path) ? "; path=" + path : "") +
-                ((domain) ? "; domain=" + domain : "") +
-                "; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+                        ((path) ? "; path=" + path : "") +
+                        ((domain) ? "; domain=" + domain : "") +
+                        "; expires=Thu, 01-Jan-1970 00:00:01 GMT";
 
             }
         }
@@ -85,18 +85,19 @@
 <div class="annotation_list">
 
 
-        <div class="annotation_cell">
-            <img class="check" src="/static/conf/img/check.jpg">
+    <div class="annotation_cell">
+        <img class="check" src="/static/conf/img/check.jpg">
 
-            <div>
-                <h2>训练任务</h2>
-                <span>任务描述：历史上有哪些伟大的人物道德上劣迹斑斑？</span>
+        <div>
+            <h2>训练任务</h2>
+            <span>任务描述：历史上有哪些伟大的人物道德上劣迹斑斑？</span>
+
             <div><a class="annotation_link"
-                        href='/calibrate/0/'
-                        target="_blank" onclick="resetTime();">点击这里开始</a></div>
-            </div>
-
+                    href='/calibrate/0/'
+                    target="_blank" onclick="resetTime();">点击这里开始</a></div>
         </div>
+
+    </div>
 
 
     {% for item in tasks %}
@@ -105,9 +106,10 @@
 
             <div>
                 <h2> 第 {{ forloop.counter }} 个搜索任务</h2>
-                <span>任务描述：{{ item.1} }}</span>
-            <div><a class="annotation_link"
-                        href='/calibrate/{{item.0}}/'
+                <span>任务描述：{{ item.1 }}</span>
+
+                <div><a class="annotation_link"
+                        href='/calibrate/{{ item.0 }}/'
                         target="_blank" onclick="resetTime();">点击这里开始</a></div>
             </div>
 

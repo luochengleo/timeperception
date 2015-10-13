@@ -19,10 +19,10 @@
                 return;
             }
             else if ((pass.value == "a") && (!isNaN(username.value))) {
-                obj=document.getElementById("tasktype")
+                obj = document.getElementById("tasktype")
                 var index = obj.selectedIndex;
                 var expType = obj.options[index].value;
-                window.location.href='/tasks/'+username.value
+                window.location.href = '/tasks/' + username.value
                 return;
             }
             else {
@@ -36,6 +36,7 @@
 </head>
 <body>
 <img style="text-align: center" src="http://www.thuir.cn/cms/uploads/images/IR4.png" align="middle">
+
 <h1 style="color:blue; text-align:center">清华大学计算机系信息检索组多功能实验平台</h1>
 
 <form align=center>
@@ -43,12 +44,12 @@
         <tr align="center">
             <td>选择实验配置：</td>
             <td>
-         <select align="center" style="width:130px" id="tasktype">
-             {%  for t in allsettings  %}
-             <option value="{{ t.0 }}">{{ t }} </option>
+                <select align="center" style="width:130px" id="tasktype">
+                    {% for t in allsettings %}
+                        <option value="{{ t.0 }}">{{ t }} </option>
 
-             {% endfor %}
-                                </select>
+                    {% endfor %}
+                </select>
             </td>
         </tr>
         <tr align=center>
@@ -63,7 +64,7 @@
         <tr align=center>
             <td colspan="2"><input type="button" value="登 录" onclick="redirect()"/>
                 <input type="reset" value="重 置"/></td>
-            </tr>
+        </tr>
 
     </table>
 </form>
