@@ -6,11 +6,11 @@ from readanno.views import calibrate
 from readanno.views import read
 from readanno.views import feedback
 
-urlpatterns = patterns('',
-                       # Examples:
-                       # url(r'^$', 'timeperception.views.home', name='home'),
-                       # url(r'^blog/', include('blog.urls')),
+# login _ no parameter;
+# tasks _ #settings
 
+
+urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^login/$', login),
                        url(r'^tasks/(\d{1,2})/$', tasks),
@@ -18,3 +18,4 @@ urlpatterns = patterns('',
                        url(r'^read/(\d{1,2})/(\d{1,2})/$', read),
                        url(r'^feedback/(\d{1,2})/$', feedback)
                        )
+
