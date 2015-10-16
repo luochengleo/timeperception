@@ -7,7 +7,12 @@ from readanno.views import read
 from readanno.views import feedback
 
 # login _ no parameter;
-# tasks _ #settings
+# tasks/#setting
+# calibrate/#setting/#task
+# read/#settings
+# feedback/#setting
+
+
 
 
 urlpatterns = patterns('',
