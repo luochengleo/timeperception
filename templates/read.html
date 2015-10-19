@@ -2,90 +2,144 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
-    <meta name="keywords" content="JS����,TAB��ǩ,JS������,JS��Ч����"/>
-    <meta name="description" content="�˴�������Ϊ�����Ҽ�ͷ��tab��ǩ���룬����վ�����ô��룬����TAB��ǩ�������������ͼ��JS����Ƶ����"/>
-    <title>�����Ҽ�ͷ��tab��ǩ����_����ͼ��</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <link rel="stylesheet" href="/static/css/lrtk.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <title>Time Anchoring</title>
+    <style type="text/css">
+        h1 {
+            font-family: "微软雅黑";
+            font-size: 40px;
+            margin: 20px 0;;
+            border-bottom: solid 1px #ccc;
+            padding-bottom: 20px;
+            letter-spacing: 2px;
+        }
 
-    <script src="/static/js/jquery.min.js" type="text/javascript"></script>
-    <script src="/static/js/jquery.scrollTo-1.3.3.js" type="text/javascript"></script>
-    <script src="/static/js/jquery.localscroll-1.2.5.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/static/js/jquery.serialScroll-1.2.1.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/static/js/coda-slider.js" type="text/javascript" charset="utf-8"></script>
+        .time-item strong {
+            background: #C71C60;
+            color: #fff;
+            line-height: 49px;
+            font-size: 36px;
+            font-family: Arial;
+            padding: 0 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
 
+        #day_show {
+            float: left;
+            line-height: 49px;
+            color: #c71c60;
+            font-size: 32px;
+            margin: 0 10px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .item-title .unit {
+            background: none;
+            line-height: 49px;
+            font-size: 24px;
+            padding: 0 10px;
+            float: left;
+        }
+    </style>
+    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript">
+        var intDiff = parseInt(60);//倒计时总秒数量
+        function timer(intDiff) {
+            window.setInterval(function () {
+                var day = 0,
+                        hour = 0,
+                        minute = 0,
+                        second = 0;//时间默认值
+                if (intDiff > 0) {
+                    day = Math.floor(intDiff / (60 * 60 * 24));
+                    hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                    minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                    second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                }
+                if (minute <= 9) minute = '0' + minute;
+                if (second <= 9) second = '0' + second;
+                $('#hour_show').html('<s id="h"></s>' + hour + '时');
+                $('#minute_show').html('<s></s>' + minute + '分');
+                $('#second_show').html('<s></s>' + second + '秒');
+                intDiff--;
+                if (intDiff == 0) {
+                    alert("time up");
+                    document.getElementById("returnbutton").style.display = "block";
+                }
+            }, 1000);
+        }
+
+        function begin() {
+            timer(intDiff);
+            document.getElementById("article").style.display = "block";
+            document.getElementById("beginbutton").disabled = "disabled";
+
+        }
+
+        function end() {
+            window.location.href = "/read/1/1"
+        }
+        /*
+         $(function(){
+         timer(intDiff);
+         });
+         */
+    </script>
 </head>
 <body>
-<!-- ���� ��ʼ -->
-<div id="slider">
-    <ul class="navigation">
-        <li><a href="coda-slider.html#sites">Sites</a></li>
-        <li><a href="coda-slider.html#files">Files</a></li>
-        <li><a href="coda-slider.html#editor">Editor</a></li>
-        <li><a href="coda-slider.html#preview">Preview</a></li>
-        <li><a href="coda-slider.html#css">CSS</a></li>
-        <li><a href="coda-slider.html#terminal">Terminal</a></li>
-        <li><a href="coda-slider.html#books">Books</a></li>
-    </ul>
+<div align="center" style="width:416px; margin:0 auto">
+    <input id="beginbutton" type=button
+           style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
+           value='Begin Reading' onclick="begin()"/>
 
-    <div class="scroll">
-        <div class="scrollContainer">
-            <div class="panel" id="sites"><h2>Sites</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p></div>
-            <div class="panel" id="files"><h2>Files</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p></div>
-            <div class="panel" id="editor"><h2>Editor</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p></div>
-            <div class="panel" id="preview"><h2>Preview</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p></div>
-            <div class="panel" id="css"><h2>CSS</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p></div>
-            <div class="panel" id="terminal"><h2>Terminal</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum. </p></div>
-            <div class="panel" id="books"><h2>Books</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p></div>
-        </div>
+    <div class="time-item">
+        <strong id="hour_show">0时</strong>
+        <strong id="minute_show">0分</strong>
+        <strong id="second_show">60秒</strong>
     </div>
-
-    <div id="shade"></div>
 </div>
-<!-- ���� ���� -->
+<div id="article" style="margin:0 auto;width: 600px; font:normal 18px/28px 'MicroSoft YaHei'; display:none">
+
+    <h1></h1>
+
+    <div style="text-align:left">
+        <p>
+            要说房价自城镇化论、丈母娘论、生孩子论之后，又多了一个原罪，这就是小学生，至此这个续集就算是接上了，怪博士说了，在所有城市中小学生数量增长快的，房价涨幅就高，比如厦门，比如北上广，而在东北哈尔滨、长春、沈阳这些地方，小学生数量这几年间反而是下降了10%-20%，所以东三省的房价很难再涨，这几年也都处于比较低的水平。看起来，这小学生数量还真是一个水晶球，确实跟房价的高低有比较密切的关系，简直高科技啊！</p>
+
+        <p>
+            但其实仔细想想，这不就是人口理论嘛，人口增长的城市房价就高，人口不长了，房价也就不涨了。而小学生的背后是年轻的劳动人口，小学生多了，这个城市的新增劳动人口也会成比例的增加。所以房价就有上涨的动力。比如，2013年，北京增加了45.5万人，上海称增加了35万人，如果这些人都买房，至少需要10万套房子的供给，如果造不出来，那房价就只有往上涨了。</p>
+
+        <p>那结论是什么样呢？房价未来到底还会不会涨呢？</p>
+
+        <p>
+            既然房价跟人口的流动有关，那就要看看大家都在干什么了，有人算了下，发现绝大多数城市这十年来的平均人口增长都在3%以下，而房价却至少每年涨2成，只有北京、上海、深圳等几个城市，人口增长超过了3%，只有厦门超过了6%，而由于严格的限购，北上广深的房价年均涨幅也低于15%，所以这么看，中国房价的最大泡沫恰恰来自于二三线城市，这些地方人口不涨，光涨房价，简直就是叔可忍婶也不可忍。</p>
+
+        <p>
+            至于一线特大城市的房价？那就要看未来的人口情况了，本身2015年以后，人口结构就会发生变化，年轻人越来越少，老头老太太越来越多。另外，政策也在做着努力，国务院做出的户籍制度改革意见明确指出，严控特大城市人口规模，什么又是特大城市呢？人口500万以上的都是。掐指一算，这样的城市在中国应该怎么也有小20个，大部分都属于高房价的地区。如果政策落实到位，这高房价慢慢也就变成了空中楼阁。</p>
+
+        <p>
+            所以，这个理论如果成立，那么一张房地产的雷区地图就出来了。起码有些城市已经不能再碰了。比如，人口流失的城市：呼和浩特、西宁、昆明、三亚、重庆、长春、哈尔滨、兰州、太原、贵阳、大连，这些都是属于房地产的高危区，而人口强劲增长的城市：厦门、上海、廊坊、东莞、深圳、苏州、郑州、北京、长沙、泉州、南京，可能还有几天蹦头儿。</p>
+
+        <p>
+            拿大连来说，2008年以来中国人口流失最严重的大城市。2008年的时候，全市义务教育阶段学生为52.2万人，到了2014年是43.8万人，下降了16%，远远超过全国平均水平。在大连买房你会发现2014年最高到了12000，现在已经果断跌了20%。太原也是一样，在校小学生人数是29.8万人，到2013年（2014年数据没有查到）为25.4万，5年下降了14.8%（由于计划生育政策，全国小学生这5年平均下降9.4%），人口处于明显流失状态。</p>
+
+        <p>
+            再看北京，2010年以来，北京市适龄儿童少年人数每年平均递增2万人，年均增长为20%，北京市小学、初中都将持续迎来入学的高峰。这个速度绝对够快，所以这五年的北京房价几乎翻了一倍，但今后五年可能也有问题了，由于特大城市人口控制，北京市提出明确计划，小学在校生规模由2014年的82.9万人逐年增长至2019年的103.4万人，总规模将增加20.5万人，年均增长率为4.5%。也就是说之后的五年，房价失去了疯涨的基础，北京房价顶多也就是一个维持现状。</p>
+
+        <p>小学生人口流失，基本这个城市就失去了房价上涨的动力，甚至马上就要暴跌。所以在这些地方投资的朋友，务必尽快撤出。</p>
+    </div>
+</div>
+
+
+<div align="center" style="width:416px; margin:0 auto">
+    <input id="returnbutton" type=button
+           style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);display:none"
+           value='Finish Reading' onclick="end()"/>
+</div>
+
 
 </body>
 </html>
