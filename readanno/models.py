@@ -18,7 +18,7 @@ class SingleChoiceQuestionare(models.Model):
     taskid  = models.IntegerField()
     title  = models.IntegerField()
     rightAnswer = models.IntegerField()
-    choices = models.CharField()
+    choices = models.CharField(max_length = 300)
 
 class Setting(models.Model):
     settingid = models.IntegerField()
