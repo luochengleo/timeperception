@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="/static/conf/annotation.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="/static/conf/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery-min.js"></script>
+    <script type="text/javascript" src="/static/conf/wc_preprocess.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.bgpos.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.reveal.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="/static/conf/anno_log.js"></script>
+    <script type="text/javascript" src="http://mediaplayer.yahoo.com/js"></script>
+    <title>所有阅读任务</title>
+</head>
+<body>
+
+<div class="annotation_header">
+    <h1 align="center">清华大学计算机系信息检索组</h1>
+
+    <h1 align="center"> 欢迎您！</h1>
+    <script>
+        function getCookieVal(offset) {
+            var endstr = document.cookie.indexOf(";", offset);
+            if (endstr == -1) {
+                endstr = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(offset, endstr));
+        }
+
+        // primary function to retrieve cookie by name
+        function getCookie(name) {
+            var arg = name + "=";
+            var alen = arg.length;
+            var clen = document.cookie.length;
+            var i = 0;
+            while (i < clen) {
+                var j = i + alen;
+                if (document.cookie.substring(i, j) == arg) {
+                    return getCookieVal(j);
+                }
+                i = document.cookie.indexOf(" ", i) + 1;
+                if (i == 0) break;
+            }
+            return null;
+        }
+
+        // store cookie value with optional details as needed
+        function setCookie(name, value, expires, path, domain, secure) {
+            document.cookie = name + "=" + escape(value) +
+                    ((expires) ? "; expires=" + expires : "") +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    ((secure) ? "; secure" : "");
+        }
+
+        // remove the cookie by setting ancient expiration date
+        function deleteCookie(name, path, domain) {
+            if (getCookie(name)) {
+                document.cookie = name + "=" +
+                        ((path) ? "; path=" + path : "") +
+                        ((domain) ? "; domain=" + domain : "") +
+                        "; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+            }
+        }
+
+        function resetTime() {
+            setCookie('time', 0, '', '/', '', '');
+        }
+        var strcookie = document.cookie;
+        var arrcookie = strcookie.split("; ");
+        var sid = arrcookie[1].split('=')[1]
+
+        document.write('<p align="center"><font style="font-size:16px" color="red">当前实验人员账号为' + sid + '</font></p>')
+    </script>
+
+    <p align="center" style="font-size:16px" color="red">当前共有{{ tasknum }}个阅读任务</p>
+
+    <p align="center" style="font-size:16px" color="red">
+        在接下来的实验中，你将针对一些问题进行文献调研。
+        对于每一个问题，我们为你找到了几篇相关或者比较相关的文档，你需要阅读这些文档，找到有用的信息，并估计你在阅读过程中花费的时间。</p>
+</div>
+<div class="annotation_list">
+
+
+    <div class="annotation_cell">
+        <img class="check" src="/static/conf/img/check.jpg">
+
+        <div>
+            <h2>训练任务</h2>
+            <span>任务描述：历史上有哪些伟大的人物道德上劣迹斑斑？</span>
+
+            <div><a class="annotation_link"
+                    href='/calibrate/0/'
+                    target="_blank" onclick="resetTime();">点击这里开始</a></div>
+        </div>
+
+    </div>
+
+
+    {% for item in tasks %}
+        <div class="annotation_cell">
+            <img class="check" src="/static/conf/img/check.jpg">
+
+            <div>
+                <h2> 第 {{ forloop.counter }} 个搜索任务</h2>
+                <span>任务描述：{{ item.1 }}</span>
+
+                <div><a class="annotation_link"
+                        href='/calibrate/{{ item.0 }}/'
+                        target="_blank" onclick="resetTime();">点击这里开始</a></div>
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
