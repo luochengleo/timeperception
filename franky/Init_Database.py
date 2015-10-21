@@ -3,7 +3,7 @@ __author__ = 'franky'
 
 import xml.dom.minidom
 from readanno.models import Task, Document, SingleChoiceQuestionare
-
+from readanno.models import Setting, Job
 
 def import_tasks(filename):
     print "import tasks from", filename
@@ -35,5 +35,26 @@ def import_tasks(filename):
         s.save()
 
 
+def import_settings(filename):
+    print "import settings from", filename
+    domtree = xml.dom.minidom.parse(filename)
+    Settings = domtree.documentElement
+    settings = Settings.getElementsByTagName('Setting')
+    for setting in settings:
+        settingid = setting.getElementsByTagName('settingid')[0].childNodes[0].data
+        settingid = int(settingid)
+        taskseq = setting.getElementsByTagName('taskseq')[0].childNodes[0].data
+        s = Setting(settingid=settingid, taskseq=taskseq)
+        s.save()
+        jobs = setting.getElementsByTagName('Job')
+        for job in jobs:
+            taskid = job.getElementsByTagName('taskid')[0].childNodes[0].data
+            taskid = int(taskid)
+            docseq = job.getElementsByTagName('docseq')[0].childNodes[0].data
+            j = Job(settingid=settingid, taskid=taskid, docseq=docseq)
+            j.save()
+
+
 def init_default():
     import_tasks('franky/tasks.xml')
+    import_settings('franky/settings.xml')

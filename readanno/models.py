@@ -22,7 +22,7 @@ class SingleChoiceQuestionare(models.Model):
 
 class Setting(models.Model):
     settingid = models.IntegerField()
-    settingdescp = models.CharField(max_length=300)
+    taskseq = models.CharField(max_length=300)
 
 class Job(models.Model):
     settingid = models.IntegerField()
