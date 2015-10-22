@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-from models import Setting
+from models import *
 from django import template
 
 
@@ -25,17 +25,22 @@ def login(request):
     return HttpResponse(respon)
 
 
-def tasks(request, settingId):
-    return HttpResponse(open('templates/tasks.html').read())
+def jobs(request, settingid):
+    _setting  = Setting.object.get(settingid = settingid)
+    _jobs = []
+    for i in range(1,5,1):
+        _jobs = Job.objects.get(settingid = settingid, )
+
+    return HttpResponse(open('templates/jobs.html').read())
 
 
-def calibrate(request, taskid):
+def calibrate(request, settingid, jobid):
     return HttpResponse(open('templates/calibrate.html').read())
 
 
-def read(request, taskid, docid):
+def read(request, settingid, jobid):
     return HttpResponse(open('templates/read.html').read())
 
 
-def feedback(request, taskid):
+def feedback(request, settingid, jobid):
     return HttpResponse(open('templates/feedback.html').read())

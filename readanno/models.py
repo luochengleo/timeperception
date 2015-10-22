@@ -15,16 +15,18 @@ class Document(models.Model):
     content = models.CharField(max_length=30000)
 
 class SingleChoiceQuestionare(models.Model):
-    taskid  = models.IntegerField()
-    title  = models.IntegerField()
+
+    taskid = models.IntegerField()
+    title = models.IntegerField()
     rightAnswer = models.IntegerField()
-    choices = models.CharField(max_length = 300)
+    choices = models.CharField(max_length = 3000)
 
 class Setting(models.Model):
     settingid = models.IntegerField()
     taskseq = models.CharField(max_length=300)
 
 class Job(models.Model):
+    jobid  = models.IntegerField()
     settingid = models.IntegerField()
     taskid  = models.IntegerField()
     docseq = models.CharField(max_length=300)
@@ -37,13 +39,13 @@ class Log(models.Model):
     content = models.CharField(max_length=5000)
 
 class Outcome(models.Model):
-    studentID = models.CharField(max_length=50)
+    studentid = models.CharField(max_length=50)
     task_id = models.IntegerField()
     answer = models.CharField(max_length=5000)
     content = models.CharField(max_length=5000)
 
 class TimeEstimation(models.Model):
-    studentID = models.CharField(max_length=50)
-    task_id = models.IntegerField()
+    studentid = models.CharField(max_length=50)
+    taskid = models.IntegerField()
     time = models.CharField(max_length=5000)
     content = models.CharField(max_length=5000)

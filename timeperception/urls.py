@@ -18,7 +18,7 @@ from readanno.views import feedback
 urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^login/$', login),
-                       url(r'^tasks/(\d{1,2})/$', tasks),
+                       url(r'^jobs/(\d{1,2})/$', jobs),
                        url(r'^calibrate/(\d{1,2})/$', calibrate),
                        url(r'^read/(\d{1,2})/(\d{1,2})/$', read),
                        url(r'^feedback/(\d{1,2})/$', feedback)
