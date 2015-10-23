@@ -28,8 +28,10 @@ def login(request):
 def jobs(request, settingid):
     _setting  = Setting.object.get(settingid = settingid)
     _jobs = []
+
     for i in range(1,5,1):
-        _jobs = Job.objects.get(settingid = settingid, )
+        _jobs.append(Job.objects.get(settingid = settingid,jobid = 0))
+
 
     return HttpResponse(open('templates/jobs.html').read())
 
