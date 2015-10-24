@@ -1,0 +1,2 @@
+from readanno.Utils.Init_Database import import_tasks
+import_tasks('data/tasks.xml')

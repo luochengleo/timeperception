@@ -15,7 +15,6 @@ class Document(models.Model):
     content = models.CharField(max_length=30000)
 
 class SingleChoiceQuestionare(models.Model):
-
     taskid = models.IntegerField()
     title = models.IntegerField()
     rightAnswer = models.IntegerField()
@@ -23,7 +22,7 @@ class SingleChoiceQuestionare(models.Model):
 
 class Setting(models.Model):
     settingid = models.IntegerField()
-    taskseq = models.CharField(max_length=300)
+    jobs = models.CharField(max_length=300)
 
 class Job(models.Model):
     jobid  = models.IntegerField()
