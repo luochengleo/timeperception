@@ -46,7 +46,7 @@ def import_settings(filename):
         settingid = setting.getElementsByTagName('settingid')[0].childNodes[0].data
         settingid = int(settingid)
         taskseq = setting.getElementsByTagName('taskseq')[0].childNodes[0].data
-        s = Setting(settingid=settingid)
+        s = Setting(settingid=settingid, jobs=taskseq)
         s.save()
         jobs = setting.getElementsByTagName('Job')
         jobid = 0
