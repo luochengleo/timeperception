@@ -5,6 +5,7 @@ import xml.dom.minidom
 from readanno.models import Task, Document, SingleChoiceQuestionare
 from readanno.models import Setting, Job
 
+
 def import_tasks(filename):
     print "import tasks from", filename
     domtree = xml.dom.minidom.parse(filename)
@@ -26,14 +27,14 @@ def import_tasks(filename):
             content = document.getElementsByTagName('content')[0].childNodes[0].data
             d = Document(taskid=task_id, docid=doc_id, relevance=relevance, title=title, content=content)
             d.save()
-        # single_choice = task.getElementsByTagName('Single_Choice_Questionare')[0]
-        # title = single_choice.getElementsByTagName('title')[0].childNodes[0].data
-        # rightAnswer = single_choice.getElementsByTagName('right_Answer')[0].childNodes[0].data
-        # rightAnswer = int(rightAnswer)
-        # choices = single_choice.getElementsByTagName('choices')[0].childNodes[0].data
-        #
-        # s = SingleChoiceQuestionare(taskid=task_id, title=title, rightAnswer=rightAnswer, choices=choices)
-        # s.save()
+        single_choice = task.getElementsByTagName('Single_Choice_Questionare')[0]
+        title = single_choice.getElementsByTagName('title')[0].childNodes[0].data
+        rightAnswer = single_choice.getElementsByTagName('right_Answer')[0].childNodes[0].data
+        rightAnswer = int(rightAnswer)
+        choices = single_choice.getElementsByTagName('choices')[0].childNodes[0].data
+
+        s = SingleChoiceQuestionare(taskid=task_id, title=title, rightAnswer=rightAnswer, choices=choices)
+        s.save()
 
 
 def import_settings(filename):
@@ -45,17 +46,19 @@ def import_settings(filename):
         settingid = setting.getElementsByTagName('settingid')[0].childNodes[0].data
         settingid = int(settingid)
         taskseq = setting.getElementsByTagName('taskseq')[0].childNodes[0].data
-        s = Setting(settingid=settingid, taskseq=taskseq)
+        s = Setting(settingid=settingid)
         s.save()
         jobs = setting.getElementsByTagName('Job')
+        jobid = 0
         for job in jobs:
             taskid = job.getElementsByTagName('taskid')[0].childNodes[0].data
             taskid = int(taskid)
             docseq = job.getElementsByTagName('docseq')[0].childNodes[0].data
-            j = Job(settingid=settingid, taskid=taskid, docseq=docseq)
+            j = Job(jobid=jobid, settingid=settingid, taskid=taskid, docseq=docseq)
             j.save()
+            jobid += 1
 
 
 def init_default():
-    import_tasks('franky/tasks.xml')
-    import_settings('franky/settings.xml')
+    import_tasks('data/tasks.xml')
+    import_settings('data/settings.xml')
