@@ -139,9 +139,19 @@
 			中韩自贸协定于2012年5月正式启动，经过两年艰苦磋商，于2014年11月实质性结束。昨天，双方在韩国首尔正式签署协定。</content>
 		</Document>
 		<Single_Choice_Questionare>
-			<title>'hahaha'</title>
-			<right_Answer>1</right_Answer>
-			<choices>'hehehe'</choices>
+			<title>什么是TPP?</title>
+			<right_Answer>B</right_Answer>
+			<choices>A.传输控制协议\tB.跨太平洋伙伴关系协定\tC.自由贸易协定\tD.世纪贸易协定</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>中国与TPP的关系是什么?</title>
+			<right_Answer>D</right_Answer>
+			<choices>A.发起国\tB.主导国\tC.一般成员国\tD.并未加入</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>下面哪一项不属于TPP的标准?</title>
+			<right_Answer>C</right_Answer>
+			<choices>A.货币自由兑换\tB.国企私有化\tC.提升关税\tD.贸易和服务自由</choices>
 		</Single_Choice_Questionare>
 	</task>
 	<task>
@@ -319,9 +329,19 @@
 			奖项的评选不仅被认为是人类战胜疾病的里程碑，还是各国从上至下提升对医学科学重要程度的认识之焦点。 玛丽· 拉斯克基金会设有董事会和基金托管人，按照严格的程序对基金进行管理。</content>
 		</Document>
 		<Single_Choice_Questionare>
-			<title>'hahaha'</title>
-			<right_Answer>1</right_Answer>
-			<choices>'hehehe'</choices>
+			<title>屠呦呦获得诺贝尔生理学或医学奖主要是与哪一种药物有关?</title>
+			<right_Answer>A</right_Answer>
+			<choices>A.青蒿素\tB.青霉素\tC.大蒜素\tD.罗红霉素</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>屠呦呦及其团队发明的新药物主要是对抗哪种疾病?</title>
+			<right_Answer>B</right_Answer>
+			<choices>A.痢疾\tB.疟疾\tC.埃博拉\tD.艾滋病</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>下面哪一项描述与屠呦呦不符?</title>
+			<right_Answer>D</right_Answer>
+			<choices>A.无博士学位\tB.无外国研究背景\tC.无院士头衔\tD.无中华人民共和国国籍</choices>
 		</Single_Choice_Questionare>
 	</task>
 	<task>
@@ -480,9 +500,19 @@
 			刘云山是应朝鲜劳动党中央委员会邀请，于9日上午抵达平壤，出席朝鲜劳动党成立70周年庆祝活动并对朝鲜进行正式友好访问的。</content>
 		</Document>
 		<Single_Choice_Questionare>
-			<title>'hahaha'</title>
-			<right_Answer>1</right_Answer>
-			<choices>'hehehe'</choices>
+			<title>朝鲜劳动党成立于哪一年?</title>
+			<right_Answer>B</right_Answer>
+			<choices>A.1943\tB.1945\tC.1947\tD.1949</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>朝鲜劳动党第一任领导人是谁?</title>
+			<right_Answer>A</right_Answer>
+			<choices>A.金日成\tB.金正日\tC.金敬姬\tD.金正恩</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>下面哪一项不是朝鲜劳动党的贡献?</title>
+			<right_Answer>C</right_Answer>
+			<choices>A.领导朝鲜军民，取得朝鲜战争的胜利\tB.大力发展朝鲜工农业\tC.援助中国进行抗日战争\tD.领导朝鲜人民积极发展旅游业</choices>
 		</Single_Choice_Questionare>
 	</task>
 	<task>
@@ -647,9 +677,19 @@
 			德奥利维拉去世后，电影界名人和葡萄牙领导人纷纷表示哀悼。葡总统席尔瓦发表声明说，德奥利维拉是葡萄牙新一代的楷模，是葡萄牙文化无与伦比的见证人。葡总理科埃略在声明中说，德奥利维拉是葡萄牙20世纪电影界一位举足轻重的人物，他对电影语言的创新力及对电影艺术的激情提升了葡萄牙的国际声誉。</content>
 		</Document>
 		<Single_Choice_Questionare>
-			<title>'hahaha'</title>
-			<right_Answer>1</right_Answer>
-			<choices>'hehehe'</choices>
+			<title>摩西马龙没有在以下哪个队打过球?</title>
+			<right_Answer>D</right_Answer>
+			<choices>A.ABA的犹他明星队\tB.休斯敦火箭队\tC.费城76人队\tD.洛杉矶湖人队</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>下面哪一项不是摩西马龙的成就?</title>
+			<right_Answer>D</right_Answer>
+			<choices>A.3次MVP\tB.1次总冠军\tC.NBA名人堂成员\tD.总得分NBA历史第一</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>摩西马龙的哪一项数据排名NBA历史第一?</title>
+			<right_Answer>C</right_Answer>
+			<choices>A.冠军总数\tB.篮板总数\tC.进攻篮板总数\tD.助攻总数</choices>
 		</Single_Choice_Questionare>
 	</task>
 	<task>
@@ -825,9 +865,19 @@
 			总而言之，对比Windows 10和Windows 8，很难发现没有改变之处，尤其是桌面平台的提升，尽管可能现在还无法让人非常满意，但这也正是微软新Windows系统最应该去做的事情，通过现在明显的变化吸引更多用户迁移到新的平台上来。</content>
 		</Document>
 		<Single_Choice_Questionare>
-			<title>'hahaha'</title>
-			<right_Answer>1</right_Answer>
-			<choices>'hehehe'</choices>
+			<title>下面哪一项不是微软2015年10月新品发布会上发布的产品?</title>
+			<right_Answer>B</right_Answer>
+			<choices>A.Lumia 950/950 XL\tB.Surface 4\tC.Surface Pro 4\tD.Surface Book</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>下面哪一项不是Surface Book的特点?</title>
+			<right_Answer>C</right_Answer>
+			<choices>A.屏幕、键盘可以分离\tB.集成了LCD驱动晶体管的显示屏\tC.整体续航能够达到24小时\tD.Microsoft Precision触摸板支持五点触控</choices>
+		</Single_Choice_Questionare>
+        <Single_Choice_Questionare>
+			<title>下面关于Surface Book的说法哪一项是正确的?</title>
+			<right_Answer>B</right_Answer>
+			<choices>A.所有版本的Surface Book都配有英伟达GeForce独立显卡\tB.屏幕部分和键盘部分都有电池\tC.侧面有三个USB 3.0接口\tD.只有一个摄像头</choices>
 		</Single_Choice_Questionare>
 	</task>
 </Tasks>
