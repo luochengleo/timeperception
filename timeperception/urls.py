@@ -5,6 +5,7 @@ from readanno.views import jobs
 from readanno.views import calibrate
 from readanno.views import read
 from readanno.views import feedback
+from readanno.views import docservice
 
 # login _ no parameter;
 # tasks/#setting
@@ -19,8 +20,9 @@ urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^login/$', login),
                        url(r'^jobs/(\d{1,2})/$', jobs),
-                       url(r'^calibrate/(\d{1,2})/$', calibrate),
+                       url(r'^calibrate/(\d{1,2})/(\d{1,2})/$', calibrate),
                        url(r'^read/(\d{1,2})/(\d{1,2})/$', read),
-                       url(r'^feedback/(\d{1,2})/$', feedback)
+                       url(r'^feedback/(\d{1,2})/$', feedback),
+                       url(r'^docservice/(\d{1,2})/(\d{1,2})/$',docservice)
                        )
 
