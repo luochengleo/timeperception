@@ -15,25 +15,32 @@ def login(request):
     settings = set()
     for t in Setting.objects.all():
         settings.add(t.settingid)
-    allsettings = set()
-    for s in settings:
-        allsettings.add((s[0], s[1]))
-        print s[0], s[1]
+
     html = template.Template(open('templates/login.html').read())
-    c = template.Context({'allsettings': allsettings})
+    c = template.Context({'allsettings': settings})
     respon = HttpResponse(html.render(c))
     return HttpResponse(respon)
 
 
 def jobs(request, settingid):
-    _setting  = Setting.object.get(settingid = settingid)
+    _setting = Setting.objects.get(settingid = settingid)
+    jobsseq = [int(item) for item in _setting.jobs.split('-')]
     _jobs = []
+    print jobsseq
+    for i in jobsseq:
+        try:
+            print i
+            _j =Job.objects.get(settingid = settingid,jobid = i)
+            descp = Task.objects.get(taskid= _j.taskid).descp
+            _jobs.append((settingid,i,descp))
+        except:
+            print 'Fail to find ',i
 
-    for i in range(1,5,1):
-        _jobs.append(Job.objects.get(settingid = settingid,jobid = 0))
 
-
-    return HttpResponse(open('templates/jobs.html').read())
+    html = template.Template(open('templates/jobs.html').read())
+    c = template.Context({'jobs': _jobs})
+    respon = HttpResponse(html.render(c))
+    return HttpResponse(respon)
 
 
 def calibrate(request, settingid, jobid):

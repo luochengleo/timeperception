@@ -9,6 +9,7 @@
         function redirect() {
             var username = document.getElementById("username");
             var pass = document.getElementById("password");
+            setCookie('studentid', username, '', '/', '', '')
             if (username.value == "") {
                 alert("请输入用户名");
                 username.focus();
@@ -22,7 +23,9 @@
                 obj = document.getElementById("tasktype")
                 var index = obj.selectedIndex;
                 var expType = obj.options[index].value;
-                window.location.href = '/tasks/' + username.value
+                setCookie('settingid', expType,'','/','','')
+                setCookie('studentid', username.value, '', '/', '', '')
+                window.location.href = '/jobs/' + expType
                 return;
             }
             else {
@@ -32,6 +35,61 @@
             }
             return true;
         }
+
+
+    </script>
+
+    <script>
+        function getCookieVal(offset) {
+            var endstr = document.cookie.indexOf(";", offset);
+            if (endstr == -1) {
+                endstr = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(offset, endstr));
+        }
+
+        // primary function to retrieve cookie by name
+        function getCookie(name) {
+            var arg = name + "=";
+            var alen = arg.length;
+            var clen = document.cookie.length;
+            var i = 0;
+            while (i < clen) {
+                var j = i + alen;
+                if (document.cookie.substring(i, j) == arg) {
+                    return getCookieVal(j);
+                }
+                i = document.cookie.indexOf(" ", i) + 1;
+                if (i == 0) break;
+            }
+            return null;
+        }
+
+        // store cookie value with optional details as needed
+        function setCookie(name, value, expires, path, domain, secure) {
+            document.cookie = name + "=" + escape(value) +
+                    ((expires) ? "; expires=" + expires : "") +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    ((secure) ? "; secure" : "");
+        }
+
+        // remove the cookie by setting ancient expiration date
+        function deleteCookie(name, path, domain) {
+            if (getCookie(name)) {
+                document.cookie = name + "=" +
+                        ((path) ? "; path=" + path : "") +
+                        ((domain) ? "; domain=" + domain : "") +
+                        "; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+            }
+        }
+
+        function resetTime() {
+            setCookie('time', 0, '', '/', '', '');
+        }
+        var strcookie = document.cookie;
+
     </script>
 </head>
 <body>
@@ -46,8 +104,7 @@
             <td>
                 <select align="center" style="width:130px" id="tasktype">
                     {% for t in allsettings %}
-                        <option value="{{ t.0 }}">{{ t }} </option>
-
+                        <option value="{{ t }}">{{ t }} </option>
                     {% endfor %}
                 </select>
             </td>
@@ -71,5 +128,7 @@
 <div style="text-align: center">
     <p>登陆说明：请输入你的10位学号登陆，密码为"a"</p>
 </div>
+
+
 </body>
 </html>

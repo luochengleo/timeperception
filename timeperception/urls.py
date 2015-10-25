@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from readanno.views import login
-from readanno.views import tasks
+from readanno.views import jobs
 from readanno.views import calibrate
 from readanno.views import read
 from readanno.views import feedback

@@ -84,32 +84,17 @@
 </div>
 <div class="annotation_list">
 
+    {% for item in jobs %}
 
-    <div class="annotation_cell">
-        <img class="check" src="/static/conf/img/check.jpg">
-
-        <div>
-            <h2>训练任务</h2>
-            <span>任务描述：历史上有哪些伟大的人物道德上劣迹斑斑？</span>
-
-            <div><a class="annotation_link"
-                    href='/calibrate/{{  }}/0/'
-                    target="_blank" onclick="resetTime();">点击这里开始</a></div>
-        </div>
-
-    </div>
-
-
-    {% for item in tasks %}
         <div class="annotation_cell">
             <img class="check" src="/static/conf/img/check.jpg">
 
             <div>
                 <h2> 第 {{ forloop.counter }} 个阅读任务</h2>
-                <span>任务描述：{{ item.1 }}</span>
+                <span>任务描述：{{ item.2 }}</span>
 
                 <div><a class="annotation_link"
-                        href='/calibrate/{{ item.0 }}/'
+                        href='/calibrate/{{ item.0 }}/{{ item.1 }}'
                         target="_blank" onclick="resetTime();">点击这里开始</a></div>
             </div>
 
