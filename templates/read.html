@@ -69,12 +69,24 @@
             }, 1000);
         }
 
+
+
         function clickdoc1() {
 
             $.get("/docservice/{{ taskid }}/{{ doc1 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
             );
+
+            document.getElementById("doc1").disabled = true;
+            document.getElementById("doc1").style.background="#A9C7A7";
+            document.getElementById("timeestimation").style.display="none";
+            document.getElementById("finishdoc").style.background="#C71C60";
+            document.getElementById("submitestimation").style.background="#C71C60";
+
+            document.getElementById("finishdoc").disabled=false;
+            init_slider();
+
 
         }
 
@@ -83,6 +95,13 @@
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
             );
+            document.getElementById("doc2").disabled = true;
+            document.getElementById("doc2").style.background="#A9C7A7";
+            document.getElementById("timeestimation").style.display="none";
+            document.getElementById("finishdoc").style.background="#C71C60";
+            document.getElementById("submitestimation").style.background="#C71C60";
+            document.getElementById("finishdoc").disabled=false;
+            reloadtimeestimation();
 
         }
         function clickdoc3() {
@@ -91,6 +110,14 @@
                     }//返回的data是字符串类型
             );
 
+            document.getElementById("doc3").disabled = true;
+            document.getElementById("doc3").style.background="#A9C7A7";
+            document.getElementById("timeestimation").style.display="none";
+            document.getElementById("finishdoc").style.background="#C71C60";
+            document.getElementById("submitestimation").style.background="#C71C60";
+            document.getElementById("finishdoc").disabled=false;
+            reloadtimeestimation();
+
         }
         function clickdoc4() {
             $.get("/docservice/{{ taskid }}/{{ doc4 }}", 0, function (data) {
@@ -98,15 +125,34 @@
                     }//返回的data是字符串类型
             );
 
+            document.getElementById("doc4").disabled =true;
+            document.getElementById("doc4").style.background="#A9C7A7";
+            document.getElementById("timeestimation").style.display="none";
+            document.getElementById("finishdoc").style.background="#C71C60";
+            document.getElementById("submitestimation").style.background="#C71C60";
+            document.getElementById("finishdoc").disabled=false;
+            reloadtimeestimation();
         }
 
         function clickfinish() {
+             window.close();
 
         }
 
 
         function estimatetime(){
             document.getElementById("timeestimation").style.display="block";
+            document.getElementById("finishdoc").style.background = "#A9C7A7";
+            document.getElementById("finishdoc").disabled=true;
+        }
+
+        function submitestimation(){
+            document.getElementById("submitestimation").style.background = "#A9C7A7";
+
+
+{#            TODO send log#}
+
+
         }
         /*
          $(function(){
@@ -116,8 +162,8 @@
     </script>
 
     <script>
-        $(document).ready(function () {
-            alert("ready");
+
+        function init_slider() {
 
             $('#seekbar').slider({
                 min: 0,
@@ -125,34 +171,38 @@
                 step: 1,
                 change: showValue
             });
-
             function showValue(event, ui) {
                 var time = ui.value;
                 var second = time % 60;
                 var minute = (time - second) / 60;
                 $('#time').html(minute + '分' + second + '秒');
             }
-        });
+
+        }
+        $(document).ready(init_slider());
+        function reloadtimeestimation(){
+            $( "#seekbar" ).slider( "value", 0 );
+        }
     </script>
 
 </head>
 <body>
 <div align="center" style="width:416px; margin:0 auto">
     <span> <input id="doc1" type=button
-                  style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
+                  style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
                   value='1' onclick="clickdoc1()"/>
         <input id="doc2" type=button
-               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
                value='2' onclick="clickdoc2()"/>
         <input id="doc3" type=button
-               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
                value='3' onclick="clickdoc3()"/>
         <input id="doc4" type=button
-               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
                value='4' onclick="clickdoc4()"/>
         <input id="finish" type=button
-               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
-               value='结束' onclick="finish()"/>
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+               value='结束' onclick="clickfinish()"/>
     </span>
 
 </div>
@@ -166,25 +216,25 @@
 </div>
 
 
+
+
 <div align="center" style="width:416px; margin:0 auto">
     <input id="finishdoc" type=button
            style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
            value='估计时间' onclick="estimatetime()"/>
 </div>
-
 <div id="timeestimation" align="center" style="width:600px; margin:0 auto; padding-top:40px; display:none">
 
 
     <div id="seekbar"></div>
 
     <div>
-        <div style="font-size: 20px;"> <span>花费时间</span>
+        <div style="font-size: 24px;"> <span>花费时间</span>
     <span id="time" name="time">0分0秒</span>
 </div>
-
-   <input id="finishdoc" type=button
+   <input id="submitestimation" type=button
            style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
-           value='提交' onclick="finish()"/>
+           value='提交' onclick="submitestimation()"/>
         </div>
 </div>
 
