@@ -3,8 +3,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>
+    {#    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>#}
 
+
+    <link href="/static/conf/button.css" type="text/css" rel="stylesheet">
+    <link href="/static/conf/annotation.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="/static/conf/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/jquery-ui.css"/>
+
+
+    <script type="text/javascript" src="/static/conf/jquery-min.js"></script>
+    <script type="text/javascript" src="/static/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/static/conf/wc_preprocess.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.bgpos.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.reveal.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="/static/conf/anno_log.js"></script>
     <title>Read</title>
     <style type="text/css">
         h1 {
@@ -45,7 +60,7 @@
             float: left;
         }
     </style>
-    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>
+{#    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>#}
     <script type="text/javascript">
         var time = parseInt(0);
         function timer(intDiff) {
@@ -84,6 +99,15 @@
             );
 
         }
+
+        function clickfinish() {
+
+        }
+
+
+        function estimatetime(){
+            document.getElementById("timeestimation").style.display="block";
+        }
         /*
          $(function(){
          timer(intDiff);
@@ -94,12 +118,14 @@
     <script>
         $(document).ready(function () {
             alert("ready");
+
             $('#seekbar').slider({
                 min: 0,
-                max: 600,
+                max: 300,
                 step: 1,
                 change: showValue
             });
+
             function showValue(event, ui) {
                 var time = ui.value;
                 var second = time % 60;
@@ -143,17 +169,23 @@
 <div align="center" style="width:416px; margin:0 auto">
     <input id="finishdoc" type=button
            style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
-           value='估计时间' onclick="end()"/>
+           value='估计时间' onclick="estimatetime()"/>
 </div>
 
-<div>
+<div id="timeestimation" align="center" style="width:600px; margin:0 auto; padding-top:40px; display:none">
+
+
     <div id="seekbar"></div>
 
-    <span>花费时间</span>
-    <span id="time2" name="time2">0分0秒</span>
-    <button class="WCOverButton button blue close-reveal-modal" type="Button"
-            onclick="click_on_submittimeestimation();">提交时间估计
-    </button>
+    <div>
+        <div style="font-size: 20px;"> <span>花费时间</span>
+    <span id="time" name="time">0分0秒</span>
+</div>
+
+   <input id="finishdoc" type=button
+           style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+           value='提交' onclick="finish()"/>
+        </div>
 </div>
 
 </body>

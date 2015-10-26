@@ -86,5 +86,4 @@ def docservice(request,taskid,docid):
     for s in _d.content.split('\n'):
         if s.strip()!='':
             content +='<p>'+s.strip()+'</p>'
-    print 'content',content
     return HttpResponse(content)
