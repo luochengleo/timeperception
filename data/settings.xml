@@ -3,7 +3,7 @@
 <Settings>
     <Setting>
         <settingid>1</settingid>
-        <taskseq>1-2-3-4-5</taskseq>
+        <taskseq>0-1-2-3-4</taskseq>
         <Job>
             <taskid>1</taskid>
             <docseq>1-2-4-5</docseq>
@@ -27,7 +27,7 @@
     </Setting>
     <Setting>
         <settingid>2</settingid>
-        <taskseq>1-2-3-4-5</taskseq>
+        <taskseq>0-1-2-3-4</taskseq>
         <Job>
             <taskid>1</taskid>
             <docseq>1-2-4-5</docseq>
@@ -51,7 +51,7 @@
     </Setting>
     <Setting>
         <settingid>3</settingid>
-        <taskseq>1-2-3-4-5</taskseq>
+        <taskseq>0-1-2-3-4</taskseq>
         <Job>
             <taskid>1</taskid>
             <docseq>1-2-4-5</docseq>
@@ -75,7 +75,7 @@
     </Setting>
     <Setting>
         <settingid>4</settingid>
-        <taskseq>1-2-3-4-5</taskseq>
+        <taskseq>0-1-2-3-4</taskseq>
         <Job>
             <taskid>1</taskid>
             <docseq>1-2-4-5</docseq>
@@ -99,7 +99,7 @@
     </Setting>
     <Setting>
         <settingid>5</settingid>
-        <taskseq>1-2-3-4-5</taskseq>
+        <taskseq>0-1-2-3-4</taskseq>
         <Job>
             <taskid>1</taskid>
             <docseq>1-2-4-5</docseq>
@@ -123,7 +123,7 @@
     </Setting>
     <Setting>
         <settingid>6</settingid>
-        <taskseq>1-2-3-4-5</taskseq>
+        <taskseq>0-1-2-3-4</taskseq>
         <Job>
             <taskid>1</taskid>
             <docseq>1-2-4-5</docseq>
