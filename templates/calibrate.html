@@ -2,7 +2,10 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" src="/static/conf/anno_log.js"></script>
 
     <title>Time Anchoring</title>
     <style type="text/css">
@@ -55,6 +58,66 @@
     <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
     <script type="text/javascript" src="/static/conf/anno_log.js"></script>
 
+    <script>
+
+
+        function getCookieVal(offset) {
+            var endstr = document.cookie.indexOf(";", offset);
+            if (endstr == -1) {
+                endstr = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(offset, endstr));
+        }
+
+        // primary function to retrieve cookie by name
+        function getCookie(name) {
+            var arg = name + "=";
+            var alen = arg.length;
+            var clen = document.cookie.length;
+            var i = 0;
+            while (i < clen) {
+                var j = i + alen;
+                if (document.cookie.substring(i, j) == arg) {
+                    return getCookieVal(j);
+                }
+                i = document.cookie.indexOf(" ", i) + 1;
+                if (i == 0) break;
+            }
+            return null;
+        }
+
+        // store cookie value with optional details as needed
+        function setCookie(name, value, expires, path, domain, secure) {
+            document.cookie = name + "=" + escape(value) +
+                    ((expires) ? "; expires=" + expires : "") +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    ((secure) ? "; secure" : "");
+        }
+
+        // remove the cookie by setting ancient expiration date
+        function deleteCookie(name, path, domain) {
+            if (getCookie(name)) {
+                document.cookie = name + "=" +
+                        ((path) ? "; path=" + path : "") +
+                        ((domain) ? "; domain=" + domain : "") +
+                        "; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+            }
+        }
+
+        function resetTime() {
+            setCookie('time', 0, '', '/', '', '');
+        }
+        var strcookie = document.cookie;
+        var arrcookie = strcookie.split("; ");
+        var studentID= arrcookie[1].split('=')[1]
+
+    </script>
+
+
+
+
     <script type="text/javascript">
         var intDiff = parseInt(60);//倒计时总秒数量
         var globaltime = 0;
@@ -89,10 +152,11 @@
             timer(intDiff);
             document.getElementById("article").style.display = "block";
             document.getElementById("beginbutton").disabled = "disabled";
-
+            begin_calibration();
         }
 
         function end() {
+            end_calibration();
             alert("在阅读这篇文章的过程中，您一共花费了" +document.getElementById("globaltime").innerHTML+" 秒钟");
             window.location.href = "/read/{{ settingid }}/{{ jobid }}"
         }
@@ -101,6 +165,8 @@
          timer(intDiff);
          });
          */
+
+        var jobid = {{ jobid }};
     </script>
 </head>
 <body>

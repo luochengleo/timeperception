@@ -6,7 +6,7 @@ from readanno.views import calibrate
 from readanno.views import read
 from readanno.views import feedback
 from readanno.views import docservice
-
+from readanno.views import log
 # login _ no parameter;
 # tasks/#setting
 # calibrate/#setting/#task
@@ -23,6 +23,7 @@ urlpatterns = patterns('',
                        url(r'^calibrate/(\d{1,2})/(\d{1,2})/$', calibrate),
                        url(r'^read/(\d{1,2})/(\d{1,2})/$', read),
                        url(r'^feedback/(\d{1,2})/$', feedback),
-                       url(r'^docservice/(\d{1,2})/(\d{1,2})/$',docservice)
+                       url(r'^docservice/(\d{1,2})/(\d{1,2})/$',docservice),
+                       url(r'^LogService/$', log)
                        )
 

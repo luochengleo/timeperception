@@ -3,9 +3,12 @@
  * Created by defaultstr on 11/28/14.
  */
 
-if (studentID == "") {
-    studentID = "0";
-}
+var strcookie = document.cookie;
+var arrcookie = strcookie.split("; ");
+var studentID= arrcookie[1].split('=')[1]
+//if (studentID == "") {
+//    studentID = "0";
+//}
 
 var current_page_url = window.location.href;
 var current_site = get_set(current_page_url);
@@ -21,37 +24,14 @@ function get_set(url_str) {
     return ret;
 }
 
-$(function () {
-    if ($("#session_annotation")) {
-        $("#session_annotation").raty('set', {number: 5, starOn: "/static/conf/img/star-on.png", starOff: "/static/conf/img/star-off.png"});
-        $("#session_annotation").raty('score', 1);
-    }
-});
 
-$(function() {
-    if ($("#query_annotation")) {
-        $("#query_annotation").raty('set', {number: 5, starOn: "/static/conf/img/star-on.png", starOff: "/static/conf/img/star-off.png"});
-        $("#query_annotation").raty('score', 1);
-    }
-});
 
 window.onbeforeunload = function (e) {
     return "";
     //return ''
 };
 
-$(function () {
-    $(".annotation_link").click(function () {
-        var node = $(this).get(0);
-        var parent_node = node.parentNode;
-        while (parent_node != null) {
-            if (parent_node.className == "annotation_cell") {
-                $(parent_node).find("img").css("visibility", "visible");
-            }
-            parent_node = parent_node.parentNode;
-        }
-    });
-});
+
 
 function questionnaire_button_on_click() {
     var text = $("#answer").val();
@@ -221,6 +201,133 @@ function click_on_submitoutcome(){
 
     }
     click_on_submittimeestimation_quiet();
+}
+
+
+function begin_calibration(){
+    var client_time = (new Date()).getTime();
+    var message = "";
+    message += "TIMESTAMP=" + client_time;
+    message += "\tUSER=" + studentID;
+    message += "\tJOBID="+jobid;
+    message += "\tACTION=BEGIN_CALIBRATION";
+    message += "\tINFO:";
+    var log_url = "http://" + server_site + ":8000/LogService/"
+
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+    });
+    window.onbeforeunload = null;
+
+
+}
+
+function end_calibration(){
+
+    var client_time = (new Date()).getTime();
+    var message = "";
+    message += "TIMESTAMP=" + client_time;
+    message += "\tUSER=" + studentID;
+    message += "\tJOBID="+jobid;
+    message += "\tACTION=END_CALIBRATION";
+    message += "\tINFO:";
+    var log_url = "http://" + server_site + ":8000/LogService/"
+
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+    });
+    window.onbeforeunload = null;
+}
+
+function begin_reading(){
+    var client_time = (new Date()).getTime();
+    var message = "";
+    message += "TIMESTAMP=" + client_time;
+    message += "\tUSER=" + studentID;
+    message += "\tJOBID="+jobid;
+    message += "\tACTION=BEGIN_READING";
+    message += "\tINFO: CURRENT_DOC="+currentDoc ;
+    var log_url = "http://" + server_site + ":8000/LogService/"
+
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+    });
+    window.onbeforeunload = null;
+
+}
+
+function end_reading(){
+
+    var client_time = (new Date()).getTime();
+    var message = "";
+    message += "TIMESTAMP=" + client_time;
+    message += "\tUSER=" + studentID;
+    message += "\tJOBID="+jobid;
+    message += "\tACTION=END_READING";
+    message += "\tINFO: CURRENT_DOC="+currentDoc ;
+    var log_url = "http://" + server_site + ":8000/LogService/"
+
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+    });
+    window.onbeforeunload = null;
+}
+
+function time_estimate(){
+    var client_time = (new Date()).getTime();
+    var message = "";
+    message += "TIMESTAMP=" + client_time;
+    message += "\tUSER=" + studentID;
+    message += "\tJOBID="+jobid;
+    message += "\tACTION=TIME_ESTIMATION";
+    message += "\tINFO: CURRENT_DOC="+currentDoc+' ET='+etime ;
+    var log_url = "http://" + server_site + ":8000/LogService/"
+
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+    });
+    window.onbeforeunload = null;
+
 }
 
 function over_button_on_click() {

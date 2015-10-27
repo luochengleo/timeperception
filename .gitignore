@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 .idea
 *.sqlite3
-
+*.log
 
 
 # C extensions

@@ -48,3 +48,11 @@ class TimeEstimation(models.Model):
     taskid = models.IntegerField()
     time = models.CharField(max_length=5000)
     content = models.CharField(max_length=5000)
+
+
+class Log(models.Model):
+    studentid = models.CharField(max_length=50)
+    jobid = models.IntegerField()
+    action = models.CharField(max_length=20)
+    content = models.CharField(max_length=5000)
+
