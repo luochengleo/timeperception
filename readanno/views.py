@@ -79,13 +79,12 @@ def read(request, settingid, jobid):
     doc2 = docs[1]
     doc3 = docs[2]
     doc4 = docs[3]
-
     print taskid,doc1,doc2,doc3,doc4
 
-
-
     html= template.Template(open('templates/read.html').read())
-    c = template.Context({'taskid':taskid,'doc1':doc1,'doc2':doc2,'doc3':doc3,'doc4':doc4,'jobid':jobid})
+
+    descp = Task.objects.get(taskid= job.taskid).descp
+    c = template.Context({'taskid':taskid,'doc1':doc1,'doc2':doc2,'doc3':doc3,'doc4':doc4,'jobid':jobid,'descp':descp})
     respon = HttpResponse(html.render(c))
     return HttpResponse(respon)
 
