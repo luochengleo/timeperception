@@ -5,7 +5,7 @@
 
 var strcookie = document.cookie;
 var arrcookie = strcookie.split("; ");
-var studentID= arrcookie[1].split('=')[1]
+var studentID= arrcookie[1].split("=")[1]
 //if (studentID == "") {
 //    studentID = "0";
 //}

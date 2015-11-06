@@ -6,7 +6,7 @@ __pycache__/
 *.sqlite3
 *.log
 static/video/timeperception.mp4
-
+~*~*~*~*~*~*~*~*
 
 # C extensions
 *.so

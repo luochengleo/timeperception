@@ -22,6 +22,11 @@
     <script type="text/javascript" src="/static/conf/anno_log.js"></script>
     <title>Read</title>
     <style type="text/css">
+
+        label {
+            text-align: left;
+            display: inline-block;
+        }
         h1 {
             font-family: "微软雅黑";
             font-size: 40px;
@@ -60,7 +65,7 @@
             float: left;
         }
     </style>
-{#    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>#}
+    {#    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>#}
     <script type="text/javascript">
         var currentDoc = 0;
         var jobid = {{ jobid }};
@@ -72,7 +77,6 @@
         }
 
 
-
         function clickdoc1() {
 
             $.get("/docservice/{{ taskid }}/{{ doc1 }}", 0, function (data) {
@@ -81,12 +85,12 @@
             );
 
             document.getElementById("doc1").disabled = true;
-            document.getElementById("doc1").style.background="#A9C7A7";
-            document.getElementById("timeestimation").style.display="none";
-            document.getElementById("finishdoc").style.background="#C71C60";
-            document.getElementById("submitestimation").style.background="#C71C60";
+            document.getElementById("doc1").style.background = "#A9C7A7";
+            document.getElementById("timeestimation").style.display = "none";
+            document.getElementById("finishdoc").style.background = "#C71C60";
+            document.getElementById("submitestimation").style.background = "#C71C60";
 
-            document.getElementById("finishdoc").disabled=false;
+            document.getElementById("finishdoc").disabled = false;
             init_slider();
             currentDoc = 1;
             begin_reading();
@@ -100,11 +104,11 @@
                     }//返回的data是字符串类型
             );
             document.getElementById("doc2").disabled = true;
-            document.getElementById("doc2").style.background="#A9C7A7";
-            document.getElementById("timeestimation").style.display="none";
-            document.getElementById("finishdoc").style.background="#C71C60";
-            document.getElementById("submitestimation").style.background="#C71C60";
-            document.getElementById("finishdoc").disabled=false;
+            document.getElementById("doc2").style.background = "#A9C7A7";
+            document.getElementById("timeestimation").style.display = "none";
+            document.getElementById("finishdoc").style.background = "#C71C60";
+            document.getElementById("submitestimation").style.background = "#C71C60";
+            document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
             currentDoc = 2;
             begin_reading();
@@ -116,11 +120,11 @@
             );
 
             document.getElementById("doc3").disabled = true;
-            document.getElementById("doc3").style.background="#A9C7A7";
-            document.getElementById("timeestimation").style.display="none";
-            document.getElementById("finishdoc").style.background="#C71C60";
-            document.getElementById("submitestimation").style.background="#C71C60";
-            document.getElementById("finishdoc").disabled=false;
+            document.getElementById("doc3").style.background = "#A9C7A7";
+            document.getElementById("timeestimation").style.display = "none";
+            document.getElementById("finishdoc").style.background = "#C71C60";
+            document.getElementById("submitestimation").style.background = "#C71C60";
+            document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
             currentDoc = 3;
             begin_reading();
@@ -131,36 +135,52 @@
                     }//返回的data是字符串类型
             );
 
-            document.getElementById("doc4").disabled =true;
-            document.getElementById("doc4").style.background="#A9C7A7";
-            document.getElementById("timeestimation").style.display="none";
-            document.getElementById("finishdoc").style.background="#C71C60";
-            document.getElementById("submitestimation").style.background="#C71C60";
-            document.getElementById("finishdoc").disabled=false;
+            document.getElementById("doc4").disabled = true;
+            document.getElementById("doc4").style.background = "#A9C7A7";
+            document.getElementById("timeestimation").style.display = "none";
+            document.getElementById("finishdoc").style.background = "#C71C60";
+            document.getElementById("submitestimation").style.background = "#C71C60";
+            document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
             currentDoc = 4;
             begin_reading();
         }
 
         function clickfinish() {
-             window.close();
+            window.close();
 
         }
 
 
-        function estimatetime(){
-            document.getElementById("timeestimation").style.display="block";
+        function estimatetime() {
+            document.getElementById("timeestimation").style.display = "block";
             document.getElementById("finishdoc").style.background = "#A9C7A7";
-            document.getElementById("finishdoc").disabled=true;
+            document.getElementById("finishdoc").disabled = true;
+
             end_reading();
+
+            var items = ['0','1', '2', '3', '4','5'];
+
+
+            var oneBig = 100 / (items.length - 1);
+
+            $.each(items, function (key, value) {
+                var w = oneBig;
+                if (key === 0 || key === items.length - 1)
+                    w = oneBig / 2;
+
+                $("#legend").append("<label style='width: " + w + "%'>" + value + "</label>");
+            });
+
+
         }
 
-        function submitestimation(){
+        function submitestimation() {
             time_estimate();
             document.getElementById("submitestimation").style.background = "#A9C7A7";
 
 
-{#            TODO send log#}
+            {#            TODO send log#}
 
 
         }
@@ -191,8 +211,8 @@
 
         }
         $(document).ready(init_slider());
-        function reloadtimeestimation(){
-            $( "#seekbar" ).slider( "value", 0 );
+        function reloadtimeestimation() {
+            $("#seekbar").slider("value", 0);
         }
     </script>
 
@@ -227,8 +247,6 @@
 </div>
 
 
-
-
 <div align="center" style="width:416px; margin:0 auto">
     <input id="finishdoc" type=button
            style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
@@ -238,15 +256,17 @@
 
 
     <div id="seekbar"></div>
+    <div id="legend"></div>
+    <img src="/static/images/ruler.png" align="middle" width="600px"/>
 
     <div>
-        <div style="font-size: 24px;"> <span>花费时间</span>
-    <span id="time" name="time">0分0秒</span>
-</div>
-   <input id="submitestimation" type=button
-           style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
-           value='提交' onclick="submitestimation()"/>
+        <div style="font-size: 24px;"><span>花费时间</span>
+            <span id="time" name="time">0分0秒</span>
         </div>
+        <input id="submitestimation" type=button
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+               value='提交' onclick="submitestimation()"/>
+    </div>
 </div>
 
 <div id="souhu" style="width:120px; font-size:14px;position:fixed;bottom: 0px;;left: 2%;">
