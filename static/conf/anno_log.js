@@ -327,7 +327,10 @@ function time_estimate(){
             }
     });
     window.onbeforeunload = null;
+}
 
+function relevance_annotate(){
+    var 
 }
 
 function over_button_on_click() {

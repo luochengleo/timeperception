@@ -24,9 +24,10 @@
     <style type="text/css">
 
         label {
-            text-align: left;
+            text-align: right;
             display: inline-block;
         }
+
         h1 {
             font-family: "微软雅黑";
             font-size: 40px;
@@ -159,16 +160,13 @@
 
             end_reading();
 
-            var items = ['0','1', '2', '3', '4','5'];
+            var items = ['1', '2', '3', '4', '5'];
 
 
-            var oneBig = 100 / (items.length - 1);
+            var oneBig = 100 / (items.length );
 
             $.each(items, function (key, value) {
                 var w = oneBig;
-                if (key === 0 || key === items.length - 1)
-                    w = oneBig / 2;
-
                 $("#legend").append("<label style='width: " + w + "%'>" + value + "</label>");
             });
 
@@ -254,14 +252,25 @@
 </div>
 <div id="timeestimation" align="center" style="width:600px; margin:0 auto; padding-top:40px; display:none">
 
-
+    <hr>
+    <h2 style="text-align:left">估计在任务中花费的时间(以下为长度为5分钟的时间轴):</h2>
     <div id="seekbar"></div>
     <div id="legend"></div>
-    <img src="/static/images/ruler.png" align="middle" width="600px"/>
 
     <div>
-        <div style="font-size: 24px;"><span>花费时间</span>
+        <div style="font-size: 24px; display: none"><span>花费时间</span>
             <span id="time" name="time">0分0秒</span>
+        </div>
+
+        <hr>
+        <h2 style="text-align:left">请评价这篇文章与阅读任务的相关性:</h2>
+        <div>
+        <form action="" method="get" style="font-size: 20px; text-align: left">这篇文章是否与阅读任务相关？<br/>
+                <label><input name="Fruit" type="radio" value="3"/>非常相关</label>
+                <label><input name="Fruit" type="radio" value="2"/>相关</label>
+                <label><input name="Fruit" type="radio" value="1"/>有点相关</label>
+                <label><input name="Fruit" type="radio" value="0"/>不相关</label>
+            </form>
         </div>
         <input id="submitestimation" type=button
                style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
