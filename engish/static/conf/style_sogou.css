@@ -1,0 +1,38 @@
+.WCExamButton {
+    display: none;
+}
+
+.resultLayout {
+    width: 550px;
+    float: left
+}
+
+.buttonLayout {
+    float: left;
+    width: 250px;
+    text-align: center;
+}
+
+.vrPic {
+    padding-bottom: 20px;
+}
+
+#ebt {
+    width: 250px;
+}
+
+#lzystardiv {
+    visibility: hidden;
+}
+
+#lzystar {
+    margin: 10px auto;
+}
+
+#wcstar {
+    margin: 15px auto;
+}
+
+#wcstardiv {
+    float: right;
+}

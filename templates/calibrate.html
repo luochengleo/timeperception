@@ -111,17 +111,18 @@
         }
         var strcookie = document.cookie;
         var arrcookie = strcookie.split("; ");
-        var studentID= arrcookie[1].split('=')[1]
+        var studentID = arrcookie[1].split('=')[1]
 
     </script>
 
 
-
-
     <script type="text/javascript">
-        var intDiff = parseInt(60);//倒计时总秒数量
-        var globaltime = 0;
-        function timer(intDiff) {
+{#        var intDiff = parseInt(0);//倒计时总秒数量#}
+        var globaltime_short = 0;
+        var globaltime_long = 0;
+
+        var docid = 0;
+        function timer_short(intDiff) {
             window.setInterval(function () {
                 var day = 0,
                         hour = 0,
@@ -140,25 +141,93 @@
                 $('#second_show').html('<s> </s>' + second + '秒');
                 document.getElementById("globaltime").innerHTML = globaltime;
                 intDiff--;
-                globaltime++;
+                globaltime_short++;
                 if (intDiff == 0) {
-                    alert("time up");
+                    return;
                     document.getElementById("returnbutton").style.display = "block";
                 }
             }, 1000);
         }
 
+        function timer_long(intDiff) {
+            window.setInterval(function () {
+                var day = 0,
+                        hour = 0,
+                        minute = 0,
+                        second = 0;//时间默认值
+                if (intDiff > 0) {
+                    day = Math.floor(intDiff / (60 * 60 * 24));
+                    hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                    minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                    second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                }
+                if (minute <= 9) minute = '0' + minute;
+                if (second <= 9) second = '0' + second;
+                $('#hour_show').html('<s id="h"></s>' + hour + '时');
+                $('#minute_show').html('<s> </s>' + minute + '分');
+                $('#second_show').html('<s> </s>' + second + '秒');
+                document.getElementById("globaltime").innerHTML = globaltime;
+                intDiff--;
+                globaltime_long++;
+                if (intDiff == 0) {
+                    document.getElementById("returnbutton").style.display = "block";
+                }
+            }, 1000);
+        }
+
+        function short() {
+            intDiff = 120;
+            docid = 0;
+            $.get("/docservice/{{ taskid }}/0", 0, function (data) {
+                        document.getElementById("articlecontent").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+            document.getElementById("docshort").disabled = true;
+
+            document.getElementById("docshort").style.background = "#A9C7A7";
+
+        }
+
+        function long() {
+            intDiff = 240;
+            docid = 9;
+            $.get("/docservice/{{ taskid }}/9", 0, function (data) {
+                        document.getElementById("articlecontent").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+            document.getElementById("doclong").disabled = true;
+            document.getElementById("doclong").style.background = "#A9C7A7";
+            document.getElementById("beginbutton").disabled = "";
+        }
+
+        function leave() {
+            window.location.href = "/read/{{ settingid }}/{{ jobid }}"
+
+        }
         function begin() {
-            timer(intDiff);
+            if (docid == 0) {
+                timer_short(10000);
+            }
+            if (docid == 9){
+                timer_long(10000);
+            }
+
+
+
             document.getElementById("article").style.display = "block";
             document.getElementById("beginbutton").disabled = "disabled";
-            begin_calibration();
+            begin_calibration(docid);
         }
 
         function end() {
-            end_calibration();
-            alert("在阅读这篇文章的过程中，您一共花费了" +document.getElementById("globaltime").innerHTML+" 秒钟");
-            window.location.href = "/read/{{ settingid }}/{{ jobid }}"
+            document.getElementById("article").style.display = "none";
+            end_calibration(docid);
+            if (docid == 0) {
+                alert("在阅读这篇文章的过程中，您一共花费了" + globaltime_short + " 秒钟");
+            }
+            if (docid == 9) {
+                alert("在阅读这篇文章的过程中，您一共花费了" + globaltime_long + " 秒钟");
+            }
         }
         /*
          $(function(){
@@ -171,11 +240,21 @@
 </head>
 <body>
 <div align="center" style="width:416px; margin:0 auto">
+    <input id="docshort" type=button
+           style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
+           value='Short' onclick="short()"/>
+    <input id="doclong" type=button
+           style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
+           value='Long' onclick="long()"/>
+    <input id="doclong" type=button
+           style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
+           value='Exit' onclick="leave()"/>
+
     <input id="beginbutton" type=button
            style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2);"
            value='Begin Reading' onclick="begin()"/>
 
-    <div class="time-item">
+    <div class="time-item" style="display:none">
         <strong id="hour_show">0时</strong>
         <strong id="minute_show">0分</strong>
         <strong id="second_show">60秒</strong>
@@ -185,11 +264,10 @@
 
     <h1></h1>
 
-    <div style="text-align:left">
-        {{ article|safe }}
+    <div id="articlecontent" ,style="text-align:left">
+
     </div>
 </div>
-
 
 <div align="center" style="width:416px; margin:0 auto">
     <input id="returnbutton" type=button
@@ -197,7 +275,7 @@
            value='Finish Reading' onclick="end()"/>
 </div>
 
-<div style = "display:none" id="globaltime">0</div>
+<div style="display:none" id="globaltime">0</div>
 
 
 </body>

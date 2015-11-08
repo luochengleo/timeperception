@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="/static/conf/annotation.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="/static/conf/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery-min.js"></script>
+    <script type="text/javascript" src="/static/conf/wc_preprocess.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.bgpos.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.reveal.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="/static/conf/anno_log.js"></script>
+    <script type="text/javascript" src="http://mediaplayer.yahoo.com/js"></script>
+    <title>所有阅读任务</title>
+</head>
+<body>
+
+<div class="annotation_header">
+    <h1 align="center">THUIR Group</h1>
+
+    <h1 align="center">Welcome to our experiments!</h1>
+    <script>
+        function getCookieVal(offset) {
+            var endstr = document.cookie.indexOf(";", offset);
+            if (endstr == -1) {
+                endstr = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(offset, endstr));
+        }
+
+        // primary function to retrieve cookie by name
+        function getCookie(name) {
+            var arg = name + "=";
+            var alen = arg.length;
+            var clen = document.cookie.length;
+            var i = 0;
+            while (i < clen) {
+                var j = i + alen;
+                if (document.cookie.substring(i, j) == arg) {
+                    return getCookieVal(j);
+                }
+                i = document.cookie.indexOf(" ", i) + 1;
+                if (i == 0) break;
+            }
+            return null;
+        }
+
+        // store cookie value with optional details as needed
+        function setCookie(name, value, expires, path, domain, secure) {
+            document.cookie = name + "=" + escape(value) +
+                    ((expires) ? "; expires=" + expires : "") +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    ((secure) ? "; secure" : "");
+        }
+
+        // remove the cookie by setting ancient expiration date
+        function deleteCookie(name, path, domain) {
+            if (getCookie(name)) {
+                document.cookie = name + "=" +
+                        ((path) ? "; path=" + path : "") +
+                        ((domain) ? "; domain=" + domain : "") +
+                        "; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+            }
+        }
+
+        function resetTime() {
+            setCookie('time', 0, '', '/', '', '');
+        }
+        var strcookie = document.cookie;
+        var arrcookie = strcookie.split("; ");
+        var sid = arrcookie[1].split('=')[1]
+
+    </script>
+
+    <p align="center" style="text-align:left;font-size:20px; color:red">
+        We have 5 survey tasks. The first one is a training
+        task and the remaining ones are offical ones.</p>
+
+    <p align="center" style="text-align:left;font-size:20px; color:red">
+        In the coming experiment, you are hired to perform a journalist survey about several topics.
+    </p>
+
+    <p align="center" style="text-align:left;font-size:20px; color:red">
+        For each tasks, we have prepared some documents for you. Please read the documents carefully and we will check
+        your outcomes from the documents. After each document, please estimate how much time you have spent on the
+        document.
+    </p>
+
+    <p align="center" style="text-align:left;font-size:20px; color:red">
+        Note that your outcomes are the principle standard to judge that if you have participated in this experiment
+        seriously.
+
+    </p>
+</div>
+<div class="annotation_list">
+
+    {% for item in jobs %}
+
+        <div class="annotation_cell">
+            <img class="check" src="/static/conf/img/check.jpg">
+
+            <div>
+                <h2> Task: {{ forloop.counter }} </h2>
+                <span>Topic Description: {{ item.2 }}</span>
+
+                <div><a class="annotation_link"
+                        href='/calibrate/{{ item.0 }}/{{ item.1 }}'
+                        target="_blank" onclick="resetTime();">Click here to start</a></div>
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

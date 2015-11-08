@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>THUIR Experiment System</title>
+    <script>
+        function redirect() {
+            var username = document.getElementById("username");
+            var pass = document.getElementById("password");
+            setCookie('studentid', username, '', '/', '', '')
+            if (username.value == "") {
+                alert("请输入用户名");
+                username.focus();
+                return;
+            }
+            else if (pass.value == "") {
+                alert("请输入密码");
+                return;
+            }
+            else if ((pass.value == "a") && (!isNaN(username.value))) {
+                obj = document.getElementById("tasktype")
+                var index = obj.selectedIndex;
+                var expType = obj.options[index].value;
+                setCookie('settingid', expType,'','/','','')
+                setCookie('studentid', username.value, '', '/', '', '')
+                window.location.href = '/jobs/' + expType
+                return;
+            }
+            else {
+                alert("登录失败，请检查用户名和密码是否有误！");
+                alert(username.value);
+                return;
+            }
+            return true;
+        }
+
+
+    </script>
+
+    <script>
+        function getCookieVal(offset) {
+            var endstr = document.cookie.indexOf(";", offset);
+            if (endstr == -1) {
+                endstr = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(offset, endstr));
+        }
+
+        // primary function to retrieve cookie by name
+        function getCookie(name) {
+            var arg = name + "=";
+            var alen = arg.length;
+            var clen = document.cookie.length;
+            var i = 0;
+            while (i < clen) {
+                var j = i + alen;
+                if (document.cookie.substring(i, j) == arg) {
+                    return getCookieVal(j);
+                }
+                i = document.cookie.indexOf(" ", i) + 1;
+                if (i == 0) break;
+            }
+            return null;
+        }
+
+        // store cookie value with optional details as needed
+        function setCookie(name, value, expires, path, domain, secure) {
+            document.cookie = name + "=" + escape(value) +
+                    ((expires) ? "; expires=" + expires : "") +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    ((secure) ? "; secure" : "");
+        }
+
+        // remove the cookie by setting ancient expiration date
+        function deleteCookie(name, path, domain) {
+            if (getCookie(name)) {
+                document.cookie = name + "=" +
+                        ((path) ? "; path=" + path : "") +
+                        ((domain) ? "; domain=" + domain : "") +
+                        "; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+            }
+        }
+
+        function resetTime() {
+            setCookie('time', 0, '', '/', '', '');
+        }
+        var strcookie = document.cookie;
+
+    </script>
+</head>
+<body>
+<img style="text-align: center" src="http://www.thuir.cn/cms/uploads/images/IR4.png" align="middle">
+
+<h1 style="color:blue; text-align:center">Experiment System of THUIR Group </h1>
+
+
+<form align=center>
+    <table align="center">
+        <tr align="center">
+            <td>Config:</td>
+            <td>
+                <select align="center" style="width:130px" id="tasktype">
+                    {% for t in allsettings %}
+                        <option value="{{ t }}">{{ t }} </option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr align=center>
+            <td>Username:</td>
+            <td><input type="text" name="username" id="username"></td>
+        </tr>
+        <tr align=center>
+            <td>Password:</td>
+            <td><input type="password" name="password" id="password"></td>
+        </tr>
+
+        <tr align=center>
+            <td colspan="2"><input type="button" value="Login" onclick="redirect()"/>
+                <input type="reset" value="Reset"/></td>
+        </tr>
+
+    </table>
+</form>
+<div style="text-align: center">
+    <p>Please login with your 10-digit Tsinghua ID, the password is 'a'</p>
+</div>
+
+
+</body>
+</html>
