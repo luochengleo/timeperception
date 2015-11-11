@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from readanno.views import login
+from readanno.views import login, docquestionservice,docoptionservice
 from readanno.views import jobs
 from readanno.views import calibrate
 from readanno.views import read
@@ -24,6 +24,9 @@ urlpatterns = patterns('',
                        url(r'^read/(\d{1,2})/(\d{1,2})/$', read),
                        url(r'^feedback/(\d{1,2})/$', feedback),
                        url(r'^docservice/(\d{1,2})/(\d{1,2})/$',docservice),
+                       url(r'^docquestionservice/(\d{1,2})/(\d{1,2})/$',docquestionservice),
+                       url(r'^docoptionservice/(\d{1,2})/(\d{1,2})/$',docoptionservice),
+
                        url(r'^LogService/$', log)
                        )
 

@@ -79,11 +79,14 @@
 
 
         function clickdoc1() {
+            document.getElementById("article").style.display = "block";
+
 
             $.get("/docservice/{{ taskid }}/{{ doc1 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
             );
+
 
             document.getElementById("doc1").disabled = true;
             document.getElementById("doc1").style.background = "#A9C7A7";
@@ -100,6 +103,7 @@
         }
 
         function clickdoc2() {
+            document.getElementById("article").style.display = "block";
             $.get("/docservice/{{ taskid }}/{{ doc2 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
@@ -115,6 +119,7 @@
             begin_reading();
         }
         function clickdoc3() {
+            document.getElementById("article").style.display = "block";
             $.get("/docservice/{{ taskid }}/{{ doc3 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
@@ -131,6 +136,7 @@
             begin_reading();
         }
         function clickdoc4() {
+            document.getElementById("article").style.display = "block";
             $.get("/docservice/{{ taskid }}/{{ doc4 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
@@ -154,28 +160,46 @@
 
 
         function estimatetime() {
+
+            document.getElementById("article").style.display = "none";
+
+            $.get("/docquestionservice/{{ taskid }}/" + currentDoc, 0, function (data) {
+                        document.getElementById("docquestion").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+
+            $.get("/docoptionservice/{{ taskid }}/" + currentDoc, 0, function (data) {
+                        var options = data.split("\\t");
+                        document.getElementById("opt1").innerHTML = options[0];
+                        document.getElementById("opt2").innerHTML = options[1];
+                        document.getElementById("opt3").innerHTML = options[2];
+                        document.getElementById("opt4").innerHTML = options[3];
+                    }//返回的data是字符串类型
+            );
             document.getElementById("timeestimation").style.display = "block";
             document.getElementById("finishdoc").style.background = "#A9C7A7";
             document.getElementById("finishdoc").disabled = true;
 
             end_reading();
 
-            var items = ['1', '2', '3', '4', '5'];
-
-
-            var oneBig = 100 / (items.length );
-
-            $.each(items, function (key, value) {
-                var w = oneBig;
-                $("#legend").append("<label style='width: " + w + "%'>" + value + "</label>");
-            });
-
 
         }
 
         function submitestimation() {
+
             time_estimate();
             document.getElementById("submitestimation").style.background = "#A9C7A7";
+
+            document.getElementById("rel4").checked=false;
+            document.getElementById("rel3").checked=false;
+            document.getElementById("rel2").checked=false;
+            document.getElementById("rel1").checked=false;
+
+            document.getElementById("outopt4").checked=false;
+            document.getElementById("outopt3").checked=false;
+            document.getElementById("outopt2").checked=false;
+            document.getElementById("outopt1").checked=false;
+
 
 
             {#            TODO send log#}
@@ -206,6 +230,17 @@
                 var minute = (time - second) / 60;
                 $('#time').html(minute + '分' + second + '秒');
             }
+
+            var items = ['1', '2', '3', '4', '5'];
+
+
+            var oneBig = 100 / (items.length );
+
+            $.each(items, function (key, value) {
+                var w = oneBig;
+                $("#legend").append("<label style='width: " + w + "%'>" + value + "</label>");
+            });
+
 
         }
         $(document).ready(init_slider());
@@ -258,12 +293,30 @@
         <h2 style="text-align:left">请评价这篇文章与阅读任务的相关性:</h2>
 
         <div>
-            <form action="" method="get" style="font-size: 20px; text-align: left">这篇文章是否与阅读任务相关？<br/>
-                <label><input name="rel3" type="radio" value="3"/>非常相关</label>
-                <label><input name="rel2" type="radio" value="2"/>相关</label>
-                <label><input name="rel1" type="radio" value="1"/>有点相关</label>
-                <label><input name="rel0" type="radio" value="0"/>不相关</label>
+            <form id="relevanceanno" action="" method="get" style="font-size: 20px; text-align: left">这篇文章是否与阅读任务相关？<br/>
+                <label><input id="rel4" name="rel" type="radio" value="3"/>非常相关</label>
+                <label><input id="rel3" name="rel" type="radio" value="2"/>相关</label>
+                <label><input id="rel2" name="rel" type="radio" value="1"/>有点相关</label>
+                <label><input id="rel1" name="rel" type="radio" value="0"/>不相关</label>
             </form>
+
+        </div>
+
+
+    </div>
+
+    <div>
+
+        <h2 id="docquestion" style="text-align:left"></h2>
+
+        <div>
+            <form action="" method="get" style="font-size: 20px; text-align: left">请选择正确选项<br/>
+                <label><input id = "outopt1" name="qus" type="radio" value="3"/><a id="opt1"></a></label>
+                <label><input id = "outopt2"  name="qus" type="radio" value="2"/><a id="opt2"></a></label>
+                <label><input id = "outopt3"  name="qus" type="radio" value="1"/><a id="opt3"></a></label>
+                <label><input id = "outopt4"  name="qus" type="radio" value="0"/><a id="opt4"></a></label>
+            </form>
+
         </div>
 
 
