@@ -69,6 +69,7 @@
     {#    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>#}
     <script type="text/javascript">
         var currentDoc = 0;
+        var _globaldocid = 0;
         var jobid = {{ jobid }};
         var time = parseInt(0);
         function timer(intDiff) {
@@ -98,6 +99,7 @@
             init_slider();
             currentDoc = 1;
             begin_reading();
+            _globaldocid = {{ doc1 }};
 
 
         }
@@ -115,6 +117,7 @@
             document.getElementById("submitestimation").style.background = "#C71C60";
             document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
+            _globaldocid = {{ doc2 }};
             currentDoc = 2;
             begin_reading();
         }
@@ -132,6 +135,7 @@
             document.getElementById("submitestimation").style.background = "#C71C60";
             document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
+            _globaldocid = {{ doc3 }};
             currentDoc = 3;
             begin_reading();
         }
@@ -149,6 +153,7 @@
             document.getElementById("submitestimation").style.background = "#C71C60";
             document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
+            _globaldocid = {{ doc4 }};
             currentDoc = 4;
             begin_reading();
         }
@@ -163,12 +168,12 @@
 
             document.getElementById("article").style.display = "none";
 
-            $.get("/docquestionservice/{{ taskid }}/" + currentDoc, 0, function (data) {
+            $.get("/docquestionservice/{{ taskid }}/" + _globaldocid, 0, function (data) {
                         document.getElementById("docquestion").innerHTML = data;
                     }//返回的data是字符串类型
             );
 
-            $.get("/docoptionservice/{{ taskid }}/" + currentDoc, 0, function (data) {
+            $.get("/docoptionservice/{{ taskid }}/" + _globaldocid, 0, function (data) {
                         var options = data.split("\\t");
                         document.getElementById("opt1").innerHTML = options[0];
                         document.getElementById("opt2").innerHTML = options[1];
