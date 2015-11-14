@@ -100,8 +100,7 @@
 			    <right_Answer>B</right_Answer>
 			    <choices>A.11\tB.12\tC.13\tD.14</choices>
 		    </Single_Choice_Questionare>
-		</Document>
-		<Document>
+		</Document><Document>
 			<doc_id>2</doc_id>
 			<relevance>1</relevance>
 			<title>为什么TPP没有中国？</title>
