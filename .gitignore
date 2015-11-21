@@ -7,7 +7,7 @@ __pycache__/
 *.log
 static/video/timeperception.mp4
 ~*~*~*~*~*~*~*~*
-
+*.DS_Store
 # C extensions
 *.so
 
