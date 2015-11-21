@@ -96,6 +96,18 @@ def docservice(request,taskid,docid):
             content +='<p>'+s.strip()+'</p>'
     return HttpResponse(content)
 
+
+def docquestionservice(request,taskid,docid):
+    _s = SingleChoiceQuestionare.objects.get(taskid = taskid,docid = docid)
+    print _s.id
+    return HttpResponse(_s.title)
+
+def docoptionservice(request,taskid,docid):
+    _s = SingleChoiceQuestionare.objects.get(taskid = taskid,docid = docid)
+    print _s.choices
+    return HttpResponse(_s.choices)
+
+
 import urllib
 
 @csrf_exempt

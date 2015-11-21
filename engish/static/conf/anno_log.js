@@ -308,13 +308,45 @@ function end_reading(){
 }
 
 function time_estimate(){
+
+    var relstr = "";
+    var rel = -1;
+    if ( document.getElementById("rel4").checked == true){
+        rel = 3;
+    }
+    if ( document.getElementById("rel3").checked == true){
+        rel = 2;
+    }
+    if ( document.getElementById("rel2").checked == true){
+        rel = 1;
+    }
+    if ( document.getElementById("rel1").checked == true){
+        rel = 0;
+    }
+
+    var answer = "X";
+    if (document.getElementById("outopt1").checked == true){
+        answer = "A";
+    }
+    if (document.getElementById("outopt2").checked == true){
+        answer = "B";
+    }
+    if (document.getElementById("outopt3").checked == true){
+        answer = "C";
+    }
+    if (document.getElementById("outopt4").checked == true){
+        answer = "D";
+    }
+
+
     var client_time = (new Date()).getTime();
     var message = "";
     message += "TIMESTAMP=" + client_time;
     message += "\tUSER=" + studentID;
     message += "\tJOBID="+jobid;
     message += "\tACTION=TIME_ESTIMATION";
-    message += "\tINFO: CURRENT_DOC="+currentDoc+' ET='+etime ;
+    message += "\tINFO: CURRENT_DOC="+currentDoc+' ET='+etime+' REL='+rel+' ANS='+answer ;
+
     var log_url = "http://" + server_site + ":8000/LogService/"
 
     $.ajax({
