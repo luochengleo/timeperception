@@ -2,9 +2,9 @@ __author__ = 'franky'
 import re
 from collections import defaultdict
 import numpy as np
-validUsers = ('2015011282', '2015011335','2015011286','2015011312','2015011285','2015011254')
-first_group_users = ('2015011282', '2015011312', '2015011285')
-second_group_users = ('2015011335', '2015011254', '2015011286')
+validUsers = ('2015011285', '2015011281', '2015011337', '2015011329', '2013011388', '2015011335', '2015011254', '2015011286', '2015011324', '2014012345')
+first_group_users = ('2015011285', '2015011281', '2015011337', '2015011329', '2013011388')
+second_group_users = ('2015011335', '2015011254', '2015011286', '2015011324', '2014012345')
 
 # calibration -userid ,jobid
 
@@ -100,7 +100,8 @@ for studentid in validUsers:
     scores = []
     for j in ['1', '2', '3', '4']:
         for d in [1, 2, 3, 4]:
-            scores.append(score[studentid][j][d])
+            if studentid != '2014012345' or j != '3' or d != 3:
+                scores.append(score[studentid][j][d])
     print studentid, np.mean(scores)
 
 def normalization_by_user_and_job():
@@ -131,7 +132,8 @@ def normalization_by_user():
         ratios = []
         for j in ['1', '2', '3', '4']:
             for d in [1, 2, 3, 4]:
-                ratios.append(ratio[studentid][j][d])
+                if studentid != '2014012345' or j != '3' or d != 3:
+                    ratios.append(ratio[studentid][j][d])
         ave = np.mean(ratios)
         stda = np.std(ratios)
         for j in ['1', '2', '3', '4']:
@@ -174,5 +176,5 @@ def normalization_by_job():
 
 
 # normalization_by_user_and_job()
-# normalization_by_user()
+normalization_by_user()
 # normalization_by_job()
