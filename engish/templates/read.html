@@ -69,6 +69,7 @@
     {#    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>#}
     <script type="text/javascript">
         var currentDoc = 0;
+        var _globaldocid = 0;
         var jobid = {{ jobid }};
         var time = parseInt(0);
         function timer(intDiff) {
@@ -79,11 +80,14 @@
 
 
         function clickdoc1() {
+            document.getElementById("article").style.display = "block";
+
 
             $.get("/docservice/{{ taskid }}/{{ doc1 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
             );
+
 
             document.getElementById("doc1").disabled = true;
             document.getElementById("doc1").style.background = "#A9C7A7";
@@ -95,11 +99,13 @@
             init_slider();
             currentDoc = 1;
             begin_reading();
+            _globaldocid = {{ doc1 }};
 
 
         }
 
         function clickdoc2() {
+            document.getElementById("article").style.display = "block";
             $.get("/docservice/{{ taskid }}/{{ doc2 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
@@ -111,10 +117,12 @@
             document.getElementById("submitestimation").style.background = "#C71C60";
             document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
+            _globaldocid = {{ doc2 }};
             currentDoc = 2;
             begin_reading();
         }
         function clickdoc3() {
+            document.getElementById("article").style.display = "block";
             $.get("/docservice/{{ taskid }}/{{ doc3 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
@@ -127,10 +135,12 @@
             document.getElementById("submitestimation").style.background = "#C71C60";
             document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
+            _globaldocid = {{ doc3 }};
             currentDoc = 3;
             begin_reading();
         }
         function clickdoc4() {
+            document.getElementById("article").style.display = "block";
             $.get("/docservice/{{ taskid }}/{{ doc4 }}", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
@@ -143,6 +153,7 @@
             document.getElementById("submitestimation").style.background = "#C71C60";
             document.getElementById("finishdoc").disabled = false;
             reloadtimeestimation();
+            _globaldocid = {{ doc4 }};
             currentDoc = 4;
             begin_reading();
         }
@@ -154,6 +165,22 @@
 
 
         function estimatetime() {
+
+            document.getElementById("article").style.display = "none";
+
+            $.get("/docquestionservice/{{ taskid }}/" + _globaldocid, 0, function (data) {
+                        document.getElementById("docquestion").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+
+            $.get("/docoptionservice/{{ taskid }}/" + _globaldocid, 0, function (data) {
+                        var options = data.split("\\t");
+                        document.getElementById("opt1").innerHTML = options[0];
+                        document.getElementById("opt2").innerHTML = options[1];
+                        document.getElementById("opt3").innerHTML = options[2];
+                        document.getElementById("opt4").innerHTML = options[3];
+                    }//返回的data是字符串类型
+            );
             document.getElementById("timeestimation").style.display = "block";
             document.getElementById("finishdoc").style.background = "#A9C7A7";
             document.getElementById("finishdoc").disabled = true;
@@ -161,12 +188,23 @@
             end_reading();
 
 
-
         }
 
         function submitestimation() {
+
             time_estimate();
             document.getElementById("submitestimation").style.background = "#A9C7A7";
+
+            document.getElementById("rel4").checked=false;
+            document.getElementById("rel3").checked=false;
+            document.getElementById("rel2").checked=false;
+            document.getElementById("rel1").checked=false;
+
+            document.getElementById("outopt4").checked=false;
+            document.getElementById("outopt3").checked=false;
+            document.getElementById("outopt2").checked=false;
+            document.getElementById("outopt1").checked=false;
+
 
 
             {#            TODO send log#}
@@ -183,16 +221,6 @@
     <script>
         var etime = 0;
         function init_slider() {
-            var items = ['1', '2', '3', '4', '5'];
-
-
-            var oneBig = 100 / (items.length );
-
-            $.each(items, function (key, value) {
-                var w = oneBig;
-                $("#legend").append("<label style='width: " + w + "%'>" + value + "</label>");
-            });
-
 
             $('#seekbar').slider({
                 min: 0,
@@ -207,6 +235,17 @@
                 var minute = (time - second) / 60;
                 $('#time').html(minute + '分' + second + '秒');
             }
+
+            var items = ['1', '2', '3', '4', '5'];
+
+
+            var oneBig = 100 / (items.length );
+
+            $.each(items, function (key, value) {
+                var w = oneBig;
+                $("#legend").append("<label style='width: " + w + "%'>" + value + "</label>");
+            });
+
 
         }
         $(document).ready(init_slider());
@@ -249,38 +288,64 @@
 <div align="center" style="width:416px; margin:0 auto">
     <input id="finishdoc" type=button
            style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
-           value='Estimate the Time' onclick="estimatetime()"/>
+           value='Finish' onclick="estimatetime()"/>
 </div>
 <div id="timeestimation" align="center" style="width:600px; margin:0 auto; padding-top:40px; display:none">
 
-    <hr>
-    <h2 style="text-align:left">Please estimate how much time you have spent in this document(you could make estimation with the following 5-minutes slide bar):</h2>
-    <div id="seekbar"></div>
-    <div id="legend"></div>
 
     <div>
+
+        <h2 style="text-align:left">Please evaluate the relevance of this document according to the topics</h2>
+
+        <div>
+            <form id="relevanceanno" action="" method="get" style="font-size: 20px; text-align: left">How relevant is this document<br/>
+                <label><input id="rel4" name="rel" type="radio" value="3"/>Very Relevant</label>
+                <label><input id="rel3" name="rel" type="radio" value="2"/>Relevant</label>
+                <label><input id="rel2" name="rel" type="radio" value="1"/>Marginally Relevant</label>
+                <label><input id="rel1" name="rel" type="radio" value="0"/>Irrelevant</label>
+            </form>
+
+        </div>
+
+
+    </div>
+
+    <div>
+
+        <h2 id="docquestion" style="text-align:left"></h2>
+
+        <div>
+            <form action="" method="get" style="font-size: 20px; text-align: left">Find the right answer<br/>
+                <label><input id = "outopt1" name="qus" type="radio" value="3"/><a id="opt1"></a></label>
+                <label><input id = "outopt2"  name="qus" type="radio" value="2"/><a id="opt2"></a></label>
+                <label><input id = "outopt3"  name="qus" type="radio" value="1"/><a id="opt3"></a></label>
+                <label><input id = "outopt4"  name="qus" type="radio" value="0"/><a id="opt4"></a></label>
+            </form>
+
+        </div>
+
+
+    </div>
+
+    <div>
+        <hr>
+        <h2 style="text-align:left">Please estimate how long you have spent in reading this document. We have a scale of 5 minutes for you:</h2>
+
+        <div id="seekbar"></div>
+        <div id="legend"></div>
+
         <div style="font-size: 24px; display: none"><span>花费时间</span>
             <span id="time" name="time">0分0秒</span>
         </div>
-
-        <hr>
-        <h2 style="text-align:left">Please evaluate how relevant this document to the topic:</h2>
-        <div>
-        <form action="" method="get" style="font-size: 20px; text-align: left">Is this document relevant to the topic?<br/>
-                <label><input name="Fruit" type="radio" value="3"/>[Great Relevant]</label>
-                <label><input name="Fruit" type="radio" value="2"/>[Relevant]</label>
-                <label><input name="Fruit" type="radio" value="1"/>[Marginal Relevant]</label>
-                <label><input name="Fruit" type="radio" value="0"/>[NOT Relevant]</label>
-            </form>
-        </div>
-        <input id="submitestimation" type=button
-               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
-               value='Submit' onclick="submitestimation()"/>
     </div>
+
+    <div><input id="submitestimation" type=button
+                style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+                value='Submit' onclick="submitestimation()"/></div>
 </div>
 
 <div id="souhu" style="width:120px; font-size:14px;position:fixed;bottom: 0px;;left: 2%;">
-    Topic Recall:{{ descp }}
+    Topic Review:{{ descp }}
 </div>
 </body>
 </html>

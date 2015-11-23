@@ -16,6 +16,7 @@ class Document(models.Model):
 
 class SingleChoiceQuestionare(models.Model):
     taskid = models.IntegerField()
+    docid = models.IntegerField()
     title = models.CharField(max_length=300)
     rightAnswer = models.CharField(max_length=30)
     choices = models.CharField(max_length=3000)

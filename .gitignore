@@ -2,12 +2,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.mp4
 .idea
 *.sqlite3
 *.log
 static/video/timeperception.mp4
 ~*~*~*~*~*~*~*~*
-
+*.DS_Store
 # C extensions
 *.so
 

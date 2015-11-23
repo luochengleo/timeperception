@@ -29,7 +29,6 @@ def import_tasks(filename):
             d.save()
 
 
-
 def import_settings(filename):
     print "import settings from", filename
     domtree = xml.dom.minidom.parse(filename)
