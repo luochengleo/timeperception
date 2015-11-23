@@ -27,13 +27,7 @@ def import_tasks(filename):
             content = document.getElementsByTagName('content')[0].childNodes[0].data
             d = Document(taskid=task_id, docid=doc_id, relevance=relevance, title=title, content=content)
             d.save()
-        single_choices = task.getElementsByTagName('Single_Choice_Questionare')
-        for single_choice in single_choices:
-            title = single_choice.getElementsByTagName('title')[0].childNodes[0].data
-            rightAnswer = single_choice.getElementsByTagName('right_Answer')[0].childNodes[0].data
-            choices = single_choice.getElementsByTagName('choices')[0].childNodes[0].data
-            s = SingleChoiceQuestionare(taskid=task_id, title=title, rightAnswer=rightAnswer, choices=choices)
-            s.save()
+
 
 
 def import_settings(filename):
@@ -59,5 +53,5 @@ def import_settings(filename):
 
 
 def init_default():
-    import_tasks('data/tasks.xml')
+    import_tasks('data/English_tasks.xml')
     import_settings('data/settings.xml')
