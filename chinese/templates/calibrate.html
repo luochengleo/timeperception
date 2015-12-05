@@ -201,7 +201,7 @@
         }
 
         function leave() {
-            window.close()
+            window.location.href = "/read/{{ settingid }}/{{ jobid }}"
 
         }
         function begin() {
@@ -223,10 +223,10 @@
             document.getElementById("article").style.display = "none";
             end_calibration(docid);
             if (docid == 0) {
-                alert("You have spent " + globaltime_short + "s, in this document");
+                alert("在阅读这篇文章的过程中，您一共花费了" + globaltime_short + " 秒钟");
             }
             if (docid == 9) {
-                alert("You have spent " + globaltime_long + "s, in this document");
+                alert("在阅读这篇文章的过程中，您一共花费了" + globaltime_long + " 秒钟");
             }
         }
         /*

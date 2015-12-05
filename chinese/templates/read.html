@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    {#    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>#}
+
+
+    <link href="/static/conf/button.css" type="text/css" rel="stylesheet">
+    <link href="/static/conf/annotation.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="/static/conf/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/jquery-ui.css"/>
+
+
+    <script type="text/javascript" src="/static/conf/jquery-min.js"></script>
+    <script type="text/javascript" src="/static/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/static/conf/wc_preprocess.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.bgpos.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.reveal.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="/static/conf/anno_log.js"></script>
+    <title>Read</title>
+    <style type="text/css">
+
+        label {
+            text-align: right;
+            display: inline-block;
+        }
+
+        h1 {
+            font-family: "微软雅黑";
+            font-size: 40px;
+            margin: 20px 0;;
+            border-bottom: solid 1px #ccc;
+            padding-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .time-item strong {
+            background: #C71C60;
+            color: #fff;
+            line-height: 49px;
+            font-size: 36px;
+            font-family: Arial;
+            padding: 0 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        #day_show {
+            float: left;
+            line-height: 49px;
+            color: #c71c60;
+            font-size: 32px;
+            margin: 0 10px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .item-title .unit {
+            background: none;
+            line-height: 49px;
+            font-size: 24px;
+            padding: 0 10px;
+            float: left;
+        }
+    </style>
+    {#    <script type="text/javascript" src="http://www.codefans.net/ajaxjs/jquery-1.6.2.min.js"></script>#}
+    <script type="text/javascript">
+        var currentDoc = 0;
+        var _globaldocid = 0;
+        var jobid = {{ jobid }};
+        var time = parseInt(0);
+        function timer(intDiff) {
+            window.setInterval(function () {
+                time++;
+            }, 1000);
+        }
+
+
+        function clickdoc1() {
+            document.getElementById("article").style.display = "block";
+
+
+            $.get("/docservice/{{ taskid }}/{{ doc1 }}", 0, function (data) {
+                        document.getElementById("articlecontent").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+
+
+            document.getElementById("doc1").disabled = true;
+            document.getElementById("doc1").style.background = "#A9C7A7";
+            document.getElementById("timeestimation").style.display = "none";
+            document.getElementById("finishdoc").style.background = "#C71C60";
+            document.getElementById("submitestimation").style.background = "#C71C60";
+
+            document.getElementById("finishdoc").disabled = false;
+            init_slider();
+            currentDoc = 1;
+            begin_reading();
+            _globaldocid = {{ doc1 }};
+
+
+        }
+
+        function clickdoc2() {
+            document.getElementById("article").style.display = "block";
+            $.get("/docservice/{{ taskid }}/{{ doc2 }}", 0, function (data) {
+                        document.getElementById("articlecontent").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+            document.getElementById("doc2").disabled = true;
+            document.getElementById("doc2").style.background = "#A9C7A7";
+            document.getElementById("timeestimation").style.display = "none";
+            document.getElementById("finishdoc").style.background = "#C71C60";
+            document.getElementById("submitestimation").style.background = "#C71C60";
+            document.getElementById("finishdoc").disabled = false;
+            reloadtimeestimation();
+            _globaldocid = {{ doc2 }};
+            currentDoc = 2;
+            begin_reading();
+        }
+        function clickdoc3() {
+            document.getElementById("article").style.display = "block";
+            $.get("/docservice/{{ taskid }}/{{ doc3 }}", 0, function (data) {
+                        document.getElementById("articlecontent").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+
+            document.getElementById("doc3").disabled = true;
+            document.getElementById("doc3").style.background = "#A9C7A7";
+            document.getElementById("timeestimation").style.display = "none";
+            document.getElementById("finishdoc").style.background = "#C71C60";
+            document.getElementById("submitestimation").style.background = "#C71C60";
+            document.getElementById("finishdoc").disabled = false;
+            reloadtimeestimation();
+            _globaldocid = {{ doc3 }};
+            currentDoc = 3;
+            begin_reading();
+        }
+        function clickdoc4() {
+            document.getElementById("article").style.display = "block";
+            $.get("/docservice/{{ taskid }}/{{ doc4 }}", 0, function (data) {
+                        document.getElementById("articlecontent").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+
+            document.getElementById("doc4").disabled = true;
+            document.getElementById("doc4").style.background = "#A9C7A7";
+            document.getElementById("timeestimation").style.display = "none";
+            document.getElementById("finishdoc").style.background = "#C71C60";
+            document.getElementById("submitestimation").style.background = "#C71C60";
+            document.getElementById("finishdoc").disabled = false;
+            reloadtimeestimation();
+            _globaldocid = {{ doc4 }};
+            currentDoc = 4;
+            begin_reading();
+        }
+
+        function clickfinish() {
+            window.close();
+
+        }
+
+
+        function estimatetime() {
+
+            document.getElementById("article").style.display = "none";
+
+            $.get("/docquestionservice/{{ taskid }}/" + _globaldocid, 0, function (data) {
+                        document.getElementById("docquestion").innerHTML = data;
+                    }//返回的data是字符串类型
+            );
+
+            $.get("/docoptionservice/{{ taskid }}/" + _globaldocid, 0, function (data) {
+                        var options = data.split("\\t");
+                        document.getElementById("opt1").innerHTML = options[0];
+                        document.getElementById("opt2").innerHTML = options[1];
+                        document.getElementById("opt3").innerHTML = options[2];
+                        document.getElementById("opt4").innerHTML = options[3];
+                    }//返回的data是字符串类型
+            );
+            document.getElementById("timeestimation").style.display = "block";
+            document.getElementById("finishdoc").style.background = "#A9C7A7";
+            document.getElementById("finishdoc").disabled = true;
+
+            end_reading();
+
+
+        }
+
+        function submitestimation() {
+
+            time_estimate();
+            document.getElementById("submitestimation").style.background = "#A9C7A7";
+
+            document.getElementById("rel4").checked=false;
+            document.getElementById("rel3").checked=false;
+            document.getElementById("rel2").checked=false;
+            document.getElementById("rel1").checked=false;
+
+            document.getElementById("outopt4").checked=false;
+            document.getElementById("outopt3").checked=false;
+            document.getElementById("outopt2").checked=false;
+            document.getElementById("outopt1").checked=false;
+
+
+
+            {#            TODO send log#}
+
+
+        }
+        /*
+         $(function(){
+         timer(intDiff);
+         });
+         */
+    </script>
+
+    <script>
+        var etime = 0;
+        function init_slider() {
+
+            $('#seekbar').slider({
+                min: 0,
+                max: 300,
+                step: 1,
+                change: showValue
+            });
+            function showValue(event, ui) {
+                etime = ui.value;
+                var time = ui.value;
+                var second = time % 60;
+                var minute = (time - second) / 60;
+                $('#time').html(minute + '分' + second + '秒');
+            }
+
+            var items = ['1', '2', '3', '4', '5'];
+
+
+            var oneBig = 100 / (items.length );
+
+            $.each(items, function (key, value) {
+                var w = oneBig;
+                $("#legend").append("<label style='width: " + w + "%'>" + value + "</label>");
+            });
+
+
+        }
+        $(document).ready(init_slider());
+        function reloadtimeestimation() {
+            $("#seekbar").slider("value", 0);
+        }
+    </script>
+
+</head>
+<body>
+<div align="center" style="width:416px; margin:0 auto">
+    <span> <input id="doc1" type=button
+                  style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+                  value='1' onclick="clickdoc1()"/>
+        <input id="doc2" type=button
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+               value='2' onclick="clickdoc2()"/>
+        <input id="doc3" type=button
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+               value='3' onclick="clickdoc3()"/>
+        <input id="doc4" type=button
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+               value='4' onclick="clickdoc4()"/>
+        <input id="finish" type=button
+               style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+               value='结束' onclick="clickfinish()"/>
+    </span>
+
+</div>
+<div id="article" style="margin:0 auto;width: 600px; font:normal 18px/28px 'MicroSoft YaHei'">
+
+    <h1></h1>
+
+    <div style="text-align:left" id="articlecontent">
+
+    </div>
+</div>
+
+
+<div align="center" style="width:416px; margin:0 auto">
+    <input id="finishdoc" type=button
+           style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+           value='结束阅读' onclick="estimatetime()"/>
+</div>
+<div id="timeestimation" align="center" style="width:600px; margin:0 auto; padding-top:40px; display:none">
+
+
+    <div>
+
+        <h2 style="text-align:left">请评价这篇文章与阅读任务的相关性:</h2>
+
+        <div>
+            <form id="relevanceanno" action="" method="get" style="font-size: 20px; text-align: left">这篇文章是否与阅读任务相关？<br/>
+                <label><input id="rel4" name="rel" type="radio" value="3"/>非常相关</label>
+                <label><input id="rel3" name="rel" type="radio" value="2"/>相关</label>
+                <label><input id="rel2" name="rel" type="radio" value="1"/>有点相关</label>
+                <label><input id="rel1" name="rel" type="radio" value="0"/>不相关</label>
+            </form>
+
+        </div>
+
+
+    </div>
+
+    <div>
+
+        <h2 id="docquestion" style="text-align:left"></h2>
+
+        <div>
+            <form action="" method="get" style="font-size: 20px; text-align: left">请选择正确选项<br/>
+                <label><input id = "outopt1" name="qus" type="radio" value="3"/><a id="opt1"></a></label>
+                <label><input id = "outopt2"  name="qus" type="radio" value="2"/><a id="opt2"></a></label>
+                <label><input id = "outopt3"  name="qus" type="radio" value="1"/><a id="opt3"></a></label>
+                <label><input id = "outopt4"  name="qus" type="radio" value="0"/><a id="opt4"></a></label>
+            </form>
+
+        </div>
+
+
+    </div>
+
+    <div>
+        <hr>
+        <h2 style="text-align:left">估计在任务中花费的时间(以下为长度为5分钟的时间轴):</h2>
+
+        <div id="seekbar"></div>
+        <div id="legend"></div>
+
+        <div style="font-size: 24px; display: none"><span>花费时间</span>
+            <span id="time" name="time">0分0秒</span>
+        </div>
+    </div>
+
+    <div><input id="submitestimation" type=button
+                style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
+                value='提交' onclick="submitestimation()"/></div>
+</div>
+
+<div id="souhu" style="width:120px; font-size:14px;position:fixed;bottom: 0px;;left: 2%;">
+    阅读任务提示：{{ descp }}
+</div>
+</body>
+</html>

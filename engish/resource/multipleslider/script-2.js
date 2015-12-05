@@ -10,7 +10,7 @@ $(function() {
     // set min and maximum values
     // day hours in this example
     min: 0,
-    max: 100,
+    max: 1000,
     // step
     // quarter of an hour in this example
     step: 1,
@@ -19,13 +19,13 @@ $(function() {
     tooltips: false,
     // current data
     handles: [{
-      value: 25,
+      value: 250,
       type: "wake"
     }, {
-      value: 50,
+      value: 500,
       type: "leave"
     }, {
-      value: 75,
+      value: 750,
       type: "return"
     }],
     // display type names

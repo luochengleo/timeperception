@@ -26,6 +26,7 @@ urlpatterns = patterns('',
                        url(r'^docservice/(\d{1,2})/(\d{1,2})/$',docservice),
                        url(r'^docquestionservice/(\d{1,2})/(\d{1,2})/$',docquestionservice),
                        url(r'^docoptionservice/(\d{1,2})/(\d{1,2})/$',docoptionservice),
+
                        url(r'^LogService/$', log)
                        )
 

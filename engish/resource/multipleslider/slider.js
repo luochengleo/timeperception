@@ -18,7 +18,7 @@
             distance: 0,
             handles: null,
             activeHandle: 0,
-            max: 100,
+            max: 1000,
             min: 0,
             orientation: 'horizontal',
             mainClass: 'mainClass',

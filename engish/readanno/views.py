@@ -85,8 +85,12 @@ def read(request, settingid, jobid):
     return HttpResponse(respon)
 
 
-def feedback(request, settingid, jobid):
-    return HttpResponse(open('templates/feedback.html').read())
+def feedback(request, taskid):
+
+    c = template.Context({'taskid':taskid})
+    html = template.Template(open('templates/feedback.html').read())
+    respon = HttpResponse(html.render(c))
+    return respon
 
 def docservice(request,taskid,docid):
     _d = Document.objects.get(taskid=taskid,docid = docid);

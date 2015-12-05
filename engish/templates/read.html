@@ -159,7 +159,8 @@
         }
 
         function clickfinish() {
-            window.close();
+
+            window.href.location = 'feedback/{{ taskid }}';
 
         }
 
@@ -220,38 +221,8 @@
 
     <script>
         var etime = 0;
-        function init_slider() {
-
-            $('#seekbar').slider({
-                min: 0,
-                max: 300,
-                step: 1,
-                change: showValue
-            });
-            function showValue(event, ui) {
-                etime = ui.value;
-                var time = ui.value;
-                var second = time % 60;
-                var minute = (time - second) / 60;
-                $('#time').html(minute + '分' + second + '秒');
-            }
-
-            var items = ['1', '2', '3', '4', '5'];
 
 
-            var oneBig = 100 / (items.length );
-
-            $.each(items, function (key, value) {
-                var w = oneBig;
-                $("#legend").append("<label style='width: " + w + "%'>" + value + "</label>");
-            });
-
-
-        }
-        $(document).ready(init_slider());
-        function reloadtimeestimation() {
-            $("#seekbar").slider("value", 0);
-        }
     </script>
 
 </head>

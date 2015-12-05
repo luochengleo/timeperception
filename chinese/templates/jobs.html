@@ -11,15 +11,14 @@
     <script type="text/javascript" src="/static/conf/jquery.raty.js"></script>
     <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
     <script type="text/javascript" src="/static/conf/anno_log.js"></script>
-    <script type="text/javascript" src="http://mediaplayer.yahoo.com/js"></script>
-    <title>Tasks</title>
+    <title>所有阅读任务</title>
 </head>
 <body>
 
 <div class="annotation_header">
-    <h1 align="center">THUIR Group</h1>
+    <h1 align="center">清华大学计算机系信息检索组</h1>
 
-    <h1 align="center">Welcome to our experiments!</h1>
+    <h1 align="center"> 欢迎您！</h1>
     <script>
         function getCookieVal(offset) {
             var endstr = document.cookie.indexOf(";", offset);
@@ -73,55 +72,29 @@
         var arrcookie = strcookie.split("; ");
         var sid = arrcookie[1].split('=')[1]
 
+        document.write('<p align="center"><font style="font-size:16px" color="red">当前实验人员账号为' + sid + '</font></p>')
     </script>
 
-    <p align="center" style="text-align:left;font-size:20px; color:red">
-        We have 5 survey tasks. The first one is a training
-        task and the remaining ones are formal ones.</p>
+    <p align="center" style="font-size:16px" color="red">当前共有{{ tasknum }}个阅读任务</p>
 
-    <p align="center" style="text-align:left;font-size:20px; color:red">
-        In the coming experiment, you are hired to perform a journalist survey about several topics.
-    </p>
-
-    <p align="center" style="text-align:left;font-size:20px; color:red">
-        For each tasks, we have prepared some documents for you. Please read the documents carefully and we will check
-        your outcomes from the documents. After each document, please estimate how much time you have spent on the
-        document.
-    </p>
-
-    <p align="center" style="text-align:left;font-size:20px; color:red">
-        Note that your outcomes are the principle standard to judge that if you have participated in this experiment
-        seriously.
-
-    </p>
+    <p align="center" style="font-size:16px" color="red">
+        在接下来的实验中，你将针对一些问题进行文献调研。
+        对于每一个问题，我们为你找到了几篇相关或者比较相关的文档，你需要阅读这些文档，找到有用的信息，并估计你在阅读过程中花费的时间。</p>
 </div>
 <div class="annotation_list">
 
-    <div class="annotation_cell">
-        <img class="check" src="/static/conf/img/check.jpg">
-
-        <div>
-            <h2> Time Trail </h2>
-            <span></span>
-
-            <div><a class="annotation_link"
-                    href='/calibrate/1/1'
-                    target="_blank" onclick="resetTime();">Click here to start</a></div>
-        </div>
-
-    </div>
     {% for item in jobs %}
 
         <div class="annotation_cell">
             <img class="check" src="/static/conf/img/check.jpg">
 
             <div>
-                <h2> Task: {{ forloop.counter }} </h2>
-                <span>Topic Description: {{ item.2 }}</span>
+                <h2> 第 {{ forloop.counter }} 个阅读任务</h2>
+                <span>任务描述：{{ item.2 }}</span>
 
                 <div><a class="annotation_link"
-                        href='/read/{{ item.0 }}/{{ item.1 }}'
-                        target="_blank" onclick="resetTime();">Click here to start</a></div>
+                        href='/calibrate/{{ item.0 }}/{{ item.1 }}'
+                        target="_blank" onclick="resetTime();">点击这里开始</a></div>
             </div>
 
         </div>
