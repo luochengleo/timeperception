@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>jQuery UI Slider - Multiple sliders</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <style>
+        #eq > span {
+            height: 320px;
+            float: left;
+            margin: 15px
+        }
+    </style>
+    <script>
+        $(function () {
+
+            // setup graphic EQ
+            $("#eq > span").each(function () {
+                // read initial values from markup and remove that
+                var value = parseInt($(this).text(), 10);
+                $(this).empty().slider({
+                    value: value,
+                    range: "min",
+                    animate: true,
+                    orientation: "vertical"
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+
+<div id="eq">
+    <span>88</span>
+    <span>77</span>
+    <span>55</span>
+    <span>33</span>
+</div>
+
+<button onclick="report()">click</button>
+
+<script>
+    function report() {
+        value = "";
+        $("#eq > span").each(function () {
+            // read initial values from markup and remove that
+            value += "_"+ $(this).slider("value");
+        });
+        alert(value);
+
+    }
+    ;
+
+</script>
+
+
+</body>
+</html>

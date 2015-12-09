@@ -96,7 +96,6 @@
             document.getElementById("submitestimation").style.background = "#C71C60";
 
             document.getElementById("finishdoc").disabled = false;
-            init_slider();
             currentDoc = 1;
             begin_reading();
             _globaldocid = {{ doc1 }};
@@ -104,6 +103,12 @@
 
         }
 
+        function reloadtimeestimation(){
+            document.getElementById("rel1").checked =false;
+            document.getElementById("rel2").checked =false;
+            document.getElementById("rel3").checked =false;
+            document.getElementById("rel4").checked =false;
+        }
         function clickdoc2() {
             document.getElementById("article").style.display = "block";
             $.get("/docservice/{{ taskid }}/{{ doc2 }}", 0, function (data) {
@@ -116,7 +121,7 @@
             document.getElementById("finishdoc").style.background = "#C71C60";
             document.getElementById("submitestimation").style.background = "#C71C60";
             document.getElementById("finishdoc").disabled = false;
-            reloadtimeestimation();
+
             _globaldocid = {{ doc2 }};
             currentDoc = 2;
             begin_reading();
@@ -160,7 +165,7 @@
 
         function clickfinish() {
 
-            window.href.location = 'feedback/{{ taskid }}';
+            window.location.href = '/feedback/{{ taskid }}';
 
         }
 
@@ -169,19 +174,6 @@
 
             document.getElementById("article").style.display = "none";
 
-            $.get("/docquestionservice/{{ taskid }}/" + _globaldocid, 0, function (data) {
-                        document.getElementById("docquestion").innerHTML = data;
-                    }//返回的data是字符串类型
-            );
-
-            $.get("/docoptionservice/{{ taskid }}/" + _globaldocid, 0, function (data) {
-                        var options = data.split("\\t");
-                        document.getElementById("opt1").innerHTML = options[0];
-                        document.getElementById("opt2").innerHTML = options[1];
-                        document.getElementById("opt3").innerHTML = options[2];
-                        document.getElementById("opt4").innerHTML = options[3];
-                    }//返回的data是字符串类型
-            );
             document.getElementById("timeestimation").style.display = "block";
             document.getElementById("finishdoc").style.background = "#A9C7A7";
             document.getElementById("finishdoc").disabled = true;
@@ -200,17 +192,7 @@
             document.getElementById("rel3").checked=false;
             document.getElementById("rel2").checked=false;
             document.getElementById("rel1").checked=false;
-
-            document.getElementById("outopt4").checked=false;
-            document.getElementById("outopt3").checked=false;
-            document.getElementById("outopt2").checked=false;
-            document.getElementById("outopt1").checked=false;
-
-
-
             {#            TODO send log#}
-
-
         }
         /*
          $(function(){
@@ -281,34 +263,9 @@
 
     </div>
 
-    <div>
-
-        <h2 id="docquestion" style="text-align:left"></h2>
-
-        <div>
-            <form action="" method="get" style="font-size: 20px; text-align: left">Find the right answer<br/>
-                <label><input id = "outopt1" name="qus" type="radio" value="3"/><a id="opt1"></a></label>
-                <label><input id = "outopt2"  name="qus" type="radio" value="2"/><a id="opt2"></a></label>
-                <label><input id = "outopt3"  name="qus" type="radio" value="1"/><a id="opt3"></a></label>
-                <label><input id = "outopt4"  name="qus" type="radio" value="0"/><a id="opt4"></a></label>
-            </form>
-
-        </div>
 
 
-    </div>
 
-    <div>
-        <hr>
-        <h2 style="text-align:left">Please estimate how long you have spent in reading this document. We have a scale of 5 minutes for you:</h2>
-
-        <div id="seekbar"></div>
-        <div id="legend"></div>
-
-        <div style="font-size: 24px; display: none"><span>花费时间</span>
-            <span id="time" name="time">0分0秒</span>
-        </div>
-    </div>
 
     <div><input id="submitestimation" type=button
                 style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"

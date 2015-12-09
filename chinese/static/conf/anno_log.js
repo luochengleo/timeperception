@@ -344,7 +344,7 @@ function time_estimate(){
     message += "TIMESTAMP=" + client_time;
     message += "\tUSER=" + studentID;
     message += "\tJOBID="+jobid;
-    message += "\tACTION=TIME_ESTIMATION";
+    message += "\tACTION=REL_ANNOTATION";
     message += "\tINFO: CURRENT_DOC="+currentDoc+' ET='+etime+' REL='+rel+' ANS='+answer ;
 
     var log_url = "http://" + server_site + ":8000/LogService/"

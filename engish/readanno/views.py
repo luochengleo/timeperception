@@ -86,9 +86,10 @@ def read(request, settingid, jobid):
 
 
 def feedback(request, taskid):
-
-    c = template.Context({'taskid':taskid})
+    question = Task.objects.get(taskid = taskid).question
+    c = template.Context({'taskid':taskid,'question':question})
     html = template.Template(open('templates/feedback.html').read())
+
     respon = HttpResponse(html.render(c))
     return respon
 

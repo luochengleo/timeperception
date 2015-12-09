@@ -6,6 +6,7 @@ from django.db import models
 class Task(models.Model):
     taskid = models.IntegerField()
     descp = models.CharField(max_length=10000)
+    question = models.CharField(max_length = 1000)
 
 class Document(models.Model):
     taskid = models.IntegerField()

@@ -5,6 +5,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta charset="utf-8">
+
+    <script data-require="jquery@*" data-semver="2.1.1"
+            src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link data-require="jqueryui@*" data-semver="1.10.0" rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css"/>
+    <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css"/>
+    <script data-require="bootstrap@*" data-semver="3.2.0"
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
+    <script data-require="jqueryui@*" data-semver="1.10.0"
+            src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/static/conf/sliderstyle.css"/>
+    <script src="/static/conf/slider.js"></script>
+    <script src="/static/conf/slider_script.js"></script>
+
+
     <link rel="dns-prefetch" href="http://img01.store.sogou.com/">
     <link rel="dns-prefetch" href="http://img02.store.sogou.com/">
     <link rel="dns-prefetch" href="http://img03.store.sogou.com/">
@@ -32,7 +48,7 @@
     <script type="text/javascript" src="/static/conf/jquery.raty.js"></script>
     <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
     <script type="text/javascript" src="/static/conf/anno_log.js"></script>
-    <title>搜狗搜索</title>
+    <title>Feedback</title>
 
 
     <style>
@@ -45,82 +61,82 @@
             margin: 20px;
             width: 400px;
         }
+
+        #eq > span {
+            height: 320px;
+            float: left;
+            margin: 15px
+        }
+
     </style>
 
 
     <link rel="stylesheet" type="text/css" href="/static/m3.v.20.css">
 </head>
 <body class=" vr1024">
+<div class="annotation_header">
+    <div style="width: 1000px;">
+        <div class="col-xs-12">
+            <div class="col-xs-12">
+                <div class="slider sleep" id="slider"></div>
+            </div>
+            <div class="col-xs-12">
+                <div class="slider-controller">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="annotation_header">
-    <h1>Feedback</h1>
+    <h2>Please estimatate how long you have spent in reading the 4 articles?</h2>
+    <tr>
 
-
-    <p style="font-size:14pt"><span>花费时间： </span><span
-            style="color:red"> 开始阅读 <----------doc 1,2,3,4 ----------> 结束浏览</span></p>
-
-    <div id="seekbar"></div>
-    <span>花费时间</span>
-    <span id="time" name="time">0分0秒</span>
-    <button class="WCOverButton button blue close-reveal-modal" type="Button"
-            onclick="click_on_submittimeestimation();">提交时间估计
-    </button>
-
-
-    <p style="font-size:14pt"><span>花费时间： 开始阅读 <------ doc 1,2,3 -----></span><span style="color:red"> 阅读最后一篇文章 <--- doc 4 -----> 结束浏览</span>
-    </p>
-
-    <div id="seekbar2"></div>
-    <span>花费时间</span>
-    <span id="time2" name="time2">0分0秒</span>
-    <button class="WCOverButton button blue close-reveal-modal" type="Button"
-            onclick="click_on_submittimeestimation();">提交时间估计
-    </button>
-
-
-    <script>
-        $(document).ready(function () {
-            $('#seekbar').slider({
-                min: 0,
-                max: 600,
-                step: 1,
-                change: showValue
-            });
-
-            $('#seekbar2').slider({
-                min: 0,
-                max: 600,
-                step: 1,
-                change: showValue2
-            });
-
-            function showValue(event, ui) {
-                var time = ui.value;
-                var second = time % 60;
-                var minute = (time - second) / 60;
-                $('#time').html(minute + '分' + second + '秒');
-            }
-
-            function showValue2(event, ui) {
-                var time = ui.value;
-                var second = time % 60;
-                var minute = (time - second) / 60;
-                $('#time2').html(minute + '分' + second + '秒');
-            }
-        });
-    </script>
+        <td>
+            <select align="center" style="width:60px" id="overall_minutes">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+            </select>
+        </td>
+        <td>Minutes</td>
+        <td>
+            <select align="center" style="width:60px" id="overall_seconds">
+                <option value="0">0</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </td>
+        <td>Seconds</td>
+    </tr>
 
 </div>
 <div class="annotation_header">
     <div>
-        <h2>请针对以下问题，简单回顾一下搜索过程中的收获:</h2>
+        <h2>Please answer the the question below with at least 50 words.</h2>
 
-        <h3 style="color:red">问题：{{ question }}</h3>
-
-        <h3>完成之后请点击<span style="color:red">“提交收获”</span></h3>
+        <h3 style="color:red">Question: {{ question }}</h3>
 
     </div>
 </div>
+
 <div class="annotation_list">
     <div class="annotation_cell">
         <textarea name="answer" id="answer"></textarea>
