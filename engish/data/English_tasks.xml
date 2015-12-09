@@ -4,6 +4,7 @@
 	<task>
 		<task_id>1</task_id>
 		<descp>Have you ever experienced one person’s yawning triggered almost all people around begin to yawn? Scientists in different fields have tried to explain this phenomenon. Please learn about the possible causes of the spread of yawning.</descp>
+		<question>Please try to explain why yawning is contagious?</question>
 		<Document>
 			<doc_id>0</doc_id>
 			<relevance>0</relevance>
@@ -83,7 +84,8 @@ There are no medicines that can effectively control the spasm. Several classes o
 	<task>
 		<task_id>2</task_id>
 		<descp>Recently the Chinese film box office record is constantly being refreshed, indicating the continuing rapid development of Chinese film market. But how much do you know about the early films? Please search for the history of film.</descp>
-        <Document>
+        <question>Please briefly review the history of film.</question>
+		<Document>
 			<doc_id>1</doc_id>
 			<relevance>1</relevance>
 			<title>History of film</title>
@@ -130,7 +132,8 @@ Kapadia, the film's director, told Indiewire in an interview that he hopes "Amy"
 	<task>
 		<task_id>3</task_id>
 		<descp>One of your friend is going to study abroad and you want to help her investigating the famous Ivy League in America. What’s its constitution, its origin and its development?</descp>
-        <Document>
+        <question>Please describe the origin and development of the Ivy League.</question>
+		<Document>
 			<doc_id>1</doc_id>
 			<relevance>1</relevance>
 			<title>Ivy League</title>
@@ -178,7 +181,8 @@ It’s not surprising that it took me so long to discover the extent of my mised
 	<task>
 		<task_id>4</task_id>
 		<descp>Dinosaurs roamed the Earth for 160 million years until their sudden die-off about 65.5 million years ago. There are many hypotheses about dinosaur extinction and please learn several of them in the following passages.</descp>
-        <Document>
+        <question>Please summarize hypotheses you learned about extinction of dinosaurs</question>
+		<Document>
 			<doc_id>1</doc_id>
 			<relevance>1</relevance>
 			<title>Asteroid Impact Hypothesis</title>
@@ -237,7 +241,8 @@ Of course there is a danger that play may potentially lead to aggression. Thus, 
 	<task>
 		<task_id>5</task_id>
 		<descp>For the first time in three years, leaders from China, Japan and South Korea met in Seoul in Nov 2015. What did they concern during their meeting and what did they reach as agreements?</descp>
-        <Document>
+        <question>Please summarize what issues were discussed at sixth trilateral summit.</question>
+		<Document>
 			<doc_id>1</doc_id>
 			<relevance>1</relevance>
 			<title>South Korea, China, Japan vow to strengthen ties at sixth trilateral summit in Seoul</title>

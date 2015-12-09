@@ -15,7 +15,8 @@ def import_tasks(filename):
         task_id = task.getElementsByTagName('task_id')[0].childNodes[0].data
         task_id = int(task_id)
         descp = task.getElementsByTagName('descp')[0].childNodes[0].data
-        t = Task(taskid=task_id, descp=descp)
+        question = task.getElementsByTagName('question')[0].childNodes[0].data
+        t = Task(taskid=task_id, descp=descp, question=question)
         t.save()
         documents = task.getElementsByTagName('Document')
         for document in documents:
