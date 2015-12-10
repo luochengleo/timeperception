@@ -296,7 +296,7 @@ function time_estimate() {
     message += "TIMESTAMP=" + client_time;
     message += "\tUSER=" + studentID;
     message += "\tJOBID=" + jobid;
-    message += "\tACTION=TIME_ESTIMATION";
+    message += "\tACTION=RELEVANCE_ANNOTATION";
     message += "\tINFO: CURRENT_DOC=" + currentDoc + ' REL=' + rel;
 
     var log_url = "http://" + server_site + ":8000/LogService/"
@@ -390,7 +390,7 @@ function click_on_submitrelative() {
     message += "\tJOBID=" + jobid;
     message += "\tDOCID=" + docid;
     message += "\tACTION=RELATIVE_ESTIMATION";
-    message += "\tINFO:" + "Overall=" + getOverall() + " Longest=" + getLongest() + " Shortest=" + getShortest() + " Relative=" + getRelative();
+    message += "\tINFO:" + "Range="+getRange()  + " Relative=" + getRelative();
     var log_url = "http://" + server_site + ":8000/LogService/"
 
     $.ajax({

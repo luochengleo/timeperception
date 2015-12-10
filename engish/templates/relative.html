@@ -34,131 +34,119 @@
                     orientation: "vertical"
                 });
             });
+
+            $("#slider-range1").slider({
+                range: true,
+                min: 0,
+                max: 30,
+                values: [0, 30],
+                slide: function (event, ui) {
+                    $("#amount1").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                }
+            });
+            $("#amount1").val($("#slider-range1").slider("values", 0) * 10 + "秒" +
+                    " - " + $("#slider-range1").slider("values", 1) * 10 + "秒");
+
+             $("#slider-range2").slider({
+                range: true,
+                min: 0,
+                max: 30,
+                values: [0, 30],
+                slide: function (event, ui) {
+                    $("#amount2").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                }
+            });
+            $("#amount2").val($("#slider-range2").slider("values", 0) * 10 + "秒" +
+                    " - " + $("#slider-range2").slider("values", 1) * 10 + "秒");
+
+             $("#slider-range3").slider({
+                range: true,
+                min: 0,
+                max: 30,
+                values: [0, 30],
+                slide: function (event, ui) {
+                    $("#amount3").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                }
+            });
+            $("#amount3").val($("#slider-range3").slider("values", 0) * 10 + "秒" +
+                    " - " + $("#slider-range3").slider("values", 1) * 10 + "秒");
+
+             $("#slider-range4").slider({
+                range: true,
+                min: 0,
+                max: 30,
+                values: [0, 30],
+                slide: function (event, ui) {
+                    $("#amount4").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                }
+            });
+            $("#amount4").val($("#slider-range4").slider("values", 0) * 10 + "秒" +
+                    " - " + $("#slider-range4").slider("values", 1) * 10 + "秒");
+
+             $("#slider-rangeall").slider({
+                range: true,
+                min: 0,
+                max: 90,
+                values: [0, 90],
+                slide: function (event, ui) {
+                    $("#amountall").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                }
+            });
+            $("#amountall").val($("#slider-rangeall").slider("values", 0) * 10 + "秒" +
+                    " - " + $("#slider-rangeall").slider("values", 1) * 10 + "秒");
         });
     </script>
 </head>
 <body>
-
 <div class="annotation_header">
-    <h2>请估计一下，阅读以上四篇文章，你总共花费了多长时间？</h2>
-    <tr>
+    <h2>请分别估计在每篇文档中花费时间的范围，以及阅读4篇文档总共花费时间的范围</h2>
 
-        <td>
-            <select align="center" style="width:60px" id="overall_minutes">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-            </select>
-        </td>
-        <td>Minutes</td>
-        <td>
-            <select align="center" style="width:60px" id="overall_seconds">
-                <option value="0">0</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-                <option value="50">50</option>
-            </select>
-        </td>
-        <td>Seconds</td>
-    </tr>
+    <div style="width:300px">
+        <h3>第1篇文档：</h3>
+        <p>
+            <label for="amount1">时间区间</label>
+            <input type="text" id="amount1" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+        <div id="slider-range1"></div>
+    </div>
 
+    <div style="width:300px">
+        <h3>第2篇文档：</h3>
+        <p>
+            <label for="amount2">时间区间</label>
+            <input type="text" id="amount2" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+        <div id="slider-range2"></div>
+    </div>
+
+    <div style="width:300px">
+        <h3>第3篇文档：</h3>
+        <p>
+            <label for="amount3">时间区间</label>
+            <input type="text" id="amount3" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+        <div id="slider-range3"></div>
+    </div>
+
+    <div style="width:300px">
+        <h3>第4篇文档：</h3>
+        <p>
+            <label for="amount4">时间区间</label>
+            <input type="text" id="amount4" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+        <div id="slider-range4"></div>
+    </div>
+
+    <div style="width:900px">
+        <h3 style="color:red">四篇文档合计花费时间</h3>
+        <p>
+            <label for="amountall">时间区间</label>
+            <input type="text" id="amountall" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+        <div id="slider-rangeall"></div>
+    </div>
 </div>
 
-<div class="annotation_header">
-    <h2>四篇文章中，用时最<span style="color:red ;">长</span>的那篇文章，你大概用了多久?</h2>
-    <tr>
-
-        <td>
-            <select align="center" style="width:60px" id="long_minutes">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-            </select>
-        </td>
-        <td>Minutes</td>
-        <td>
-            <select align="center" style="width:60px" id="long_seconds">
-                <option value="0">0</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-                <option value="50">50</option>
-            </select>
-        </td>
-        <td>Seconds</td>
-    </tr>
-
-</div>
-
-
-<div class="annotation_header">
-    <h2>四篇文章中，用时最<span style="color:red ;">短</span>的那篇文章，你大概用了多久?</h2>
-    <tr>
-
-        <td>
-            <select align="center" style="width:60px" id="short_minutes">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-            </select>
-        </td>
-        <td>Minutes</td>
-        <td>
-            <select align="center" style="width:60px" id="short_seconds">
-                <option value="0">0</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-                <option value="50">50</option>
-            </select>
-        </td>
-        <td>Seconds</td>
-    </tr>
-
-</div>
 
 
 <div class="annotation_header">
@@ -184,47 +172,22 @@
         value = "";
         $("#eq > span").each(function () {
             // read initial values from markup and remove that
-            value +=  $(this).slider("value")+"_";
+            value += $(this).slider("value") + "_";
         });
         return value;
-    };
+    }
+    ;
 
-    function getOverall(){
-        minObj = document.getElementById("overall_minutes")
-        var index = minObj.selectedIndex;
-        var m = minObj.options[index].value;
+    function getRange(){
+        var rtr = "";
+        var i = 1;
+        for(i = 1;i<5;i++){
+            rtr += '_' + $("#slider-range"+i).slider("values", 0)+'_' + $("#slider-range"+i).slider("values", 1);
+        }
+        rtr += '_' + $("#slider-rangeall").slider("values", 0)+'_' + $("#slider-rangeall").slider("values", 1)
+        return rtr;
 
-        secObj = document.getElementById("overall_seconds")
-        index = secObj.selectedIndex;
-        var s = secObj.options[index].value;
-
-        return m+"_"+s;
-    };
-
-    function getLongest(){
-        minObj = document.getElementById("long_minutes")
-        var index = minObj.selectedIndex;
-        var m = minObj.options[index].value;
-
-        secObj = document.getElementById("long_seconds")
-        index = secObj.selectedIndex;
-        var s = secObj.options[index].value;
-
-        return m+"_"+s;
-    };
-
-    function getShortest(){
-        minObj = document.getElementById("short_minutes")
-        var index = minObj.selectedIndex;
-        var m = minObj.options[index].value;
-
-        secObj = document.getElementById("short_seconds")
-        index = secObj.selectedIndex;
-        var s = secObj.options[index].value;
-
-        return m+"_"+s;
-
-    };
+    }
 
 </script>
 

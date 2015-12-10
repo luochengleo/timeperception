@@ -197,22 +197,28 @@
             </div>
         </div>
     </div>
-    <button class="WCOverButton button blue close-reveal-modal align" type="Button" onclick="click_on_timeestimation();">
+    <button class="WCOverButton button blue close-reveal-modal align" type="Button"
+            onclick="click_on_timeestimation();">
         Submit Estimation
     </button>
-
 </div>
+
+
+
+
 <script>
-function getSegs(){
-    var rtr = ""
-    objs = document.getElementsByTagName("a")
-    for(i= 0;i<objs.length;i++){
-        rtr+= objs[i].getAttribute("data-value")+"_";
+
+
+    function getSegs() {
+        var rtr = ""
+        objs = document.getElementsByTagName("a")
+        for (i = 0; i < objs.length; i++) {
+            rtr += objs[i].getAttribute("data-value") + "_";
+        }
+
+        return rtr;
+
     }
-
-    return rtr;
-
-}
 </script>
 
 
