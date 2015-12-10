@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!-- saved from url=(0218)http://www.sogou.com/web?query=%E5%BC%80%E5%BF%83%E4%B9%90%E5%9B%AD+%E7%BE%8A%E9%A9%BC&ie=utf8&_ast=1415606656&_asf=null&w=01029901&p=40040100&dp=1&cid=&sut=7854&sst0=1415606634628&lkt=1%2C1415606631196%2C1415606631196 -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="utf-8">
+
+    <script data-require="jquery@*" data-semver="2.1.1"
+            src="/static/conf/time/jquery.min.js"></script>
+    <link data-require="jqueryui@*" data-semver="1.10.0" rel="stylesheet"
+          href="/static/conf/time/jquery-ui-1.10.0.custom.min.css"/>
+    <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css"/>
+    <script data-require="bootstrap@*" data-semver="3.2.0"
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
+    <script data-require="jqueryui@*" data-semver="1.10.0"
+            src="/static/conf/time/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/static/conf/sliderstyle.css"/>
+    <script src="/static/conf/slider.js"></script>
+    <script src="/static/conf/slider_script.js"></script>
+
+
+    <link rel="dns-prefetch" href="http://img01.store.sogou.com/">
+    <link rel="dns-prefetch" href="http://img02.store.sogou.com/">
+    <link rel="dns-prefetch" href="http://img03.store.sogou.com/">
+    <link rel="dns-prefetch" href="http://img04.store.sogou.com/">
+    <link rel="dns-prefetch" href="http://img01.sogoucdn.com/">
+    <link rel="dns-prefetch" href="http://img02.sogoucdn.com/">
+    <link rel="stylesheet" href="/static/css/jquery-ui.css"/>
+    <link rel="dns-prefetch" href="http://img03.sogoucdn.com/">
+    <link rel="dns-prefetch" href="http://img04.sogoucdn.com/">
+    <link rel="shortcut icon" href="http://www.sogou.c../../../../static/images/logo/new/favicon.ico?nv=1&v=2"
+          type="image/x-icon">
+    <link href="/static/conf/button.css" type="text/css" rel="stylesheet">
+    <link href="/static/conf/annotation.css" type="text/css" rel="stylesheet">
+    <!-- global variables: current task id, current query -->
+    <script type="text/javascript" src="/static/conf/wc_preprocess.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.bgpos.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.reveal.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="/static/conf/anno_log.js"></script>
+    <title>Feedback</title>
+
+    <style>
+        #seekbar {
+            margin: 20px;
+            width: 400px;
+        }
+
+        #seekbar2 {
+            margin: 20px;
+            width: 400px;
+        }
+
+        #eq > span {
+            height: 320px;
+            float: left;
+            margin: 15px
+        }
+
+    </style>
+    <link rel="stylesheet" type="text/css" href="/static/m3.v.20.css">
+</head>
+<body class=" vr1024">
+<script>
+
+    var jobid = {{ taskid }};
+    var currentTaskID = {{ taskid }};
+    $(function () {
+
+        // function to create slider ticks
+        var setSliderTicks = function () {
+
+        };
+
+        // create slider
+        $('#slider').slider({
+            // set min and maximum values
+            // day hours in this example
+            min: 0,
+            max: 1000,
+            // step
+            // quarter of an hour in this example
+            step: 1,
+            // range
+            // show tooltips
+            tooltips: false,
+            // current data
+            handles: [{
+                value: 250,
+                type: "wake"
+            }, {
+                value: 500,
+                type: "leave"
+            }, {
+                value: 750,
+                type: "return"
+            }],
+            // display type names
+            showTypeNames: true,
+            typeNames: {
+                'wake': 'Wake Up',
+                'leave': 'Leave',
+                'return': 'Return',
+            },
+            ticks: {
+                // use default values
+                // main tick is 1
+                tickMain: 1,
+                // side tick is 0.5
+                tickSide: 0.5,
+                // show main label
+                tickShowLabelMain: false,
+                // don't show side label
+                tickShowLabelSide: false,
+            },
+            // main css class (of unset data)
+            mainClass: 'wake',
+            // time
+            type: 'time',
+            // slide callback
+            slide: function (e, ui) {
+                console.log(e, ui);
+            },
+            // handle clicked callback
+            handleActivated: function (event, handle) {
+                // get select element
+                var select = $(this).parent().find('.slider-controller select');
+                // set selected option
+                select.val(handle.type);
+            }
+        });
+
+        // button for adding new ranges
+        $('.slider-controller button.add').click(function (e) {
+            e.preventDefault();
+            // get slider
+            var $slider = $('#slider');
+            // trigger addHandle event
+            $slider.slider('addHandle', {
+                value: 12,
+                type: $('.slider-controller select').val()
+            });
+            return false;
+        });
+
+        // button for removing currently selected handle
+        $('.slider-controller button.remove').click(function (e) {
+            e.preventDefault();
+            // get slider
+            var $slider = $('#slider');
+            // trigger removeHandle event on active handle
+            $slider.slider('removeHandle', $slider.find('a.ui-state-active').attr('data-id'));
+
+            return false;
+        });
+
+        // when clicking on handler
+        $(document).on('click', '.slider a', function () {
+            var select = $('.slider-controller select');
+            // enable if disabled
+            //select.attr('disabled', false);
+            alert($(this).attr('data-type'));
+            select.val($(this).attr('data-type'));
+            /*if ($(this).parent().find('a.ui-state-active').length)
+             $(this).toggleClass('ui-state-active');*/
+        });
+
+        $("#eq > span").each(function () {
+            // read initial values from markup and remove that
+            var value = parseInt($(this).text(), 10);
+            alert(value);
+            $(this).empty().slider({
+                value: value,
+                range: "min",
+                animate: true,
+                orientation: "vertical"
+            });
+        });
+    });
+</script>
+
+<div class="annotation_header">
+    <h2>请移动线段中的三个点，使得相应的四条线段的长度分别代表你在每篇文章中花费的时间。</h2>
+
+    <div style="width: 1000px;">
+        <div class="col-xs-12">
+            <div class="col-xs-12">
+                <div class="slider sleep" id="slider"></div>
+            </div>
+            <div class="col-xs-12">
+                <div class="slider-controller">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="WCOverButton button blue close-reveal-modal align" type="Button" onclick="click_on_timeestimation();">
+        Submit Estimation
+    </button>
+
+</div>
+<script>
+function getSegs(){
+    var rtr = ""
+    objs = document.getElementsByTagName("a")
+    for(i= 0;i<objs.length;i++){
+        rtr+= objs[i].getAttribute("data-value")+"_";
+    }
+
+    return rtr;
+
+}
+</script>
+
+
+</div>
+</body>
+</html>

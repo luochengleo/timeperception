@@ -58,8 +58,6 @@ def jobs(request, settingid):
 
 def calibrate(request, settingid, jobid):
     taskid = Job.objects.get(settingid=settingid,jobid = jobid).taskid
-
-
     html = template.Template(open('templates/calibrate.html').read())
     c = template.Context({'taskid': taskid,'settingid':settingid,'jobid':jobid})
 
@@ -85,11 +83,25 @@ def read(request, settingid, jobid):
     return HttpResponse(respon)
 
 
-def feedback(request, taskid):
+def time(request, taskid):
+    question = Task.objects.get(taskid = taskid).question
+    c = template.Context({'taskid':taskid})
+    html = template.Template(open('templates/time.html').read())
+
+    respon = HttpResponse(html.render(c))
+    return respon
+
+def relative(request, taskid):
+    question = Task.objects.get(taskid = taskid).question
+    c = template.Context({'taskid':taskid})
+    html = template.Template(open('templates/relative.html').read())
+    respon = HttpResponse(html.render(c))
+    return respon
+
+def outcome(request, taskid):
     question = Task.objects.get(taskid = taskid).question
     c = template.Context({'taskid':taskid,'question':question})
-    html = template.Template(open('templates/feedback.html').read())
-
+    html = template.Template(open('templates/outcome.html').read())
     respon = HttpResponse(html.render(c))
     return respon
 

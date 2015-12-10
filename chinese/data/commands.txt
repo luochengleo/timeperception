@@ -1,3 +1,0 @@
-from readanno.Utils.Init_Database import *
-import_tasks('data/tasks.xml')
-import_settings('data/settings.xml')

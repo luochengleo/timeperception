@@ -109,12 +109,12 @@ a[data-temperature="minimum"],
 .ui-slider-handle.saving,
 a[data-temperature="saving"],
 .ui-slider-range.saving {
-  background: #f2e079;
+  background: #a3e5f4;
 }
 .ui-slider-handle.comfort,
 a[data-temperature="comfort"],
 .ui-slider-range.comfort {
-  background: #e6a235;
+  background: #a3e5f4;
 }
 .ui-slider-handle.sleep,
 a[data-temperature="sleep"],
@@ -124,27 +124,27 @@ a[data-temperature="sleep"],
 .ui-slider-handle.leave,
 a[data-temperature="leave"],
 .ui-slider-range.leave {
-  background: #f2e079;
+  background: #a3e5f4;
 }
 .ui-slider-handle.return,
 a[data-temperature="return"],
 .ui-slider-range.return {
-  background: #e6a235;
+  background: #a3e5f4;
 }
 .ui-slider-handle.wake,
 a[data-temperature="wake"],
 .ui-slider-range.wake {
-  background: #e96223;
+  background: #a3e5f4;
 }
 .temperature-wake {
-  background-color: #e96223;
+  background-color: #a3e5f4;
   color: #fff;
 }
 .temperature-leave {
-  background-color: #f2e079;
+  background-color: #a3e5f4;
 }
 .temperature-return {
-  background-color: #e6a235;
+  background-color: #a3e5f4;
   color: #fff;
 }
 .temperature-sleep {

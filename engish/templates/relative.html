@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Relative Estimation</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="/static/conf/anno_log.js"></script>
+    <link href="/static/conf/button.css" type="text/css" rel="stylesheet">
+    <link href="/static/conf/annotation.css" type="text/css" rel="stylesheet">
+
+    <style>
+        #eq > span {
+            height: 320px;
+            float: left;
+            margin: 15px
+        }
+    </style>
+    <script>
+        var jobid = {{ taskid }};
+        var docid = 0;
+        var currentTaskID = {{ taskid }};
+        $(function () {
+
+            // setup graphic EQ
+            $("#eq > span").each(function () {
+                // read initial values from markup and remove that
+                var value = parseInt($(this).text(), 10);
+                $(this).empty().slider({
+                    value: value,
+                    range: "min",
+                    animate: true,
+                    orientation: "vertical"
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+<div class="annotation_header">
+    <h2>请估计一下，阅读以上四篇文章，你总共花费了多长时间？</h2>
+    <tr>
+
+        <td>
+            <select align="center" style="width:60px" id="overall_minutes">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+            </select>
+        </td>
+        <td>Minutes</td>
+        <td>
+            <select align="center" style="width:60px" id="overall_seconds">
+                <option value="0">0</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </td>
+        <td>Seconds</td>
+    </tr>
+
+</div>
+
+<div class="annotation_header">
+    <h2>四篇文章中，用时最<span style="color:red ;">长</span>的那篇文章，你大概用了多久?</h2>
+    <tr>
+
+        <td>
+            <select align="center" style="width:60px" id="long_minutes">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+            </select>
+        </td>
+        <td>Minutes</td>
+        <td>
+            <select align="center" style="width:60px" id="long_seconds">
+                <option value="0">0</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </td>
+        <td>Seconds</td>
+    </tr>
+
+</div>
+
+
+<div class="annotation_header">
+    <h2>四篇文章中，用时最<span style="color:red ;">短</span>的那篇文章，你大概用了多久?</h2>
+    <tr>
+
+        <td>
+            <select align="center" style="width:60px" id="short_minutes">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+            </select>
+        </td>
+        <td>Minutes</td>
+        <td>
+            <select align="center" style="width:60px" id="short_seconds">
+                <option value="0">0</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </td>
+        <td>Seconds</td>
+    </tr>
+
+</div>
+
+
+<div class="annotation_header">
+    <h2> 下面图中，从左至右分布代表第1篇至第4篇文档花费的时间，请调节每条线段，估计出每篇文档上花费的时间。</h2>
+</div>
+<div style="align:center">
+    <div id="eq">
+        <span>80</span>
+        <span>80</span>
+        <span>80</span>
+        <span>80</span>
+    </div>
+</div>
+<div>
+    <button class="WCOverButton button blue close-reveal-modal align" type="Button"
+            onclick="click_on_submitrelative();">
+        Submit Estimation
+    </button>
+</div>
+
+<script>
+    function getRelative() {
+        value = "";
+        $("#eq > span").each(function () {
+            // read initial values from markup and remove that
+            value +=  $(this).slider("value")+"_";
+        });
+        return value;
+    };
+
+    function getOverall(){
+        minObj = document.getElementById("overall_minutes")
+        var index = minObj.selectedIndex;
+        var m = minObj.options[index].value;
+
+        secObj = document.getElementById("overall_seconds")
+        index = secObj.selectedIndex;
+        var s = secObj.options[index].value;
+
+        return m+"_"+s;
+    };
+
+    function getLongest(){
+        minObj = document.getElementById("long_minutes")
+        var index = minObj.selectedIndex;
+        var m = minObj.options[index].value;
+
+        secObj = document.getElementById("long_seconds")
+        index = secObj.selectedIndex;
+        var s = secObj.options[index].value;
+
+        return m+"_"+s;
+    };
+
+    function getShortest(){
+        minObj = document.getElementById("short_minutes")
+        var index = minObj.selectedIndex;
+        var m = minObj.options[index].value;
+
+        secObj = document.getElementById("short_seconds")
+        index = secObj.selectedIndex;
+        var s = secObj.options[index].value;
+
+        return m+"_"+s;
+
+    };
+
+</script>
+
+
+</body>
+</html>

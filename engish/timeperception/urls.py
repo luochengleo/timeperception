@@ -4,7 +4,7 @@ from readanno.views import login, docquestionservice,docoptionservice
 from readanno.views import jobs
 from readanno.views import calibrate
 from readanno.views import read
-from readanno.views import feedback
+from readanno.views import time,relative,outcome
 from readanno.views import docservice
 from readanno.views import log
 # login _ no parameter;
@@ -22,7 +22,11 @@ urlpatterns = patterns('',
                        url(r'^jobs/(\d{1,2})/$', jobs),
                        url(r'^calibrate/(\d{1,2})/(\d{1,2})/$', calibrate),
                        url(r'^read/(\d{1,2})/(\d{1,2})/$', read),
-                       url(r'^feedback/(\d{1,2})/$', feedback),
+                       url(r'^time/(\d{1,2})/$', time),
+                       url(r'^relative/(\d{1,2})/$', relative),
+                       url(r'^outcome/(\d{1,2})/$', outcome),
+
+
                        url(r'^docservice/(\d{1,2})/(\d{1,2})/$',docservice),
                        url(r'^docquestionservice/(\d{1,2})/(\d{1,2})/$',docquestionservice),
                        url(r'^docoptionservice/(\d{1,2})/(\d{1,2})/$',docoptionservice),

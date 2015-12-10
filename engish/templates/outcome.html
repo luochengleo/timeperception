@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!-- saved from url=(0218)http://www.sogou.com/web?query=%E5%BC%80%E5%BF%83%E4%B9%90%E5%9B%AD+%E7%BE%8A%E9%A9%BC&ie=utf8&_ast=1415606656&_asf=null&w=01029901&p=40040100&dp=1&cid=&sut=7854&sst0=1415606634628&lkt=1%2C1415606631196%2C1415606631196 -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="utf-8">
+
+    <script data-require="jquery@*" data-semver="2.1.1"
+            src="/static/conf/time/jquery.min.js"></script>
+    <link data-require="jqueryui@*" data-semver="1.10.0" rel="stylesheet"
+          href="/static/conf/time/jquery-ui-1.10.0.custom.min.css"/>
+
+
+    <link rel="dns-prefetch" href="http://img01.store.sogou.com/">
+    <link rel="dns-prefetch" href="http://img02.store.sogou.com/">
+    <link rel="dns-prefetch" href="http://img03.store.sogou.com/">
+    <link rel="dns-prefetch" href="http://img04.store.sogou.com/">
+    <link rel="dns-prefetch" href="http://img01.sogoucdn.com/">
+    <link rel="dns-prefetch" href="http://img02.sogoucdn.com/">
+    <link rel="stylesheet" href="/static/css/jquery-ui.css"/>
+    <link rel="dns-prefetch" href="http://img03.sogoucdn.com/">
+    <link rel="dns-prefetch" href="http://img04.sogoucdn.com/">
+    <link rel="shortcut icon" href="http://www.sogou.c../../../../static/images/logo/new/favicon.ico?nv=1&v=2"
+          type="image/x-icon">
+    <link href="/static/conf/button.css" type="text/css" rel="stylesheet">
+    <link href="/static/conf/annotation.css" type="text/css" rel="stylesheet">
+    <!-- global variables: current task id, current query -->
+    <script type="text/javascript" src="/static/conf/wc_preprocess.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.bgpos.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.reveal.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="/static/conf/jquery.min.js"></script>
+
+    <script type="text/javascript" src="/static/conf/anno_log.js"></script>
+    <title>Feedback</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/m3.v.20.css">
+</head>
+<body class=" vr1024">
+<script>
+    var currentTaskID = {{ taskid }};
+    var jobid = {{ taskid }};
+</script>
+
+
+<div class="annotation_header">
+    <div>
+        <h2>Please answer the the question below with at least 50 words. <span style="color:red">(in English)</span>
+        </h2>
+
+        <h3 style="color:red">Question: {{ question }}</h3>
+
+    </div>
+</div>
+
+<div class="annotation_list">
+    <div class="annotation_cell">
+        <textarea name="answer" id="answer"></textarea>
+    </div>
+    <button class="WCOverButton button blue close-reveal-modal align" type="Button" onclick="click_on_submitoutcome();">
+        提交收获
+    </button>
+</div>
+</body>
+</html>
