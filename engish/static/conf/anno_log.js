@@ -390,22 +390,26 @@ function click_on_submitrelative() {
     message += "\tJOBID=" + jobid;
     message += "\tDOCID=" + docid;
     message += "\tACTION=RELATIVE_ESTIMATION";
-    message += "\tINFO:" + "Range="+getRange()  + " Relative=" + getRelative();
+    message += "\tINFO:" + "Range=" + getRange() + " Relative=" + getRelative();
     var log_url = "http://" + server_site + ":8000/LogService/"
 
-    $.ajax({
-        type: 'POST',
-        url: log_url,
-        data: {message: message},
-        async: false,
-        complete: function (jqXHR, textStatus) {
-            //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
-            //should we reset onbeforeunload here?
-            console.log("synchronously flush hallo answer")
-        }
-    });
-    window.onbeforeunload = null;
-    window.location.href = "/outcome/" + jobid + "/"
+    if (confirm("Are you confirm that this is your time estimation?")) {
+
+
+        $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+        });
+        window.onbeforeunload = null;
+        window.location.href = "/outcome/" + jobid + "/"
+    }
 }
 
 
@@ -420,24 +424,27 @@ function click_on_timeestimation() {
     message += "\tINFO:" + "Segments=" + getSegs();
     var log_url = "http://" + server_site + ":8000/LogService/"
 
-    $.ajax({
-        type: 'POST',
-        url: log_url,
-        data: {message: message},
-        async: false,
-        complete: function (jqXHR, textStatus) {
-            //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
-            //should we reset onbeforeunload here?
-            console.log("synchronously flush hallo answer")
-        }
-    });
-    window.onbeforeunload = null;
-    window.location.href = "/relative/" + jobid + "/"
+    if (confirm("Are you confirm that this is your time estimation?")) {
+
+        $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+        });
+        window.onbeforeunload = null;
+        window.location.href = "/relative/" + jobid + "/";
+    }
 }
 
 
 function click_on_submitoutcome() {
-    var reg=new RegExp("\r\n","g");
+    var reg = new RegExp("\r\n", "g");
     var text = document.getElementById("answer").value;
     var message = "";
     var client_time = (new Date()).getTime();
@@ -462,6 +469,7 @@ function click_on_submitoutcome() {
             }
         });
         window.onbeforeunload = null;
+        window.close();
     }
-    //window.close()
+
 }
