@@ -10,7 +10,7 @@
         </Job>
         <Job>
             <taskid>2</taskid>
-            <docseq>1-4-2-3</docseq>
+            <docseq>1-2-4-5</docseq>
         </Job>
         <Job>
             <taskid>3</taskid>
@@ -18,35 +18,11 @@
         </Job>
         <Job>
             <taskid>4</taskid>
-            <docseq>1-2-4-5</docseq>
+            <docseq>1-4-5-2</docseq>
         </Job>
         <Job>
             <taskid>5</taskid>
-            <docseq>1-4-2-5</docseq>
-        </Job>
-    </Setting>
-    <Setting>
-        <settingid>2</settingid>
-        <taskseq>0-1-2-3-4</taskseq>
-        <Job>
-            <taskid>1</taskid>
-            <docseq>1-2-4-5</docseq>
-        </Job>
-        <Job>
-            <taskid>2</taskid>
-            <docseq>1-4-2-5</docseq>
-        </Job>
-        <Job>
-            <taskid>3</taskid>
-            <docseq>1-4-2-3</docseq>
-        </Job>
-        <Job>
-            <taskid>4</taskid>
-            <docseq>1-4-2-5</docseq>
-        </Job>
-        <Job>
-            <taskid>5</taskid>
-            <docseq>1-2-4-5</docseq>
+            <docseq>4-1-2-5</docseq>
         </Job>
     </Setting>
 </Settings>
