@@ -60,6 +60,7 @@
 
     <script>
 
+
         function getCookieVal(offset) {
             var endstr = document.cookie.indexOf(";", offset);
             if (endstr == -1) {
@@ -177,7 +178,7 @@
         function short() {
             intDiff = 120;
             docid = 0;
-            $.get("/docservice/1/0", 0, function (data) {
+            $.get("/docservice/{{ taskid }}/0", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
             );
@@ -190,7 +191,7 @@
         function long() {
             intDiff = 240;
             docid = 9;
-            $.get("/docservice/1/9", 0, function (data) {
+            $.get("/docservice/{{ taskid }}/9", 0, function (data) {
                         document.getElementById("articlecontent").innerHTML = data;
                     }//返回的data是字符串类型
             );
@@ -200,7 +201,7 @@
         }
 
         function leave() {
-            window.close()
+            window.location.href = "/read/{{ settingid }}/{{ jobid }}"
 
         }
         function begin() {
@@ -222,10 +223,10 @@
             document.getElementById("article").style.display = "none";
             end_calibration(docid);
             if (docid == 0) {
-                alert("You have spent " + globaltime_short + "s, in this document");
+                alert("在阅读这篇文章的过程中，您一共花费了" + globaltime_short + " 秒钟");
             }
             if (docid == 9) {
-                alert("You have spent " + globaltime_long + "s, in this document");
+                alert("在阅读这篇文章的过程中，您一共花费了" + globaltime_long + " 秒钟");
             }
         }
         /*

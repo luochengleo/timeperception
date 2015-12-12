@@ -1,0 +1,197 @@
+﻿<!DOCTYPE doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+    <meta charset="utf-8">
+
+    <link href="http://www.sogou.com/images/logo/new/favicon.ico?nv=1&amp;v=2" rel="shortcut icon" type="image/x-icon">
+    <title>
+        _QUERY-搜索
+    </title>
+    <link rel='stylesheet' type='text/css' href='../conf/style_sogou.css'>
+    <link href="../conf/button.css" type="text/css" rel="stylesheet">
+    <link href="../conf/reveal.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="../conf/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../conf/jquery-min.js"></script>
+    <script type="text/javascript" src="../conf/wc_preprocess.js"></script>
+    <script type="text/javascript" src="../conf/wc_log.js"></script>
+    <script type="text/javascript" src="../conf/jquery.bgpos.js"></script>
+    <script type="text/javascript" src="../conf/jquery.reveal.js"></script>
+    <script type="text/javascript" src="../conf/jquery.raty.js"></script>
+    <script type="text/javascript" src="../conf/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="../conf/wc_log_ex.js"></script>
+
+    </link>
+    </meta>
+    </meta>
+    _STYLE
+</head>
+<body>
+<div id="myModal_ex" class="reveal-modal">
+    <div id="examineResult">
+    </div>
+
+    <div>
+        <table>
+            <tr>
+                <td id="ebt">
+                    <button class="PanelExamButton button green" type="Button" id="examined">检验过</button>
+                </td>
+                <td id="ebt">
+                    <div id="lzystardiv"><h4>相关性：</h4>
+
+                        <div id="lzystar"></div>
+                    </div>
+                </td>
+                <td id="ebt">
+                    <button class="PanelExamButton button red" type="Button" id="notexamined">未检验</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<div id="myModal" class="reveal-modal">
+    <h2 style="font-size: x-large;">请根据搜索任务及您的浏览过程给出您对本次搜索满意程度的评分(不满意:1星 - 满意:5星)</h2>
+
+    <div id="wcstar"></div>
+</div>
+
+<div class="wrap">
+    <dl class="topbar">
+        <dd class="no-bg">
+            <a class="res-logn-ico" href="javascript:void(0)" id="loginBtn">
+                登录
+            </a>
+        </dd>
+    </dl>
+    <div class="header">
+        <a class="logo" title="回到搜狗首页">
+            <img alt="" height="32" src="http://www.sogou.com/images/logo/new/sousuo02.png?nv=1&amp;v=2" width="123"/>
+        </a>
+        <ul class="searchnav">
+            <li>
+                <a href="http://news.sogou.com/news?ie=utf8&amp;p=40230447&amp;interV=kKIOkrELjboJmLkElbYTkKIKmbELjbkRmLkElbkTkKIRmLkEk78TkKILkbELjboN_-1221139334&amp;query=_QUERY"
+                   id="sogou_news" onclick="navBar(this,'query=',true);">
+                    新闻
+                </a>
+            </li>
+            <li class="cur">
+                <a>
+                    网页
+                </a>
+            </li>
+            <li>
+      <span class="nav-new">
+      </span>
+                <a href="http://weixin.sogou.com/weixin?p=01030402&amp;query=_QUERY&amp;type=2&amp;ie=utf8"
+                   id="sogou_weixin" onclick="navBar(this,'query=',true)">
+                    微信
+                </a>
+            </li>
+            <li>
+                <a href="http://wenwen.sogou.com/s/?cid=websearch2ww&amp;w=_QUERY" id="sogou_wenwen"
+                   onclick="navBar(this,'w=',true)">
+                    问问
+                </a>
+            </li>
+            <li>
+                <a href="http://pic.sogou.com/pics?ie=utf8&amp;p=40230504&amp;interV=kKIOkrELjboJmLkElbYTkKIKmbELjbkRmLkElbkTkKIRmLkEk78TkKILkbELjboN_-1221139334&amp;query=_QUERY"
+                   id="sogou_pic" onclick="navBar(this,'query=',true)">
+                    图片
+                </a>
+            </li>
+            <li>
+                <a href="http://v.sogou.com/v?ie=utf8&amp;p=40230608&amp;interV=kKIOkrELjboJmLkElbYTkKIKmbELjbkRmLkElbkTkKIRmLkEk78TkKILkbELjboN_-1221139334&amp;query=_QUERY"
+                   id="sogou_video" onclick="navBar(this,'query=',true)">
+                    视频
+                </a>
+            </li>
+            <li>
+                <a href="http://mp3.sogou.com/music.so?ie=utf8&amp;class=1&amp;p=40010200&amp;interV=kKIOkrELjboJmLkElbYTkKIKmbELjbkRmLkElbkTkKIRmLkEk78TkKILkbELjboN_-1221139334&amp;query=_QUERY"
+                   id="sogou_music" onclick="navBar(this,'query=',true)">
+                    音乐
+                </a>
+            </li>
+            <li>
+                <a href="http://map.sogou.com/#lq=_QUERY" id="sogou_maps" onclick="navBar(this,'#lq=',false)">
+                    地图
+                </a>
+            </li>
+            <li>
+                <a href="http://www.sogou.com/web?query=_QUERY&amp;interation=196648&amp;chuidq=40&amp;sourceid=inttab_web&amp;interV=kKIOkrELjboJmLkElbYTkKIKmbELjbkRmLkElbkTkKIRmLkEk78TkKILkbELjboN_-1221139334"
+                   id="inttab_40_2" onclick="navBar(this,'query=',true);">
+                    论坛
+                </a>
+            </li>
+            <li class="navMore">
+                <a href="http://www.sogou.com/docs/more.htm?v=1" id="top_more" target="_blank">
+                    更多
+       <span>
+        &gt;&gt;
+       </span>
+                </a>
+            </li>
+        </ul>
+        <form id="searchForm" name="searchForm">
+
+            <div class="querybox">
+                <div class="qborder">
+                    <div class="qborder2">
+                        <input autocomplete="off" class="query" id="upquery" name="query" onfocus="focusInput(this)"
+                               ov="_QUERY" type="text" value="_QUERY">
+                        </input>
+                    </div>
+                </div>
+                <div>
+                    <button class="WCOverButton button blue close-reveal-modal" type="Button"
+                            onclick="display_examining_button();">浏览完成
+                    </button>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+    <div class="wrapper" id="wrapper">
+        <div class="main" id="main">
+            <div>
+                <div class="results">
+
+                    _RESULT_LIST
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="cr" id="s_footer">
+        <a id="sogou_webhelp">
+            搜索帮助
+        </a>
+        <a id="sogou_feedback">
+            对结果不满意？
+        </a>
+        <a id="sogou_jubao">
+            举报
+        </a>
+        <a id="sogou_weibo">
+            官方微博
+        </a>
+        ? 2014 THUIR.ORG
+        <a class="g">
+            免责声明
+        </a>
+    </div>
+
+</div>
+<img border="0" height="0" src="http://www.sogou.com/img/fav.ico?be7ccea0-0e66-4515-a7be-bf10730335ed"
+     style="position:absolute;top:-1px" width="0"/>
+
+
+</body>
+</html>
+<!--1411186260694-->
+<!--STATUS total 12 time 71 page 9 maxEnd 655 totalItems 10581-->
+<!--real_pageno:1-->
+<!--zly-->
