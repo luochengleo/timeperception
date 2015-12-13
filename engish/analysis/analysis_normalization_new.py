@@ -24,6 +24,16 @@ segp = re.compile(r'Segments=(.*?)\t')
 rangep = re.compile(r'Range=(.*?)\t')
 relap = re.compile(r'Relative=(.*?)\t')
 
+job_setting_relevance = defaultdict(lambda: defaultdict(lambda: []))
+for line in open('../data/job_settings.csv').readlines()[1:]:
+    id, jobid, settingid, taskid, docseq = line.strip().split(',')
+    for doc in docseq.split('-'):
+        if int(doc) < 4:
+            job_setting_relevance[int(settingid)][taskid].append(1)
+        else:
+            job_setting_relevance[int(settingid)][taskid].append(0)
+print job_setting_relevance
+
 for line in open('../data/pilot.csv').readlines()[1:]:
     id = line.strip().split(',')[0]
     studentid = line.strip().split(',')[1]
@@ -87,6 +97,23 @@ relative_estimated_time = defaultdict(lambda: defaultdict(lambda: defaultdict(la
 relative_ratio = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.0)))
 perceived_relevance = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
 
+segments_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
+range_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
+relative_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
+segments_non_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
+range_non_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
+relative_non_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
+segments_rr_comparison_results = defaultdict(lambda: [])
+segments_rn_comparison_results = defaultdict(lambda: [])
+segments_nn_comparison_results = defaultdict(lambda: [])
+range_rr_comparison_results = defaultdict(lambda: [])
+range_rn_comparison_results = defaultdict(lambda: [])
+range_nn_comparison_results = defaultdict(lambda: [])
+relative_rr_comparison_results = defaultdict(lambda: [])
+relative_rn_comparison_results = defaultdict(lambda: [])
+relative_nn_comparison_results = defaultdict(lambda: [])
+
+
 for studentid in validUsers:
     for j in ['1', '3', '4', '5']:
         for d in [1, 2, 3, 4]:
@@ -133,4 +160,71 @@ def normalization_by_user():
         fout.write('\n')
     fout.close()
 
-normalization_by_user()
+# normalization_by_user()
+
+
+def pairwise_comparison():
+    fout = open('../data/pairwise_comparison.csv', 'w')
+    for studentid in validUsers:
+        for j in ['1', '3', '4', '5']:
+            for d in [1, 2, 3, 4]:
+                print studentid, j, perceived_relevance[studentid][j][d]
+                if perceived_relevance[studentid][j][d] == -1:
+                    if studentid in first_group_users:
+                        if job_setting_relevance[1][j][d-1] == 1:
+                            segments_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
+                            range_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
+                            relative_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
+                        else:
+                            segments_non_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
+                            range_non_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
+                            relative_non_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
+                    if studentid in second_group_users:
+                        if job_setting_relevance[2][j][d-1] == 1:
+                            segments_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
+                            range_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
+                            relative_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
+                        else:
+                            segments_non_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
+                            range_non_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
+                            relative_non_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
+                elif perceived_relevance[studentid][j][d] < 2:
+                    segments_non_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
+                    range_non_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
+                    relative_non_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
+                else:
+                    segments_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
+                    range_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
+                    relative_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
+
+            print studentid, j, segments_relevant_ratios[studentid][j], segments_non_relevant_ratios[studentid][j]
+            for ratio_r in segments_relevant_ratios[studentid][j]:
+                for ratio_n in segments_non_relevant_ratios[studentid][j]:
+                    if ratio_r < ratio_n:
+                        segments_rn_comparison_results[studentid].append('-1')
+                    else:
+                        segments_rn_comparison_results[studentid].append('1')
+            for ratio_r in range_relevant_ratios[studentid][j]:
+                for ratio_n in range_non_relevant_ratios[studentid][j]:
+                    if ratio_r < ratio_n:
+                        range_rn_comparison_results[studentid].append('-1')
+                    else:
+                        range_rn_comparison_results[studentid].append('1')
+            for ratio_r in relative_relevant_ratios[studentid][j]:
+                for ratio_n in relative_non_relevant_ratios[studentid][j]:
+                    if ratio_r < ratio_n:
+                        relative_rn_comparison_results[studentid].append('-1')
+                    else:
+                        relative_rn_comparison_results[studentid].append('1')
+        fout.write(studentid + 'segments,')
+        fout.write(','.join(segments_rn_comparison_results[studentid]))
+        fout.write('\n')
+        fout.write(studentid + 'range,')
+        fout.write(','.join(range_rn_comparison_results[studentid]))
+        fout.write('\n')
+        fout.write(studentid + 'relative,')
+        fout.write(','.join(relative_rn_comparison_results[studentid]))
+        fout.write('\n')
+    fout.close()
+
+pairwise_comparison()

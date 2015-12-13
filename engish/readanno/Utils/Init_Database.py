@@ -54,4 +54,4 @@ def import_settings(filename):
 
 def init_default():
     import_tasks('data/English_tasks.xml')
-    import_settings('data/settings.xml')
+    import_settings('data/English_settings.xml')
