@@ -83,18 +83,26 @@ def read(request, settingid, jobid):
     return HttpResponse(respon)
 
 
-def time(request, taskid):
+def time1(request, taskid):
     question = Task.objects.get(taskid = taskid).question
     c = template.Context({'taskid':taskid})
-    html = template.Template(open('templates/time.html').read())
+    html = template.Template(open('templates/time1.html').read())
 
     respon = HttpResponse(html.render(c))
     return respon
 
-def relative(request, taskid):
+def time2(request, taskid):
     question = Task.objects.get(taskid = taskid).question
     c = template.Context({'taskid':taskid})
-    html = template.Template(open('templates/relative.html').read())
+    html = template.Template(open('templates/time2.html').read())
+    respon = HttpResponse(html.render(c))
+    return respon
+
+
+def time3(request, taskid):
+    question = Task.objects.get(taskid = taskid).question
+    c = template.Context({'taskid':taskid})
+    html = template.Template(open('templates/time3.html').read())
     respon = HttpResponse(html.render(c))
     return respon
 

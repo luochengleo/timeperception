@@ -184,7 +184,6 @@
 
 <div class="annotation_header">
     <h2>请移动线段中的三个点，使得相应的四条线段的长度分别代表你在每篇文章中花费的时间。</h2>
-
     <div style="width: 1000px;">
         <div class="col-xs-12">
             <div class="col-xs-12">
@@ -203,21 +202,14 @@
     </button>
 </div>
 
-
-
-
 <script>
-
-
     function getSegs() {
         var rtr = ""
         objs = document.getElementsByTagName("a")
         for (i = 0; i < objs.length; i++) {
             rtr += objs[i].getAttribute("data-value") + "_";
         }
-
         return rtr;
-
     }
 </script>
 
