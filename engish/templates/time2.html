@@ -41,11 +41,11 @@
                 max: 30,
                 values: [0, 30],
                 slide: function (event, ui) {
-                    $("#amount1").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                    $("#amount1").val(ui.values[0] * 10 + "s - " + ui.values[1] * 10 + "s");
                 }
             });
-            $("#amount1").val($("#slider-range1").slider("values", 0) * 10 + "秒" +
-                    " - " + $("#slider-range1").slider("values", 1) * 10 + "秒");
+            $("#amount1").val($("#slider-range1").slider("values", 0) * 10 + "s" +
+                    " - " + $("#slider-range1").slider("values", 1) * 10 + "s");
 
              $("#slider-range2").slider({
                 range: true,
@@ -53,11 +53,11 @@
                 max: 30,
                 values: [0, 30],
                 slide: function (event, ui) {
-                    $("#amount2").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                    $("#amount2").val(ui.values[0] * 10 + "s - " + ui.values[1] * 10 + "s");
                 }
             });
-            $("#amount2").val($("#slider-range2").slider("values", 0) * 10 + "秒" +
-                    " - " + $("#slider-range2").slider("values", 1) * 10 + "秒");
+            $("#amount2").val($("#slider-range2").slider("values", 0) * 10 + "s" +
+                    " - " + $("#slider-range2").slider("values", 1) * 10 + "s");
 
              $("#slider-range3").slider({
                 range: true,
@@ -65,11 +65,11 @@
                 max: 30,
                 values: [0, 30],
                 slide: function (event, ui) {
-                    $("#amount3").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                    $("#amount3").val(ui.values[0] * 10 + "s - " + ui.values[1] * 10 + "s");
                 }
             });
-            $("#amount3").val($("#slider-range3").slider("values", 0) * 10 + "秒" +
-                    " - " + $("#slider-range3").slider("values", 1) * 10 + "秒");
+            $("#amount3").val($("#slider-range3").slider("values", 0) * 10 + "s" +
+                    " - " + $("#slider-range3").slider("values", 1) * 10 + "s");
 
              $("#slider-range4").slider({
                 range: true,
@@ -77,11 +77,11 @@
                 max: 30,
                 values: [0, 30],
                 slide: function (event, ui) {
-                    $("#amount4").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                    $("#amount4").val(ui.values[0] * 10 + "s - " + ui.values[1] * 10 + "s");
                 }
             });
-            $("#amount4").val($("#slider-range4").slider("values", 0) * 10 + "秒" +
-                    " - " + $("#slider-range4").slider("values", 1) * 10 + "秒");
+            $("#amount4").val($("#slider-range4").slider("values", 0) * 10 + "s" +
+                    " - " + $("#slider-range4").slider("values", 1) * 10 + "s");
 
              $("#slider-rangeall").slider({
                 range: true,
@@ -89,49 +89,49 @@
                 max: 90,
                 values: [0, 90],
                 slide: function (event, ui) {
-                    $("#amountall").val(ui.values[0] * 10 + "秒 - " + ui.values[1] * 10 + "秒");
+                    $("#amountall").val(ui.values[0] * 10 + "s - " + ui.values[1] * 10 + "s");
                 }
             });
-            $("#amountall").val($("#slider-rangeall").slider("values", 0) * 10 + "秒" +
-                    " - " + $("#slider-rangeall").slider("values", 1) * 10 + "秒");
+            $("#amountall").val($("#slider-rangeall").slider("values", 0) * 10 + "s" +
+                    " - " + $("#slider-rangeall").slider("values", 1) * 10 + "s");
         });
     </script>
 </head>
 <body>
 <div class="annotation_header">
-    <h2>请分别估计在每篇文档中花费时间的范围，以及阅读4篇文档总共花费时间的范围</h2>
+    <h2>Please estimate the minimal and maximal time you have spent in each document</h2>
 
     <div style="width:300px">
-        <h3>第1篇文档：</h3>
+        <h3>Doc 1 :</h3>
         <p>
-            <label for="amount1">时间区间</label>
+            <label for="amount1">Time</label>
             <input type="text" id="amount1" readonly style="border:0; color:#f6931f; font-weight:bold;">
         </p>
         <div id="slider-range1"></div>
     </div>
 
     <div style="width:300px">
-        <h3>第2篇文档：</h3>
+        <h3>Doc 2 :</h3>
         <p>
-            <label for="amount2">时间区间</label>
+            <label for="amount2">Time</label>
             <input type="text" id="amount2" readonly style="border:0; color:#f6931f; font-weight:bold;">
         </p>
         <div id="slider-range2"></div>
     </div>
 
     <div style="width:300px">
-        <h3>第3篇文档：</h3>
+        <h3>Doc 3 :</h3>
         <p>
-            <label for="amount3">时间区间</label>
+            <label for="amount3">Time</label>
             <input type="text" id="amount3" readonly style="border:0; color:#f6931f; font-weight:bold;">
         </p>
         <div id="slider-range3"></div>
     </div>
 
     <div style="width:300px">
-        <h3>第4篇文档：</h3>
+        <h3>Doc 4 :</h3>
         <p>
-            <label for="amount4">时间区间</label>
+            <label for="amount4">Time</label>
             <input type="text" id="amount4" readonly style="border:0; color:#f6931f; font-weight:bold;">
         </p>
         <div id="slider-range4"></div>
@@ -141,21 +141,9 @@
 </div>
 
 
-
-<div class="annotation_header">
-    <h2> 下面图中，从左至右分布代表第1篇至第4篇文档花费的时间，请调节每条线段，估计出每篇文档上花费的时间。</h2>
-</div>
-<div style="align:center">
-    <div id="eq">
-        <span>80</span>
-        <span>80</span>
-        <span>80</span>
-        <span>80</span>
-    </div>
-</div>
 <div>
     <button class="WCOverButton button blue close-reveal-modal align" type="Button"
-            onclick="click_on_submitrelative();">
+            onclick="click_on_time2();">
         Submit Estimation
     </button>
 </div>

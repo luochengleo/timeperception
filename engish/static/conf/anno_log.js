@@ -382,17 +382,70 @@ function over_button_on_click() {
 }
 
 
-function click_on_submitrelative() {
+function click_on_time2() {
     var client_time = (new Date()).getTime();
     var message = "";
     message += "TIMESTAMP=" + client_time;
     message += "\tUSER=" + studentID;
     message += "\tJOBID=" + jobid;
     message += "\tDOCID=" + docid;
-    message += "\tACTION=RELATIVE_ESTIMATION";
-    message += "\tINFO:" + "Range=" + getRange() + " Relative=" + getRelative();
+    message += "\tACTION=TIME2";
+    message += "\tINFO:" + "Range=" + getRange();
     var log_url = "http://" + server_site + ":8000/LogService/"
 
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+        });
+
+    if (confirm("Are you confirm that this is your time estimation?")) {
+
+
+        $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+        });
+        window.onbeforeunload = null;
+        window.location.href = "/time3/" + jobid + "/"
+    }
+}
+
+function click_on_time3() {
+    var client_time = (new Date()).getTime();
+    var message = "";
+    message += "TIMESTAMP=" + client_time;
+    message += "\tUSER=" + studentID;
+    message += "\tJOBID=" + jobid;
+    message += "\tDOCID=" + docid;
+    message += "\tACTION=TIME3";
+    message += "\tINFO:" + " Relative=" + getRelative();
+    var log_url = "http://" + server_site + ":8000/LogService/"
+
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+        });
     if (confirm("Are you confirm that this is your time estimation?")) {
 
 
@@ -413,17 +466,28 @@ function click_on_submitrelative() {
 }
 
 
-function click_on_timeestimation() {
+function click_on_time1() {
     var client_time = (new Date()).getTime();
     var message = "";
     message += "TIMESTAMP=" + client_time;
     message += "\tUSER=" + studentID;
     message += "\tJOBID=" + jobid;
     message += "\tDOCID=" + "0";
-    message += "\tACTION=TIME_ESTIMATION";
+    message += "\tACTION=TIME_1";
     message += "\tINFO:" + "Segments=" + getSegs();
     var log_url = "http://" + server_site + ":8000/LogService/"
 
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+        });
     if (confirm("Are you confirm that this is your time estimation?")) {
 
         $.ajax({
@@ -438,7 +502,7 @@ function click_on_timeestimation() {
             }
         });
         window.onbeforeunload = null;
-        window.location.href = "/relative/" + jobid + "/";
+        window.location.href = "/time2/" + jobid + "/";
     }
 }
 
@@ -454,8 +518,19 @@ function click_on_submitoutcome() {
     message += "\tDOCID=" + "0";
     message += "\tACTION=OUTCOME";
     message += "\tINFO:" + "answer=" + text.replace(reg, " ");
-
     var log_url = "http://" + server_site + ":8000/LogService/";
+
+    $.ajax({
+            type: 'POST',
+            url: log_url,
+            data: {message: message},
+            async: false,
+            complete: function (jqXHR, textStatus) {
+                //alert(textStatus + "----" + jqXHR.status + "----" + jqXHR.readyState);
+                //should we reset onbeforeunload here?
+                console.log("synchronously flush hallo answer")
+            }
+        });
     if (confirm("Are you confirm that this is your outcome?")) {
         $.ajax({
             type: 'POST',
