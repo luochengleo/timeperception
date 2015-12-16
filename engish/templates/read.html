@@ -99,6 +99,7 @@
             currentDoc = 1;
             begin_reading();
             _globaldocid = {{ doc1 }};
+            document.getElementById("navbar").style.display="none";
 
 
         }
@@ -125,6 +126,8 @@
             _globaldocid = {{ doc2 }};
             currentDoc = 2;
             begin_reading();
+            document.getElementById("navbar").style.display="none";
+
         }
         function clickdoc3() {
             document.getElementById("article").style.display = "block";
@@ -143,6 +146,7 @@
             _globaldocid = {{ doc3 }};
             currentDoc = 3;
             begin_reading();
+            document.getElementById("navbar").style.display="none";
         }
         function clickdoc4() {
             document.getElementById("article").style.display = "block";
@@ -161,6 +165,7 @@
             _globaldocid = {{ doc4 }};
             currentDoc = 4;
             begin_reading();
+            document.getElementById("navbar").style.display="none";
         }
 
         function clickfinish() {
@@ -192,6 +197,8 @@
             document.getElementById("rel3").checked=false;
             document.getElementById("rel2").checked=false;
             document.getElementById("rel1").checked=false;
+
+            document.getElementById("navbar").style.display="block";
         }
         /*
          $(function(){
@@ -208,7 +215,7 @@
 
 </head>
 <body>
-<div align="center" style="width:416px; margin:0 auto">
+<div id ="navbar" align="center" style="width:416px; margin:0 auto">
     <span> <input id="doc1" type=button
                   style="background:#C71C60;color:#fff;line-height:49px;font-size:36px;font-family:Arial;padding:0 10px;margin-right:10px;border-radius:5px;box-shadow:1px 1px 3px rgba(0,0,0,0.2)"
                   value='1' onclick="clickdoc1()"/>
