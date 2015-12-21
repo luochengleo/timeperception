@@ -1,40 +1,32 @@
+# -*- coding: utf-8 -*-
 __author__ = 'franky'
 import re
 from collections import defaultdict
 import numpy as np
-validUsers = ('2015012616', '2015012805')
-first_group_users = ('2015012616', )
-second_group_users = ('2015012805', )
+import scipy.stats as stats
+import matplotlib.pyplot as plt
 
-# calibration -userid ,jobid
+validUsers = {'2015012620': 1, '2015012618': 2, '2015012674': 3, '2014011319': 4, '2015012625': 5, '2015012676': 6, '2015012609': 7, '2015012811': 8, '2015012653': 9, '2015012679': 10, '2015012617': 11, '2015012828': 12, '2015212354': 13, '2015012624': 14, '2014012759': 15, '2012012767': 16, '2015012623': 17, '2014012772': 18, '2015012610': 19, '2011012756': 20, '2014012780': 21, '2015012622': 22, '2015012649': 23, '2015011043': 24}
 
-# calibration -userid ,jobid,docid
-segments_estimation = defaultdict(lambda:defaultdict(lambda:defaultdict(lambda:-1)))
-range_estimation = defaultdict(lambda:defaultdict(lambda:defaultdict(lambda:-1)))
-relative_estimation = defaultdict(lambda:defaultdict(lambda:defaultdict(lambda:-1)))
+estimation = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1))))
 relevance = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
-reading = defaultdict(lambda:defaultdict(lambda:defaultdict(lambda:[0.0,0.0])))
+reading_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [0.0, 0.0])))
 
-etp = re.compile(r'ET=(.*?)\t')
+
+# import settings
+job_setting = defaultdict(lambda: defaultdict(lambda: ''))
+for line in open('../data/job_settings.csv').readlines()[1:]:
+    id, jobid, settingid, taskid, docseq = line.strip().split(',')
+    job_setting[int(settingid)][taskid] = docseq
+
+# read logs
 cdp = re.compile(r'CURRENT_DOC=(.*?)\t')
 tp = re.compile(r'TIMESTAMP=(.*?)\t')
 relp = re.compile(r'REL=(.*?)\t')
-ansp = re.compile(r'ANS=(.*?)\t')
 segp = re.compile(r'Segments=(.*?)\t')
 rangep = re.compile(r'Range=(.*?)\t')
 relap = re.compile(r'Relative=(.*?)\t')
-
-job_setting_relevance = defaultdict(lambda: defaultdict(lambda: []))
-for line in open('../data/job_settings.csv').readlines()[1:]:
-    id, jobid, settingid, taskid, docseq = line.strip().split(',')
-    for doc in docseq.split('-'):
-        if int(doc) < 4:
-            job_setting_relevance[int(settingid)][taskid].append(1)
-        else:
-            job_setting_relevance[int(settingid)][taskid].append(0)
-print job_setting_relevance
-
-for line in open('../data/pilot.csv').readlines()[1:]:
+for line in open('../data/log20151220.csv').readlines()[1:]:
     id = line.strip().split(',')[0]
     studentid = line.strip().split(',')[1]
     jobid = line.strip().split(',')[2]
@@ -42,189 +34,411 @@ for line in open('../data/pilot.csv').readlines()[1:]:
     content = line.strip().split(',')[4]
     if studentid in validUsers:
         if action == 'BEGIN_READING':
-            # newdocid = cdp = re.compile(r'CURRENT_DOC=(.*?)')
-            # print content
-            docid = int(cdp.search(content+'\t').group(1))
+            doc_rank = int(cdp.search(content+'\t').group(1))
             time = int(tp.search(content+'\t').group(1))
-            reading[studentid][jobid][docid][0] = time
+            reading_time[studentid][jobid][doc_rank][0] = time
+            # 时刻记得维护一个最新时间戳,避免日志丢失造成大的时间错误
+            if doc_rank < 4:
+                reading_time[studentid][jobid][doc_rank+1][0] = time
 
         if action == 'END_READING':
-            # newdocid = cdp = re.compile(r'CURRENT_DOC=(.*?)')
-            docid = int(cdp.search(content+'\t').group(1))
+            doc_rank = int(cdp.search(content+'\t').group(1))
             time = int(tp.search(content+'\t').group(1))
-            reading[studentid][jobid][docid][1] = time
+            reading_time[studentid][jobid][doc_rank][1] = time
+            if doc_rank < 4:
+                reading_time[studentid][jobid][doc_rank+1][0] = time
 
         if action == 'RELEVANCE_ANNOTATION':
-            docid = int(cdp.search(content+'\t').group(1).split(' ')[0])
+            doc_rank = int(cdp.search(content+'\t').group(1).split(' ')[0])
+            time = int(tp.search(content+'\t').group(1))
             rel = int(relp.search(content+'\t').group(1).split(' ')[0])
-            relevance[studentid][jobid][docid] = rel
+            relevance[studentid][jobid][doc_rank] = rel
+            if doc_rank < 4:
+                reading_time[studentid][jobid][doc_rank+1][0] = time
 
-        if action == 'TIME_ESTIMATION':
+        if action == 'TIME_1':
             seg = segp.search(content+'\t').group(1).split(' ')[0]
             point1, point2, point3, _ = seg.split('_')
             point1 = int(point1)
             point2 = int(point2)
             point3 = int(point3)
-            segments_estimation[studentid][jobid][1] = point1
-            segments_estimation[studentid][jobid][2] = point2 - point1
-            segments_estimation[studentid][jobid][3] = point3 - point2
-            segments_estimation[studentid][jobid][4] = 1000 - point3
+            estimation['segments'][studentid][jobid][1] = point1
+            estimation['segments'][studentid][jobid][2] = point2 - point1
+            estimation['segments'][studentid][jobid][3] = point3 - point2
+            estimation['segments'][studentid][jobid][4] = 1000 - point3
 
-        if action == 'RELATIVE_ESTIMATION':
+        if action == 'TIME2':
             ran = rangep.search(content+'\t').group(1).split(' ')[0]
-            _, min1, max1, min2, max2, min3, max3, min4, max4, mintotal, maxtotal = ran.split('_')
+            _, min1, max1, min2, max2, min3, max3, min4, max4, _ = ran.split('_')
             mean1 = (int(min1)*10 + int(max1)*10) / 2
             mean2 = (int(min2)*10 + int(max2)*10) / 2
             mean3 = (int(min3)*10 + int(max3)*10) / 2
             mean4 = (int(min4)*10 + int(max4)*10) / 2
-            range_estimation[studentid][jobid][1] = mean1
-            range_estimation[studentid][jobid][2] = mean2
-            range_estimation[studentid][jobid][3] = mean3
-            range_estimation[studentid][jobid][4] = mean4
+            estimation['range'][studentid][jobid][1] = mean1
+            estimation['range'][studentid][jobid][2] = mean2
+            estimation['range'][studentid][jobid][3] = mean3
+            estimation['range'][studentid][jobid][4] = mean4
+
+        if action == 'TIME3':
             rela = relap.search(content+'\t').group(1).split(' ')[0]
             doc1, doc2, doc3, doc4, _ = rela.split('_')
-            relative_estimation[studentid][jobid][1] = int(doc1)
-            relative_estimation[studentid][jobid][2] = int(doc2)
-            relative_estimation[studentid][jobid][3] = int(doc3)
-            relative_estimation[studentid][jobid][4] = int(doc4)
+            estimation['relative'][studentid][jobid][1] = int(doc1)
+            estimation['relative'][studentid][jobid][2] = int(doc2)
+            estimation['relative'][studentid][jobid][3] = int(doc3)
+            estimation['relative'][studentid][jobid][4] = int(doc4)
 
+# task2-task5, dwell_time, estimated_time, perceived_relevance
 dwell_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.0)))
-segments_estimated_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
-segments_ratio = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.0)))
-range_estimated_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
-range_ratio = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.0)))
-relative_estimated_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
-relative_ratio = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.0)))
+estimated_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1))))
 perceived_relevance = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
 
-segments_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
-range_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
-relative_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
-segments_non_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
-range_non_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
-relative_non_relevant_ratios = defaultdict(lambda: defaultdict(lambda: []))
-segments_rr_comparison_results = defaultdict(lambda: [])
-segments_rn_comparison_results = defaultdict(lambda: [])
-segments_nn_comparison_results = defaultdict(lambda: [])
-range_rr_comparison_results = defaultdict(lambda: [])
-range_rn_comparison_results = defaultdict(lambda: [])
-range_nn_comparison_results = defaultdict(lambda: [])
-relative_rr_comparison_results = defaultdict(lambda: [])
-relative_rn_comparison_results = defaultdict(lambda: [])
-relative_nn_comparison_results = defaultdict(lambda: [])
-
-
 for studentid in validUsers:
-    for j in ['1', '3', '4', '5']:
+    for j in ['2', '3', '4', '5']:
         for d in [1, 2, 3, 4]:
-            dwell_time[studentid][j][d] = (reading[studentid][j][d][1] - reading[studentid][j][d][0]) / 1000.0
+            dwell_time[studentid][j][d] = (reading_time[studentid][j][d][1] - reading_time[studentid][j][d][0]) / 1000.0
             perceived_relevance[studentid][j][d] = relevance[studentid][j][d]
-            segments_estimated_time[studentid][j][d] = segments_estimation[studentid][j][d]
-            segments_ratio[studentid][j][d] = segments_estimation[studentid][j][d] / dwell_time[studentid][j][d]
-            range_estimated_time[studentid][j][d] = range_estimation[studentid][j][d]
-            range_ratio[studentid][j][d] = range_estimation[studentid][j][d] / dwell_time[studentid][j][d]
-            relative_estimated_time[studentid][j][d] = relative_estimation[studentid][j][d]
-            relative_ratio[studentid][j][d] = relative_estimation[studentid][j][d] / dwell_time[studentid][j][d]
+            for time_method in ['segments', 'range', 'relative']:
+                estimated_time[time_method][studentid][j][d] = float(estimation[time_method][studentid][j][d])
+        print studentid, j, perceived_relevance[studentid][j]
 
 
-def normalization_by_user():
-    fout = open('../data/normalization_by_user.csv', 'w')
-    for studentid in validUsers:
-        items = []
-        items.append(studentid)
-        segments_ratios = []
-        range_ratios = []
-        relative_ratios = []
-        for j in ['1', '3', '4', '5']:
-            for d in [1, 2, 3, 4]:
-                segments_ratios.append(segments_ratio[studentid][j][d])
-                range_ratios.append(range_ratio[studentid][j][d])
-                relative_ratios.append(relative_ratio[studentid][j][d])
-        segments_ave = np.mean(segments_ratios)
-        segments_stda = np.std(segments_ratios)
-        range_ave = np.mean(range_ratios)
-        range_stda = np.std(range_ratios)
-        relative_ave = np.mean(relative_ratios)
-        relative_stda = np.std(relative_ratios)
-        for j in ['1', '3', '4', '5']:
-            for d in [1, 2, 3, 4]:
-                items.append(str(perceived_relevance[studentid][j][d]))
-                items.append(str(dwell_time[studentid][j][d]))
-                items.append(str(segments_estimated_time[studentid][j][d]))
-                items.append(str((segments_ratio[studentid][j][d] - segments_ave) / segments_stda))
-                items.append(str(range_estimated_time[studentid][j][d]))
-                items.append(str((range_ratio[studentid][j][d] - range_ave) / range_stda))
-                items.append(str(relative_estimated_time[studentid][j][d]))
-                items.append(str((relative_ratio[studentid][j][d] - relative_ave) / relative_stda))
-        fout.write(','.join(items))
-        fout.write('\n')
-    fout.close()
-
-# normalization_by_user()
-
-
-def pairwise_comparison():
-    fout = open('../data/pairwise_comparison.csv', 'w')
-    for studentid in validUsers:
-        for j in ['1', '3', '4', '5']:
-            for d in [1, 2, 3, 4]:
-                print studentid, j, perceived_relevance[studentid][j][d]
-                if perceived_relevance[studentid][j][d] == -1:
-                    if studentid in first_group_users:
-                        if job_setting_relevance[1][j][d-1] == 1:
-                            segments_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
-                            range_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
-                            relative_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
-                        else:
-                            segments_non_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
-                            range_non_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
-                            relative_non_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
-                    if studentid in second_group_users:
-                        if job_setting_relevance[2][j][d-1] == 1:
-                            segments_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
-                            range_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
-                            relative_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
-                        else:
-                            segments_non_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
-                            range_non_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
-                            relative_non_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
-                elif perceived_relevance[studentid][j][d] < 2:
-                    segments_non_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
-                    range_non_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
-                    relative_non_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
+# relevance_filling
+for studentid in validUsers:
+    for j in ['2', '3', '4', '5']:
+        docseq_ = job_setting[validUsers[studentid]][j]
+        for d in [1, 2, 3, 4]:
+            docid = int(docseq_.split('-')[d-1])
+            if perceived_relevance[studentid][j][d] == -1:
+                if docid > 3:
+                    perceived_relevance[studentid][j][d] = 0
                 else:
-                    segments_relevant_ratios[studentid][j].append(segments_ratio[studentid][j][d])
-                    range_relevant_ratios[studentid][j].append(range_ratio[studentid][j][d])
-                    relative_relevant_ratios[studentid][j].append(relative_ratio[studentid][j][d])
+                    perceived_relevance[studentid][j][d] = 3
 
-            print studentid, j, segments_relevant_ratios[studentid][j], segments_non_relevant_ratios[studentid][j]
-            for ratio_r in segments_relevant_ratios[studentid][j]:
-                for ratio_n in segments_non_relevant_ratios[studentid][j]:
-                    if ratio_r < ratio_n:
-                        segments_rn_comparison_results[studentid].append('-1')
-                    else:
-                        segments_rn_comparison_results[studentid].append('1')
-            for ratio_r in range_relevant_ratios[studentid][j]:
-                for ratio_n in range_non_relevant_ratios[studentid][j]:
-                    if ratio_r < ratio_n:
-                        range_rn_comparison_results[studentid].append('-1')
-                    else:
-                        range_rn_comparison_results[studentid].append('1')
-            for ratio_r in relative_relevant_ratios[studentid][j]:
-                for ratio_n in relative_non_relevant_ratios[studentid][j]:
-                    if ratio_r < ratio_n:
-                        relative_rn_comparison_results[studentid].append('-1')
-                    else:
-                        relative_rn_comparison_results[studentid].append('1')
-        fout.write(studentid + 'segments,')
-        fout.write(','.join(segments_rn_comparison_results[studentid]))
+# perceived relevant and irrelevant docs
+relevant_doc_ranks = defaultdict(lambda: defaultdict(lambda: []))
+irrelevant_doc_ranks = defaultdict(lambda: defaultdict(lambda: []))
+for studentid in validUsers:
+    for j in ['2', '3', '4', '5']:
+        for d in [1, 2, 3, 4]:
+            if perceived_relevance[studentid][j][d] < 2:
+                irrelevant_doc_ranks[studentid][j].append(d)
+            else:
+                relevant_doc_ranks[studentid][j].append(d)
+
+# relevant & relevant
+rr_de_agree_num = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+rr_de_total_num = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+rr_e1e2_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+rr_e1e3_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+rr_e2e3_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+rr_e1e2_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+rr_e1e3_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+rr_e2e3_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+# relevant & irrelevant
+ri_de_agree_num = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+ri_de_total_num = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+ri_e1e2_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+ri_e1e3_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+ri_e2e3_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+ri_e1e2_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+ri_e1e3_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+ri_e2e3_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+# irrelevant & irrelevant
+ii_de_agree_num = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+ii_de_total_num = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+ii_e1e2_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+ii_e1e3_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+ii_e2e3_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
+ii_e1e2_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+ii_e1e3_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+ii_e2e3_total_num = defaultdict(lambda: defaultdict(lambda: 0))
+
+
+def analyze_pairwise_agreement():
+    for studentid in validUsers:
+        for j in ['2', '3', '4', '5']:
+            # relevant & relevant
+            for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
+                for d2 in range(d1+1, len(relevant_doc_ranks[studentid][j])):
+                    doc1 = relevant_doc_ranks[studentid][j][d1]
+                    doc2 = relevant_doc_ranks[studentid][j][d2]
+                    # dtime & etime(3 methods)
+                    for time_method in ['segments', 'range', 'relative']:
+                        rr_de_total_num[time_method][studentid][j] += 1
+                        if (dwell_time[studentid][j][doc1] <= dwell_time[studentid][j][doc2] and estimated_time[time_method][studentid][j][doc1] <= estimated_time[time_method][studentid][j][doc2]) or (dwell_time[studentid][j][doc1] >= dwell_time[studentid][j][doc2] and estimated_time[time_method][studentid][j][doc1] >= estimated_time[time_method][studentid][j][doc2]):
+                            rr_de_agree_num[time_method][studentid][j] += 1
+                    # segments & range
+                    rr_e1e2_total_num[studentid][j] += 1
+                    if (estimated_time['segments'][studentid][j][doc1] <= estimated_time['segments'][studentid][j][doc2] and estimated_time['range'][studentid][j][doc1] <= estimated_time['range'][studentid][j][doc2]) or (estimated_time['segments'][studentid][j][doc1] >= estimated_time['segments'][studentid][j][doc2] and estimated_time['range'][studentid][j][doc1] >= estimated_time['range'][studentid][j][doc2]):
+                        rr_e1e2_agree_num[studentid][j] += 1
+                    # segments & relative
+                    rr_e1e3_total_num[studentid][j] += 1
+                    if (estimated_time['segments'][studentid][j][doc1] <= estimated_time['segments'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] <= estimated_time['relative'][studentid][j][doc2]) or (estimated_time['segments'][studentid][j][doc1] >= estimated_time['segments'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] >= estimated_time['relative'][studentid][j][doc2]):
+                        rr_e1e3_agree_num[studentid][j] += 1
+                    # range & relative
+                    rr_e2e3_total_num[studentid][j] += 1
+                    if (estimated_time['range'][studentid][j][doc1] <= estimated_time['range'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] <= estimated_time['relative'][studentid][j][doc2]) or (estimated_time['range'][studentid][j][doc1] >= estimated_time['range'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] >= estimated_time['relative'][studentid][j][doc2]):
+                        rr_e2e3_agree_num[studentid][j] += 1
+
+            # relevant & irrelevant
+            for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
+                for d2 in range(0, len(irrelevant_doc_ranks[studentid][j])):
+                    doc1 = relevant_doc_ranks[studentid][j][d1]
+                    doc2 = irrelevant_doc_ranks[studentid][j][d2]
+                    # dtime & etime(3 methods)
+                    for time_method in ['segments', 'range', 'relative']:
+                        ri_de_total_num[time_method][studentid][j] += 1
+                        if (dwell_time[studentid][j][doc1] <= dwell_time[studentid][j][doc2] and estimated_time[time_method][studentid][j][doc1] <= estimated_time[time_method][studentid][j][doc2]) or (dwell_time[studentid][j][doc1] >= dwell_time[studentid][j][doc2] and estimated_time[time_method][studentid][j][doc1] >= estimated_time[time_method][studentid][j][doc2]):
+                            ri_de_agree_num[time_method][studentid][j] += 1
+                    # segments & range
+                    ri_e1e2_total_num[studentid][j] += 1
+                    if (estimated_time['segments'][studentid][j][doc1] <= estimated_time['segments'][studentid][j][doc2] and estimated_time['range'][studentid][j][doc1] <= estimated_time['range'][studentid][j][doc2]) or (estimated_time['segments'][studentid][j][doc1] >= estimated_time['segments'][studentid][j][doc2] and estimated_time['range'][studentid][j][doc1] >= estimated_time['range'][studentid][j][doc2]):
+                        ri_e1e2_agree_num[studentid][j] += 1
+                    # segments & relative
+                    ri_e1e3_total_num[studentid][j] += 1
+                    if (estimated_time['segments'][studentid][j][doc1] <= estimated_time['segments'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] <= estimated_time['relative'][studentid][j][doc2]) or (estimated_time['segments'][studentid][j][doc1] >= estimated_time['segments'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] >= estimated_time['relative'][studentid][j][doc2]):
+                        ri_e1e3_agree_num[studentid][j] += 1
+                    # range & relative
+                    ri_e2e3_total_num[studentid][j] += 1
+                    if (estimated_time['range'][studentid][j][doc1] <= estimated_time['range'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] <= estimated_time['relative'][studentid][j][doc2]) or (estimated_time['range'][studentid][j][doc1] >= estimated_time['range'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] >= estimated_time['relative'][studentid][j][doc2]):
+                        ri_e2e3_agree_num[studentid][j] += 1
+
+            # irrelevant & irrelevant
+            for d1 in range(0, len(irrelevant_doc_ranks[studentid][j])):
+                for d2 in range(d1+1, len(irrelevant_doc_ranks[studentid][j])):
+                    doc1 = irrelevant_doc_ranks[studentid][j][d1]
+                    doc2 = irrelevant_doc_ranks[studentid][j][d2]
+                    # dtime & etime(3 methods)
+                    for time_method in ['segments', 'range', 'relative']:
+                        ii_de_total_num[time_method][studentid][j] += 1
+                        if (dwell_time[studentid][j][doc1] <= dwell_time[studentid][j][doc2] and estimated_time[time_method][studentid][j][doc1] <= estimated_time[time_method][studentid][j][doc2]) or (dwell_time[studentid][j][doc1] >= dwell_time[studentid][j][doc2] and estimated_time[time_method][studentid][j][doc1] >= estimated_time[time_method][studentid][j][doc2]):
+                            ii_de_agree_num[time_method][studentid][j] += 1
+                    # segments & range
+                    ii_e1e2_total_num[studentid][j] += 1
+                    if (estimated_time['segments'][studentid][j][doc1] <= estimated_time['segments'][studentid][j][doc2] and estimated_time['range'][studentid][j][doc1] <= estimated_time['range'][studentid][j][doc2]) or (estimated_time['segments'][studentid][j][doc1] >= estimated_time['segments'][studentid][j][doc2] and estimated_time['range'][studentid][j][doc1] >= estimated_time['range'][studentid][j][doc2]):
+                        ii_e1e2_agree_num[studentid][j] += 1
+                    # segments & relative
+                    ii_e1e3_total_num[studentid][j] += 1
+                    if (estimated_time['segments'][studentid][j][doc1] <= estimated_time['segments'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] <= estimated_time['relative'][studentid][j][doc2]) or (estimated_time['segments'][studentid][j][doc1] >= estimated_time['segments'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] >= estimated_time['relative'][studentid][j][doc2]):
+                        ii_e1e3_agree_num[studentid][j] += 1
+                    # range & relative
+                    ii_e2e3_total_num[studentid][j] += 1
+                    if (estimated_time['range'][studentid][j][doc1] <= estimated_time['range'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] <= estimated_time['relative'][studentid][j][doc2]) or (estimated_time['range'][studentid][j][doc1] >= estimated_time['range'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] >= estimated_time['relative'][studentid][j][doc2]):
+                        ii_e2e3_agree_num[studentid][j] += 1
+
+# analyze_pairwise_agreement()
+
+
+def compute_pairwise_agreement():
+    fout = open('../data/pairwise_agreement.csv', 'w')
+    for studentid in validUsers:
+        fout.write(studentid + ',')
+        rr_e1e2_agree_num_all_tasks = 0
+        rr_e1e2_total_num_all_tasks = 0
+        ri_e1e2_agree_num_all_tasks = 0
+        ri_e1e2_total_num_all_tasks = 0
+        ii_e1e2_agree_num_all_tasks = 0
+        ii_e1e2_total_num_all_tasks = 0
+
+        rr_e1e3_agree_num_all_tasks = 0
+        rr_e1e3_total_num_all_tasks = 0
+        ri_e1e3_agree_num_all_tasks = 0
+        ri_e1e3_total_num_all_tasks = 0
+        ii_e1e3_agree_num_all_tasks = 0
+        ii_e1e3_total_num_all_tasks = 0
+
+        rr_e2e3_agree_num_all_tasks = 0
+        rr_e2e3_total_num_all_tasks = 0
+        ri_e2e3_agree_num_all_tasks = 0
+        ri_e2e3_total_num_all_tasks = 0
+        ii_e2e3_agree_num_all_tasks = 0
+        ii_e2e3_total_num_all_tasks = 0
+
+        rr_de_agree_num_all_tasks = defaultdict(lambda: 0)
+        rr_de_total_num_all_tasks = defaultdict(lambda: 0)
+        ri_de_agree_num_all_tasks = defaultdict(lambda: 0)
+        ri_de_total_num_all_tasks = defaultdict(lambda: 0)
+        ii_de_agree_num_all_tasks = defaultdict(lambda: 0)
+        ii_de_total_num_all_tasks = defaultdict(lambda: 0)
+
+        for j in ['2', '3', '4', '5']:
+            rr_e1e2_agree_num_all_tasks += rr_e1e2_agree_num[studentid][j]
+            rr_e1e2_total_num_all_tasks += rr_e1e2_total_num[studentid][j]
+            ri_e1e2_agree_num_all_tasks += ri_e1e2_agree_num[studentid][j]
+            ri_e1e2_total_num_all_tasks += ri_e1e2_total_num[studentid][j]
+            ii_e1e2_agree_num_all_tasks += ii_e1e2_agree_num[studentid][j]
+            ii_e1e2_total_num_all_tasks += ii_e1e2_total_num[studentid][j]
+
+            rr_e1e3_agree_num_all_tasks += rr_e1e3_agree_num[studentid][j]
+            rr_e1e3_total_num_all_tasks += rr_e1e3_total_num[studentid][j]
+            ri_e1e3_agree_num_all_tasks += ri_e1e3_agree_num[studentid][j]
+            ri_e1e3_total_num_all_tasks += ri_e1e3_total_num[studentid][j]
+            ii_e1e3_agree_num_all_tasks += ii_e1e3_agree_num[studentid][j]
+            ii_e1e3_total_num_all_tasks += ii_e1e3_total_num[studentid][j]
+
+            rr_e2e3_agree_num_all_tasks += rr_e2e3_agree_num[studentid][j]
+            rr_e2e3_total_num_all_tasks += rr_e2e3_total_num[studentid][j]
+            ri_e2e3_agree_num_all_tasks += ri_e2e3_agree_num[studentid][j]
+            ri_e2e3_total_num_all_tasks += ri_e2e3_total_num[studentid][j]
+            ii_e2e3_agree_num_all_tasks += ii_e2e3_agree_num[studentid][j]
+            ii_e2e3_total_num_all_tasks += ii_e2e3_total_num[studentid][j]
+
+            for time_method in ['segments', 'range', 'relative']:
+                rr_de_agree_num_all_tasks[time_method] += rr_de_agree_num[time_method][studentid][j]
+                rr_de_total_num_all_tasks[time_method] += rr_de_total_num[time_method][studentid][j]
+                ri_de_agree_num_all_tasks[time_method] += ri_de_agree_num[time_method][studentid][j]
+                ri_de_total_num_all_tasks[time_method] += ri_de_total_num[time_method][studentid][j]
+                ii_de_agree_num_all_tasks[time_method] += ii_de_agree_num[time_method][studentid][j]
+                ii_de_total_num_all_tasks[time_method] += ii_de_total_num[time_method][studentid][j]
+
+        items = [
+            float(rr_e1e2_agree_num_all_tasks) / float(rr_e1e2_total_num_all_tasks),
+            float(ri_e1e2_agree_num_all_tasks) / float(ri_e1e2_total_num_all_tasks),
+            float(ii_e1e2_agree_num_all_tasks) / float(ii_e1e2_total_num_all_tasks),
+            float(rr_e1e2_agree_num_all_tasks + ri_e1e2_agree_num_all_tasks + ii_e1e2_agree_num_all_tasks) / float(rr_e1e2_total_num_all_tasks + ri_e1e2_total_num_all_tasks + ii_e1e2_total_num_all_tasks),
+            float(rr_e1e3_agree_num_all_tasks) / float(rr_e1e3_total_num_all_tasks),
+            float(ri_e1e3_agree_num_all_tasks) / float(ri_e1e3_total_num_all_tasks),
+            float(ii_e1e3_agree_num_all_tasks) / float(ii_e1e3_total_num_all_tasks),
+            float(rr_e1e3_agree_num_all_tasks + ri_e1e3_agree_num_all_tasks + ii_e1e3_agree_num_all_tasks) / float(rr_e1e3_total_num_all_tasks + ri_e1e3_total_num_all_tasks + ii_e1e3_total_num_all_tasks),
+            float(rr_e2e3_agree_num_all_tasks) / float(rr_e2e3_total_num_all_tasks),
+            float(ri_e2e3_agree_num_all_tasks) / float(ri_e2e3_total_num_all_tasks),
+            float(ii_e2e3_agree_num_all_tasks) / float(ii_e2e3_total_num_all_tasks),
+            float(rr_e2e3_agree_num_all_tasks + ri_e2e3_agree_num_all_tasks + ii_e2e3_agree_num_all_tasks) / float(rr_e2e3_total_num_all_tasks + ri_e2e3_total_num_all_tasks + ii_e2e3_total_num_all_tasks),
+            float(rr_de_agree_num_all_tasks['segments']) / float(rr_de_total_num_all_tasks['segments']),
+            float(ri_de_agree_num_all_tasks['segments']) / float(ri_de_total_num_all_tasks['segments']),
+            float(ii_de_agree_num_all_tasks['segments']) / float(ii_de_total_num_all_tasks['segments']),
+            float(rr_de_agree_num_all_tasks['range']) / float(rr_de_total_num_all_tasks['range']),
+            float(ri_de_agree_num_all_tasks['range']) / float(ri_de_total_num_all_tasks['range']),
+            float(ii_de_agree_num_all_tasks['range']) / float(ii_de_total_num_all_tasks['range']),
+            float(rr_de_agree_num_all_tasks['relative']) / float(rr_de_total_num_all_tasks['relative']),
+            float(ri_de_agree_num_all_tasks['relative']) / float(ri_de_total_num_all_tasks['relative']),
+            float(ii_de_agree_num_all_tasks['relative']) / float(ii_de_total_num_all_tasks['relative']),
+        ]
+        fout.write(','.join(str(item) for item in items))
         fout.write('\n')
-        fout.write(studentid + 'range,')
-        fout.write(','.join(range_rn_comparison_results[studentid]))
-        fout.write('\n')
-        fout.write(studentid + 'relative,')
-        fout.write(','.join(relative_rn_comparison_results[studentid]))
-        fout.write('\n')
+
     fout.close()
 
-pairwise_comparison()
+# compute_pairwise_agreement()
+
+
+def compute_dtime():
+    r_dtimes = defaultdict(lambda: [])
+    ir_dtimes = defaultdict(lambda: [])
+    means_r_dtimes = []
+    std_r_dtimes = []
+    means_ir_dtimes = []
+    std_ir_dtimes = []
+    for studentid in validUsers:
+        for j in ['2', '3', '4', '5']:
+            for d in relevant_doc_ranks[studentid][j]:
+                r_dtimes[j].append(dwell_time[studentid][j][d])
+            for d in irrelevant_doc_ranks[studentid][j]:
+                ir_dtimes[j].append(dwell_time[studentid][j][d])
+    for j in ['2', '3', '4', '5']:
+        means_r_dtimes.append(np.mean(r_dtimes[j]))
+        std_r_dtimes.append(np.std(r_dtimes[j]))
+        means_ir_dtimes.append(np.mean(ir_dtimes[j]))
+        std_ir_dtimes.append(np.std(ir_dtimes[j]))
+        print j, np.mean(r_dtimes[j]), np.std(r_dtimes[j]), np.mean(ir_dtimes[j]), np.std(ir_dtimes[j]), stats.ttest_ind(r_dtimes[j], ir_dtimes[j], equal_var=False)
+    # plot
+    n_groups = 4
+    fig, ax = plt.subplots()
+    index = np.arange(n_groups)
+    bar_width = 0.35
+    opacity = 0.4
+    error_config = {'ecolor': '0.3'}
+    rects1 = plt.bar(index, means_r_dtimes, bar_width, alpha=opacity, color='b', yerr=std_r_dtimes, error_kw=error_config, label='R')
+    rects2 = plt.bar(index + bar_width, means_ir_dtimes, bar_width, alpha=opacity, color='r', yerr=std_ir_dtimes, error_kw=error_config, label='I')
+    plt.xlabel('Task')
+    plt.ylabel('Dtime')
+    plt.title('')
+    plt.xticks(index + bar_width, ('2', '3', '4', '5'))
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+compute_dtime()
+
+
+rr_perceived_drifts = defaultdict(lambda: defaultdict(lambda: []))
+ri_perceived_drifts = defaultdict(lambda: defaultdict(lambda: []))
+ii_perceived_drifts = defaultdict(lambda: defaultdict(lambda: []))
+
+
+def compute_perceived_drift():
+    for time_method in ['segments', 'range', 'relative']:
+        for j in ['2', '3', '4', '5']:
+            for studentid in validUsers:
+                # relevant & irrelevant
+                for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
+                    for d2 in range(0, len(irrelevant_doc_ranks[studentid][j])):
+                        doc1 = relevant_doc_ranks[studentid][j][d1]
+                        doc2 = irrelevant_doc_ranks[studentid][j][d2]
+                        perceived_drift = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
+                        ri_perceived_drifts[time_method][j].append(perceived_drift)
+                for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
+                    for d2 in range(d1+1, len(relevant_doc_ranks[studentid][j])):
+                        doc1 = relevant_doc_ranks[studentid][j][d1]
+                        doc2 = relevant_doc_ranks[studentid][j][d2]
+                        perceived_drift = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
+                        rr_perceived_drifts[time_method][j].append(perceived_drift)
+                for d1 in range(0, len(irrelevant_doc_ranks[studentid][j])):
+                    for d2 in range(d1+1, len(irrelevant_doc_ranks[studentid][j])):
+                        doc1 = irrelevant_doc_ranks[studentid][j][d1]
+                        doc2 = irrelevant_doc_ranks[studentid][j][d2]
+                        perceived_drift = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
+                        ii_perceived_drifts[time_method][j].append(perceived_drift)
+            print time_method, j, np.mean(ri_perceived_drifts[time_method][j]), np.std(ri_perceived_drifts[time_method][j]), stats.ttest_1samp(ri_perceived_drifts[time_method][j], 1)
+            print time_method, j, np.mean(rr_perceived_drifts[time_method][j]), np.std(rr_perceived_drifts[time_method][j]), stats.ttest_1samp(rr_perceived_drifts[time_method][j], 1)
+            print time_method, j, np.mean(ii_perceived_drifts[time_method][j]), np.std(ii_perceived_drifts[time_method][j]), stats.ttest_1samp(ii_perceived_drifts[time_method][j], 1)
+        # plot
+        plt.subplot(1, 3, 1)
+        for k in [2, 3, 4, 5]:
+            X = []
+            for l in range(0, len(ri_perceived_drifts[time_method][str(k)])):
+                X.append(k-2)
+            Y = ri_perceived_drifts[time_method][str(k)]
+            plt.scatter(X, Y, alpha=.5)
+        index = np.arange(4)
+        bar_width = 0.5
+        plt.xlabel('Task')
+        plt.ylabel('perceived_drift')
+        plt.ylim(-1.0, 4.0)
+        plt.title('<R,I>')
+        plt.xticks(index, ('2', '3', '4', '5'))
+
+        plt.subplot(1, 3, 2)
+        for k in [2, 3, 4, 5]:
+            X = []
+            for l in range(0, len(rr_perceived_drifts[time_method][str(k)])):
+                X.append(k-2)
+            Y = rr_perceived_drifts[time_method][str(k)]
+            plt.scatter(X, Y, alpha=.5)
+        index = np.arange(4)
+        bar_width = 0.5
+        plt.xlabel('Task')
+        plt.ylim(-1.0, 4.0)
+        plt.title('<R,R>')
+        plt.xticks(index, ('2', '3', '4', '5'))
+
+        plt.subplot(1, 3, 3)
+        for k in [2, 3, 4, 5]:
+            X = []
+            for l in range(0, len(ii_perceived_drifts[time_method][str(k)])):
+                X.append(k-2)
+            Y = ii_perceived_drifts[time_method][str(k)]
+            plt.scatter(X, Y, alpha=.5)
+        index = np.arange(4)
+        bar_width = 0.5
+        plt.xlabel('Task')
+        plt.ylim(-1.0, 4.0)
+        plt.title('<I,I>')
+        plt.xticks(index, ('2', '3', '4', '5'))
+
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+
+compute_perceived_drift()
