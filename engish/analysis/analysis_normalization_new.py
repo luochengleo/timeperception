@@ -6,7 +6,7 @@ import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
 
-validUsers = {'2015012620': 1, '2015012618': 2, '2015012674': 3, '2014011319': 4, '2015012625': 5, '2015012676': 6, '2015012609': 7, '2015012811': 8, '2015012653': 9, '2015012679': 10, '2015012617': 11, '2015012828': 12, '2015212354': 13, '2015012624': 14, '2014012759': 15, '2012012767': 16, '2015012623': 17, '2014012772': 18, '2015012610': 19, '2011012756': 20, '2014012780': 21, '2015012622': 22, '2015012649': 23, '2015011043': 24}
+validUsers = {'2015012620': 1, '2015012618': 2, '2015012674': 3, '2014011319': 4, '2015012625': 5, '2015012676': 6, '2015012609': 7, '2015012811': 8, '2015012653': 9, '2015012679': 10, '2015012617': 11, '2015012828': 12, '2015012642': 13, '2015012624': 14, '2014012759': 15, '2012012767': 16, '2015012623': 17, '2014012772': 18, '2015012610': 19, '2011012756': 20, '2014012780': 21, '2015012622': 22, '2015012649': 23, '2015011043': 24}
 
 estimation = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1))))
 relevance = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
@@ -26,7 +26,7 @@ relp = re.compile(r'REL=(.*?)\t')
 segp = re.compile(r'Segments=(.*?)\t')
 rangep = re.compile(r'Range=(.*?)\t')
 relap = re.compile(r'Relative=(.*?)\t')
-for line in open('../data/log20151220.csv').readlines()[1:]:
+for line in open('../data/log20151227.csv').readlines()[1:]:
     id = line.strip().split(',')[0]
     studentid = line.strip().split(',')[1]
     jobid = line.strip().split(',')[2]
@@ -254,7 +254,7 @@ def analyze_pairwise_agreement():
                     if (estimated_time['range'][studentid][j][doc1] <= estimated_time['range'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] <= estimated_time['relative'][studentid][j][doc2]) or (estimated_time['range'][studentid][j][doc1] >= estimated_time['range'][studentid][j][doc2] and estimated_time['relative'][studentid][j][doc1] >= estimated_time['relative'][studentid][j][doc2]):
                         ii_e2e3_agree_num[studentid][j] += 1
 
-# analyze_pairwise_agreement()
+analyze_pairwise_agreement()
 
 
 def compute_pairwise_agreement():
@@ -349,7 +349,7 @@ def compute_pairwise_agreement():
 
     fout.close()
 
-# compute_pairwise_agreement()
+compute_pairwise_agreement()
 
 
 def compute_dtime():
@@ -389,7 +389,7 @@ def compute_dtime():
     plt.savefig("../data/dwell_time_comparison.png")
     plt.show()
 
-# compute_dtime()
+compute_dtime()
 
 
 rr_perceived_drifts = defaultdict(lambda: defaultdict(lambda: []))
