@@ -19,7 +19,9 @@ estimation = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: default
 relevance = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
 # begin 时间和ending的时间
 reading_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [0.0, 0.0])))
-
+# range 方法的low和high
+range_low = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
+range_high = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
 
 # import settings
 job_setting = defaultdict(lambda: defaultdict(lambda: ''))
@@ -82,6 +84,14 @@ for line in open('../data/log20151227.csv').readlines()[1:]:
             mean2 = (int(min2) * 10 + int(max2) * 10) / 2
             mean3 = (int(min3) * 10 + int(max3) * 10) / 2
             mean4 = (int(min4) * 10 + int(max4) * 10) / 2
+            range_low[studentid][jobid][1] = int(min1) * 10
+            range_low[studentid][jobid][2] = int(min2) * 10
+            range_low[studentid][jobid][3] = int(min3) * 10
+            range_low[studentid][jobid][4] = int(min4) * 10
+            range_high[studentid][jobid][1] = int(max1) * 10
+            range_high[studentid][jobid][2] = int(max2) * 10
+            range_high[studentid][jobid][3] = int(max3) * 10
+            range_high[studentid][jobid][4] = int(max4) * 10
             estimation['range'][studentid][jobid][1] = mean1
             estimation['range'][studentid][jobid][2] = mean2
             estimation['range'][studentid][jobid][3] = mean3
@@ -131,7 +141,21 @@ relevance_agree_num = defaultdict(lambda: defaultdict(lambda: 0))
 # studentid, taskid, docid(1,2,3,4,5,6), docseq(1,2,3,4), perceived relevance, time1, time2 low, time2 high, time3
 
 
+def output_csv():
+    fout = open('../data/output.csv', 'w')
+    fout.write("studentid,taskid,docid,docrank,perceived relevance,time1,time2_low,time2_high,time3\n")
+    for studentid in validUsers:
+        for taskid in ['2', '3', '4', '5']:
+            for docrank in [1, 2, 3, 4]:
+                fout.write(studentid + ',')
+                fout.write(taskid + ',')
+                docseq_ = job_setting[validUsers[studentid]][taskid]
+                docid = int(docseq_.split('-')[docrank-1])
+                fout.write(str(docid) + ',' + str(docrank) + ',' + str(perceived_relevance[studentid][taskid][docrank]) + ',' + str(estimated_time['segments'][studentid][taskid][docrank]) + ',' + str(range_low[studentid][taskid][docrank]) + ',' + str(range_high[studentid][taskid][docrank]) + ',' + str(estimated_time['relative'][studentid][taskid][docrank]) + '\n')
 
+    fout.close()
+
+output_csv()
 # 计算用户的relevance 和我们设定的relevance是不是一致？
 
 
