@@ -2,6 +2,7 @@
 __author__ = 'franky'
 import re
 from collections import defaultdict
+import math
 import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
@@ -165,7 +166,7 @@ def output_csv():
 
     fout.close()
 
-output_csv()
+# output_csv()
 # 计算用户的relevance 和我们设定的relevance是不是一致？
 
 
@@ -183,7 +184,7 @@ def compute_relevance_agreement():
             print j, docid, relevance_agreement[j][docid]
 
 
-compute_relevance_agreement()
+# compute_relevance_agreement()
 
 # print dwell time, estimated time, perceived relevance
 '''for studentid in validUsers:
@@ -582,13 +583,14 @@ def compute_dtime():
 
 # compute_dtime()
 
-# 用ratio
+# 用perception ratio
 rr_perceived_ratios = defaultdict(lambda: [])
 ri_perceived_ratios = defaultdict(lambda: [])
 ii_perceived_ratios = defaultdict(lambda: [])
 
 
 def compute_perception_ratio():
+    fout = open('../data/perception_ratio_significance.csv', 'w')
     for time_method in ['segments', 'range', 'relative']:
         for j in ['2', '3', '4', '5']:
             for studentid in validUsers:
@@ -598,29 +600,31 @@ def compute_perception_ratio():
                         doc1 = relevant_doc_ranks[studentid][j][d1]
                         doc2 = irrelevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        ri_perceived_ratios[time_method].append(perceived_ratio)
+                        ri_perceived_ratios[time_method].append(math.log(perceived_ratio))
                 # relevant & relevant
                 for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
                     for d2 in range(d1 + 1, len(relevant_doc_ranks[studentid][j])):
                         doc1 = relevant_doc_ranks[studentid][j][d1]
                         doc2 = relevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        rr_perceived_ratios[time_method].append(perceived_ratio)
-                        rr_perceived_ratios[time_method].append(1/perceived_ratio)
+                        rr_perceived_ratios[time_method].append(math.log(perceived_ratio))
                 # irrelevant & irrelevant
                 for d1 in range(0, len(irrelevant_doc_ranks[studentid][j])):
                     for d2 in range(d1 + 1, len(irrelevant_doc_ranks[studentid][j])):
                         doc1 = irrelevant_doc_ranks[studentid][j][d1]
                         doc2 = irrelevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        ii_perceived_ratios[time_method].append(perceived_ratio)
-                        ii_perceived_ratios[time_method].append(1/perceived_ratio)
+                        ii_perceived_ratios[time_method].append(math.log(perceived_ratio))
+        fout.write(time_method + ',ri,mean:' + str(round(np.mean(ri_perceived_ratios[time_method]), 3)) + ',p-value:' + str(round(stats.ttest_1samp(ri_perceived_ratios[time_method], 0)[1], 3)) + '\n')
+        fout.write(time_method + ',rr,mean:' + str(round(np.mean(rr_perceived_ratios[time_method]), 3)) + ',p-value:' + str(round(stats.ttest_1samp(rr_perceived_ratios[time_method], 0)[1], 3)) + '\n')
+        fout.write(time_method + ',ii,mean:' + str(round(np.mean(ii_perceived_ratios[time_method]), 3)) + ',p-value:' + str(round(stats.ttest_1samp(ii_perceived_ratios[time_method], 0)[1], 3)) + '\n')
         print time_method, "ri", np.mean(ri_perceived_ratios[time_method]), np.std(
-                ri_perceived_ratios[time_method]), stats.ttest_1samp(ri_perceived_ratios[time_method], 1)[1]
+                ri_perceived_ratios[time_method]), stats.ttest_1samp(ri_perceived_ratios[time_method], 0)[1]
         print time_method, "rr", np.mean(rr_perceived_ratios[time_method]), np.std(
-                rr_perceived_ratios[time_method]), stats.ttest_1samp(rr_perceived_ratios[time_method], 1)[1]
+                rr_perceived_ratios[time_method]), stats.ttest_1samp(rr_perceived_ratios[time_method], 0)[1]
         print time_method, "ii", np.mean(ii_perceived_ratios[time_method]), np.std(
-                ii_perceived_ratios[time_method]), stats.ttest_1samp(ii_perceived_ratios[time_method], 1)[1]
+                ii_perceived_ratios[time_method]), stats.ttest_1samp(ii_perceived_ratios[time_method], 0)[1]
+    fout.close()
 
     # plot
     index = np.arange(3)
@@ -628,49 +632,49 @@ def compute_perception_ratio():
     plt.subplot(1, 3, 1)
     data = [ri_perceived_ratios["segments"], ri_perceived_ratios["range"], ri_perceived_ratios["relative"]]
     plt.boxplot(data)
-    plt.ylim(0.0, 2.5)
-    plt.ylabel("perceived ratio")
+    plt.ylabel("log perceived ratio")
+    plt.ylim(-1.5, 1.5)
     plt.xticks(index + bar_width, ("SG", "RG", "RC"))
     plt.title("<R, I>")
-    plt.scatter([1, ], [np.mean(ri_perceived_ratios["segments"]), ], 10, color='black')
+    '''plt.scatter([1, ], [np.mean(ri_perceived_ratios["segments"]), ], 10, color='black')
     plt.annotate(str(round(np.mean(ri_perceived_ratios["segments"]), 2)), xy=(1, np.mean(ri_perceived_ratios["segments"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
     plt.scatter([2, ], [np.mean(ri_perceived_ratios["range"]), ], 10, color='black')
     plt.annotate(str(round(np.mean(ri_perceived_ratios["range"]), 2)), xy=(2, np.mean(ri_perceived_ratios["range"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
     plt.scatter([3, ], [np.mean(ri_perceived_ratios["relative"]), ], 10, color='black')
-    plt.annotate(str(round(np.mean(ri_perceived_ratios["relative"]), 2)), xy=(3, np.mean(ri_perceived_ratios["relative"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
+    plt.annotate(str(round(np.mean(ri_perceived_ratios["relative"]), 2)), xy=(3, np.mean(ri_perceived_ratios["relative"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)'''
 
     plt.subplot(1, 3, 2)
     data = [rr_perceived_ratios["segments"], rr_perceived_ratios["range"], rr_perceived_ratios["relative"]]
     plt.boxplot(data)
-    plt.ylim(0.0, 2.5)
+    plt.ylim(-1.5, 1.5)
     plt.xticks(index + bar_width, ("SG", "RG", "RC"))
     plt.title("<R, R>")
-    plt.scatter([1, ], [np.mean(rr_perceived_ratios["segments"]), ], 10, color='black')
+    '''plt.scatter([1, ], [np.mean(rr_perceived_ratios["segments"]), ], 10, color='black')
     plt.annotate(str(round(np.mean(rr_perceived_ratios["segments"]), 2)), xy=(1, np.mean(rr_perceived_ratios["segments"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
     plt.scatter([2, ], [np.mean(rr_perceived_ratios["range"]), ], 10, color='black')
     plt.annotate(str(round(np.mean(rr_perceived_ratios["range"]), 2)), xy=(2, np.mean(rr_perceived_ratios["range"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
     plt.scatter([3, ], [np.mean(rr_perceived_ratios["relative"]), ], 10, color='black')
-    plt.annotate(str(round(np.mean(rr_perceived_ratios["relative"]), 2)), xy=(3, np.mean(rr_perceived_ratios["relative"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
+    plt.annotate(str(round(np.mean(rr_perceived_ratios["relative"]), 2)), xy=(3, np.mean(rr_perceived_ratios["relative"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)'''
 
     plt.subplot(1, 3, 3)
     data = [ii_perceived_ratios["segments"], ii_perceived_ratios["range"], ii_perceived_ratios["relative"]]
     plt.boxplot(data)
-    plt.ylim(0.0, 2.5)
+    plt.ylim(-1.5, 1.5)
     plt.xticks(index + bar_width, ("SG", "RG", "RC"))
     plt.title("<I, I>")
-    plt.scatter([1, ], [np.mean(ii_perceived_ratios["segments"]), ], 10, color='black')
+    '''plt.scatter([1, ], [np.mean(ii_perceived_ratios["segments"]), ], 10, color='black')
     plt.annotate(str(round(np.mean(ii_perceived_ratios["segments"]), 2)), xy=(1, np.mean(ii_perceived_ratios["segments"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
     plt.scatter([2, ], [np.mean(ii_perceived_ratios["range"]), ], 10, color='black')
     plt.annotate(str(round(np.mean(ii_perceived_ratios["range"]), 2)), xy=(2, np.mean(ii_perceived_ratios["range"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
     plt.scatter([3, ], [np.mean(ii_perceived_ratios["relative"]), ], 10, color='black')
-    plt.annotate(str(round(np.mean(ii_perceived_ratios["relative"]), 2)), xy=(3, np.mean(ii_perceived_ratios["relative"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
+    plt.annotate(str(round(np.mean(ii_perceived_ratios["relative"]), 2)), xy=(3, np.mean(ii_perceived_ratios["relative"])), xytext=(+10, -3), textcoords='offset points', fontsize=10)'''
 
     plt.legend()
     plt.tight_layout()
-    plt.savefig("../data/perception_ratio.eps")
+    plt.savefig("../data/log_perception_ratio.eps")
     plt.show()
 
-# compute_perception_ratio()
+compute_perception_ratio()
 
 
 # 每个user的perception_ratio的分布
@@ -680,6 +684,7 @@ ii_user_perceived_ratios = defaultdict(lambda: defaultdict(lambda: []))
 
 
 def compute_user_perception_ratio():
+    fout = open('../data/user_perception_ratio_significance.csv', 'w')
     for time_method in ['segments', 'range', 'relative']:
         for j in ['2', '3', '4', '5']:
             for studentid in validUsers:
@@ -689,30 +694,30 @@ def compute_user_perception_ratio():
                         doc1 = relevant_doc_ranks[studentid][j][d1]
                         doc2 = irrelevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        ri_user_perceived_ratios[time_method][studentid].append(perceived_ratio)
+                        ri_user_perceived_ratios[time_method][studentid].append(math.log(perceived_ratio))
                 # relevant & relevant
                 for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
                     for d2 in range(d1 + 1, len(relevant_doc_ranks[studentid][j])):
                         doc1 = relevant_doc_ranks[studentid][j][d1]
                         doc2 = relevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        rr_user_perceived_ratios[time_method][studentid].append(perceived_ratio)
-                        rr_user_perceived_ratios[time_method][studentid].append(1/perceived_ratio)
+                        rr_user_perceived_ratios[time_method][studentid].append(math.log(perceived_ratio))
                 # irrelevant & irrelevant
                 for d1 in range(0, len(irrelevant_doc_ranks[studentid][j])):
                     for d2 in range(d1 + 1, len(irrelevant_doc_ranks[studentid][j])):
                         doc1 = irrelevant_doc_ranks[studentid][j][d1]
                         doc2 = irrelevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        ii_user_perceived_ratios[time_method][studentid].append(perceived_ratio)
-                        ii_user_perceived_ratios[time_method][studentid].append(1/perceived_ratio)
+                        ii_user_perceived_ratios[time_method][studentid].append(math.log(perceived_ratio))
         for studentid in validUsers:
             print time_method, studentid, "ri", np.mean(ri_user_perceived_ratios[time_method][studentid]), np.std(
-                ri_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(ri_user_perceived_ratios[time_method][studentid], 1)[1]
+                ri_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(ri_user_perceived_ratios[time_method][studentid], 0)[1]
+            fout.write(time_method + ',' + studentid + ',ri,mean:' + str(round(np.mean(ri_user_perceived_ratios[time_method][studentid]), 3)) + ',p-value:' + str(round(stats.ttest_1samp(ri_user_perceived_ratios[time_method][studentid], 0)[1], 3)) + '\n')
             '''print time_method, studentid, "rr", np.mean(rr_user_perceived_ratios[time_method][studentid]), np.std(
                 rr_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(rr_user_perceived_ratios[time_method][studentid], 1)[1]
             print time_method, studentid, "ii", np.mean(ii_user_perceived_ratios[time_method][studentid]), np.std(
                 ii_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(ii_user_perceived_ratios[time_method][studentid], 1)[1]'''
+    fout.close()
 
     # plot
     index = np.arange(3)
@@ -724,19 +729,20 @@ def compute_user_perception_ratio():
         data = [ri_user_perceived_ratios["segments"][studentid], ri_user_perceived_ratios["range"][studentid], ri_user_perceived_ratios["relative"][studentid]]
         plt.boxplot(data)
         plt.ylim(0.0, 2.5)
-        if i == 1:
+        if i % 8 == 1:
             plt.ylabel("perceived ratio")
+        plt.ylim(-1.5, 1.5)
         plt.xticks(index + bar_width, ("SG", "RG", "RC"))
-        plt.scatter([1, ], [np.mean(ri_user_perceived_ratios["segments"][studentid]), ], 10, color='black')
+        '''plt.scatter([1, ], [np.mean(ri_user_perceived_ratios["segments"][studentid]), ], 10, color='black')
         plt.annotate(str(round(np.mean(ri_user_perceived_ratios["segments"][studentid]), 2)), xy=(1, np.mean(ri_user_perceived_ratios["segments"][studentid])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
         plt.scatter([2, ], [np.mean(ri_user_perceived_ratios["range"][studentid]), ], 10, color='black')
         plt.annotate(str(round(np.mean(ri_user_perceived_ratios["range"][studentid]), 2)), xy=(2, np.mean(ri_user_perceived_ratios["range"][studentid])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
         plt.scatter([3, ], [np.mean(ri_user_perceived_ratios["relative"][studentid]), ], 10, color='black')
-        plt.annotate(str(round(np.mean(ri_user_perceived_ratios["relative"][studentid]), 2)), xy=(3, np.mean(ri_user_perceived_ratios["relative"][studentid])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
+        plt.annotate(str(round(np.mean(ri_user_perceived_ratios["relative"][studentid]), 2)), xy=(3, np.mean(ri_user_perceived_ratios["relative"][studentid])), xytext=(+10, -3), textcoords='offset points', fontsize=10)'''
 
     plt.legend()
     plt.tight_layout()
-    plt.savefig("../data/user_perception_ratio.eps")
+    plt.savefig("../data/log_user_perception_ratio.eps")
     plt.show()
 
 compute_user_perception_ratio()
@@ -749,6 +755,7 @@ ii_task_perceived_ratios = defaultdict(lambda: defaultdict(lambda: []))
 
 
 def compute_task_perception_ratio():
+    fout = open('../data/task_perception_ratio_significance.csv', 'w')
     for time_method in ['segments', 'range', 'relative']:
         for j in ['2', '3', '4', '5']:
             for studentid in validUsers:
@@ -758,30 +765,30 @@ def compute_task_perception_ratio():
                         doc1 = relevant_doc_ranks[studentid][j][d1]
                         doc2 = irrelevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        ri_task_perceived_ratios[time_method][j].append(perceived_ratio)
+                        ri_task_perceived_ratios[time_method][j].append(math.log(perceived_ratio))
                 # relevant & relevant
                 for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
                     for d2 in range(d1 + 1, len(relevant_doc_ranks[studentid][j])):
                         doc1 = relevant_doc_ranks[studentid][j][d1]
                         doc2 = relevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        rr_task_perceived_ratios[time_method][j].append(perceived_ratio)
-                        rr_task_perceived_ratios[time_method][j].append(1/perceived_ratio)
+                        rr_task_perceived_ratios[time_method][j].append(math.log(perceived_ratio))
                 # irrelevant & irrelevant
                 for d1 in range(0, len(irrelevant_doc_ranks[studentid][j])):
                     for d2 in range(d1 + 1, len(irrelevant_doc_ranks[studentid][j])):
                         doc1 = irrelevant_doc_ranks[studentid][j][d1]
                         doc2 = irrelevant_doc_ranks[studentid][j][d2]
                         perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        ii_task_perceived_ratios[time_method][j].append(perceived_ratio)
-                        ii_task_perceived_ratios[time_method][j].append(1/perceived_ratio)
+                        ii_task_perceived_ratios[time_method][j].append(math.log(perceived_ratio))
             print time_method, j, "ri", np.mean(ri_task_perceived_ratios[time_method][j]), np.std(
-                ri_task_perceived_ratios[time_method][j]), stats.ttest_1samp(ri_task_perceived_ratios[time_method][j], 1)[1]
+                ri_task_perceived_ratios[time_method][j]), stats.ttest_1samp(ri_task_perceived_ratios[time_method][j], 0)[1]
+            fout.write(time_method + ',' + j + ',ri,mean:' + str(round(np.mean(ri_task_perceived_ratios[time_method][j]), 3)) + ',p-value:' + str(round(stats.ttest_1samp(ri_task_perceived_ratios[time_method][j], 0)[1], 3)) + '\n')
             '''print time_method, studentid, "rr", np.mean(rr_user_perceived_ratios[time_method][studentid]), np.std(
                 rr_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(rr_user_perceived_ratios[time_method][studentid], 1)[1]
             print time_method, studentid, "ii", np.mean(ii_user_perceived_ratios[time_method][studentid]), np.std(
                 ii_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(ii_user_perceived_ratios[time_method][studentid], 1)[1]'''
 
+    fout.close()
     # plot
     index = np.arange(3)
     bar_width = 1
@@ -790,19 +797,20 @@ def compute_task_perception_ratio():
         data = [ri_task_perceived_ratios["segments"][j], ri_task_perceived_ratios["range"][j], ri_task_perceived_ratios["relative"][j]]
         plt.boxplot(data)
         plt.ylim(0.0, 2.5)
-        if int(j)-1 == 1:
+        if int(j)-1 == 1 or int(j)-1 == 3:
             plt.ylabel("perceived ratio")
+        plt.ylim(-1.5, 1.5)
         plt.xticks(index + bar_width, ("SG", "RG", "RC"))
-        plt.scatter([1, ], [np.mean(ri_task_perceived_ratios["segments"][j]), ], 10, color='black')
+        '''plt.scatter([1, ], [np.mean(ri_task_perceived_ratios["segments"][j]), ], 10, color='black')
         plt.annotate(str(round(np.mean(ri_task_perceived_ratios["segments"][j]), 2)), xy=(1, np.mean(ri_task_perceived_ratios["segments"][j])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
         plt.scatter([2, ], [np.mean(ri_task_perceived_ratios["range"][j]), ], 10, color='black')
         plt.annotate(str(round(np.mean(ri_task_perceived_ratios["range"][j]), 2)), xy=(2, np.mean(ri_task_perceived_ratios["range"][j])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
         plt.scatter([3, ], [np.mean(ri_task_perceived_ratios["relative"][j]), ], 10, color='black')
-        plt.annotate(str(round(np.mean(ri_task_perceived_ratios["relative"][j]), 2)), xy=(3, np.mean(ri_task_perceived_ratios["relative"][j])), xytext=(+10, -3), textcoords='offset points', fontsize=10)
+        plt.annotate(str(round(np.mean(ri_task_perceived_ratios["relative"][j]), 2)), xy=(3, np.mean(ri_task_perceived_ratios["relative"][j])), xytext=(+10, -3), textcoords='offset points', fontsize=10)'''
 
     plt.legend()
     plt.tight_layout()
-    plt.savefig("../data/task_perception_ratio.eps")
+    plt.savefig("../data/log_task_perception_ratio.eps")
     plt.show()
 
 compute_task_perception_ratio()

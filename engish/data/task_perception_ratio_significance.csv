@@ -1,0 +1,12 @@
+segments,2,ri,mean:-0.062,p-value:0.213
+segments,3,ri,mean:-0.043,p-value:0.284
+segments,4,ri,mean:-0.098,p-value:0.098
+segments,5,ri,mean:-0.177,p-value:0.0
+range,2,ri,mean:-0.087,p-value:0.087
+range,3,ri,mean:-0.031,p-value:0.532
+range,4,ri,mean:-0.093,p-value:0.089
+range,5,ri,mean:-0.161,p-value:0.0
+relative,2,ri,mean:-0.023,p-value:0.69
+relative,3,ri,mean:-0.001,p-value:0.989
+relative,4,ri,mean:-0.063,p-value:0.339
+relative,5,ri,mean:-0.068,p-value:0.145

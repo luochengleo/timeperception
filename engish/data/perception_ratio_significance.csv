@@ -1,0 +1,9 @@
+segments,ri,mean:-0.097,p-value:0.0
+segments,rr,mean:-0.126,p-value:0.0
+segments,ii,mean:0.063,p-value:0.186
+range,ri,mean:-0.096,p-value:0.0
+range,rr,mean:-0.102,p-value:0.003
+range,ii,mean:0.068,p-value:0.137
+relative,ri,mean:-0.04,p-value:0.147
+relative,rr,mean:-0.097,p-value:0.009
+relative,ii,mean:0.077,p-value:0.12
