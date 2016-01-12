@@ -647,7 +647,7 @@ def compute_perception_ratio():
     plt.boxplot(data)
     plt.ylabel("perceived ratio", fontdict=font)
     plt.ylim(-1.5, 1.5)
-    plt.xticks(index + bar_width, ("SG", "RG", "RC"), fontsize=16)
+    plt.xticks(index + bar_width, ("SG", "BD", "RC"), fontsize=16)
     plt.yticks(fontsize=16)
     # plt.title("<R, I>", fontdict=font)
     plt.scatter([1, ], [np.mean(ri_perceived_ratios["segments"]), ], 10, color='black')
@@ -692,7 +692,7 @@ def compute_perception_ratio():
     plt.savefig("../data/log_perception_ratio.eps")
     plt.show()
 
-# compute_perception_ratio()
+compute_perception_ratio()
 
 
 # 每个user的perception_ratio的分布
@@ -756,24 +756,33 @@ def compute_user_perception_ratio():
         else:
             plt.yticks([], [])
         plt.ylim(-1.5, 1.5)
-        plt.xticks(index + bar_width, ("SG", "RG", "RC"), fontsize=12)
+        plt.xticks(index + bar_width, ("SG", "BD", "RC"), fontsize=12)
         plt.yticks(fontsize=12)
         plt.title(str(i), fontdict=font)
         plt.scatter([1, ], [np.mean(ri_user_perceived_ratios["segments"][studentid]), ], 10, color='black')
         if stats.ttest_1samp(ri_user_perceived_ratios["segments"][studentid], 0)[1] < 0.05:
             plt.annotate(str(round(np.mean(ri_user_perceived_ratios["segments"][studentid]), 2)) + '*', xy=(0.8, np.mean(ri_user_perceived_ratios["segments"][studentid])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=10)
+            print i, ",segments,mean:", round(np.mean(ri_user_perceived_ratios["segments"][studentid]), 2)
+            for j in ['2', '3', '4', '5']:
+                print j, "dtime:", dwell_time[studentid][j], "sg-etime:", estimated_time['segments'][studentid][j]
         else:
             plt.annotate(str(round(np.mean(ri_user_perceived_ratios["segments"][studentid]), 2)), xy=(0.8, np.mean(ri_user_perceived_ratios["segments"][studentid])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=10)
 
         plt.scatter([2, ], [np.mean(ri_user_perceived_ratios["range"][studentid]), ], 10, color='black')
         if stats.ttest_1samp(ri_user_perceived_ratios["range"][studentid], 0)[1] < 0.05:
             plt.annotate(str(round(np.mean(ri_user_perceived_ratios["range"][studentid]), 2)) + '*', xy=(1.8, np.mean(ri_user_perceived_ratios["range"][studentid])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=10)
+            print i, ",range,mean:", round(np.mean(ri_user_perceived_ratios["range"][studentid]), 2)
+            for j in ['2', '3', '4', '5']:
+                print j, "dtime:", dwell_time[studentid][j], "rg-etime:", estimated_time['range'][studentid][j]
         else:
             plt.annotate(str(round(np.mean(ri_user_perceived_ratios["range"][studentid]), 2)), xy=(1.8, np.mean(ri_user_perceived_ratios["range"][studentid])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=10)
 
         plt.scatter([3, ], [np.mean(ri_user_perceived_ratios["relative"][studentid]), ], 10, color='black')
         if stats.ttest_1samp(ri_user_perceived_ratios["relative"][studentid], 0)[1] < 0.05:
             plt.annotate(str(round(np.mean(ri_user_perceived_ratios["relative"][studentid]), 2)) + '*', xy=(2.8, np.mean(ri_user_perceived_ratios["relative"][studentid])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=10)
+            print i, ",relative,mean:", round(np.mean(ri_user_perceived_ratios["relative"][studentid]), 2)
+            for j in ['2', '3', '4', '5']:
+                print j, "dtime:", dwell_time[studentid][j], "rc-etime:", estimated_time['relative'][studentid][j]
         else:
             plt.annotate(str(round(np.mean(ri_user_perceived_ratios["relative"][studentid]), 2)), xy=(2.8, np.mean(ri_user_perceived_ratios["relative"][studentid])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=10)
 
@@ -784,7 +793,7 @@ def compute_user_perception_ratio():
     plt.savefig("../data/log_user_perception_ratio.eps")
     plt.show()
 
-# compute_user_perception_ratio()
+compute_user_perception_ratio()
 
 
 # 每个task的perception_ratio的分布
@@ -846,7 +855,7 @@ def compute_task_perception_ratio():
         else:
             plt.yticks([], [])
         plt.ylim(-1.5, 1.5)
-        plt.xticks(index + bar_width, ("SG", "RG", "RC"), fontsize=14)
+        plt.xticks(index + bar_width, ("SG", "BD", "RC"), fontsize=14)
         plt.yticks(fontsize=14)
         plt.title('task'+j, fontdict=font)
         plt.scatter([1, ], [np.mean(ri_task_perceived_ratios["segments"][j]), ], 10, color='black')
