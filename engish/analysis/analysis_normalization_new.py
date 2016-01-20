@@ -19,8 +19,8 @@ validUsers = {'2015012620': 1, '2015012618': 2, '2015012674': 3, '2014011319': 4
 estimation = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1))))
 # 估计的relevance
 relevance = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
-# begin 时间和ending的时间
-reading_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [0.0, 0.0])))
+# begin 时间和ending的时间和relevance annotation的时间
+reading_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [0.0, 0.0, 0.0])))
 # range 方法的low和high
 range_low = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
 range_high = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
@@ -52,6 +52,10 @@ for line in open('../data/log20151227.csv').readlines()[1:]:
             # 时刻记得维护一个最新时间戳,避免日志丢失造成大的时间错误
             if doc_rank < 4:
                 reading_time[studentid][jobid][doc_rank + 1][0] = time
+            if doc_rank > 1 and reading_time[studentid][jobid][doc_rank - 1][1] == 0.0:
+                reading_time[studentid][jobid][doc_rank - 1][1] = time
+            if doc_rank > 1 and reading_time[studentid][jobid][doc_rank - 1][2] == 0.0:
+                reading_time[studentid][jobid][doc_rank - 1][2] = time
 
         if action == 'END_READING':
             doc_rank = int(cdp.search(content + '\t').group(1))
@@ -59,14 +63,23 @@ for line in open('../data/log20151227.csv').readlines()[1:]:
             reading_time[studentid][jobid][doc_rank][1] = time
             if doc_rank < 4:
                 reading_time[studentid][jobid][doc_rank + 1][0] = time
+            if doc_rank > 1 and reading_time[studentid][jobid][doc_rank - 1][1] == 0.0:
+                reading_time[studentid][jobid][doc_rank - 1][1] = time
+            if doc_rank > 1 and reading_time[studentid][jobid][doc_rank - 1][2] == 0.0:
+                reading_time[studentid][jobid][doc_rank - 1][2] = time
 
         if action == 'RELEVANCE_ANNOTATION':
             doc_rank = int(cdp.search(content + '\t').group(1).split(' ')[0])
             time = int(tp.search(content + '\t').group(1))
+            reading_time[studentid][jobid][doc_rank][2] = time
             rel = int(relp.search(content + '\t').group(1).split(' ')[0])
             relevance[studentid][jobid][doc_rank] = rel
             if doc_rank < 4:
                 reading_time[studentid][jobid][doc_rank + 1][0] = time
+            if doc_rank > 1 and reading_time[studentid][jobid][doc_rank - 1][1] == 0.0:
+                reading_time[studentid][jobid][doc_rank - 1][1] = time
+            if doc_rank > 1 and reading_time[studentid][jobid][doc_rank - 1][2] == 0.0:
+                reading_time[studentid][jobid][doc_rank - 1][2] = time
 
         if action == 'TIME_1':
             seg = segp.search(content + '\t').group(1).split(' ')[0]
@@ -126,14 +139,27 @@ for line in open('../data/log20151227.csv').readlines()[1:]:
 dwell_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.0)))
 estimated_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1))))
 perceived_relevance = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: -1)))
+relevance_time = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.0)))
 
 for studentid in validUsers:
     for j in ['2', '3', '4', '5']:
         for d in [1, 2, 3, 4]:
             dwell_time[studentid][j][d] = (reading_time[studentid][j][d][1] - reading_time[studentid][j][d][0]) / 1000.0
             perceived_relevance[studentid][j][d] = relevance[studentid][j][d]
+            relevance_time[studentid][j][d] = (reading_time[studentid][j][d][2] - reading_time[studentid][j][d][1]) / 1000.0
             for time_method in ['segments', 'range', 'relative']:
                 estimated_time[time_method][studentid][j][d] = float(estimation[time_method][studentid][j][d])
+# compute average dwell_time and relevance_time
+total_dwell_time = 0
+total_relevance_time = 0
+total_num = 0
+for studentid in validUsers:
+    for j in ['2', '3', '4', '5']:
+        for d in [1, 2, 3, 4]:
+            total_num += 1
+            total_dwell_time += dwell_time[studentid][j][d]
+            total_relevance_time += relevance_time[studentid][j][d]
+print "average dwell time:", total_dwell_time / total_num, "average relevance time:", total_relevance_time / total_num
 
 
 # relevance_filling
@@ -541,6 +567,45 @@ def compute_pairwise_agreement():
 # compute_pairwise_agreement()
 
 
+def compute_kappa():
+    predefined = [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0]
+    fout = open('../data/kappa.csv', 'w')
+    k = 0
+    for studentid in validUsers:
+        perceived = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for j in ['2', '3', '4', '5']:
+            for d in relevant_doc_ranks[studentid][j]:
+                docseq_ = job_setting[validUsers[studentid]][j]
+                docid = int(docseq_.split('-')[d - 1])
+                if docid < 4:
+                    perceived[int(j)*4 + docid - 9] = 1
+                else:
+                    perceived[int(j)*4 + docid - 10] = 1
+        yy = 0.0
+        yn = 0.0
+        ny = 0.0
+        nn = 0.0
+        for i in range(0, 16):
+            if predefined[i] == 1 and perceived[i] == 1:
+                yy += 1
+            if predefined[i] == 1 and perceived[i] == 0:
+                yn += 1
+            if predefined[i] == 0 and perceived[i] == 1:
+                ny += 1
+            if predefined[i] == 0 and perceived[i] == 0:
+                nn += 1
+        total = 16.0
+        po = (yy + nn) / total
+        pe = ((yy + yn) / total) * ((yy + ny) / total) + ((nn + yn) / total) * ((nn + ny) / total)
+        kappa = (po - pe) / (1 - pe)
+        k += 1
+        print k, studentid, kappa
+        fout.write(str(k) + ',' + str(kappa) + '\n')
+    fout.close()
+
+compute_kappa()
+
+
 # 计算dwell time，比较相关不相关上的差异
 def compute_dtime():
     r_dtimes = defaultdict(lambda: [])
@@ -582,7 +647,7 @@ def compute_dtime():
     plt.savefig("../data/dwell_time_comparison.png")
     plt.show()'''
 
-compute_dtime()
+#compute_dtime()
 
 # 用perception ratio
 rr_perceived_ratios = defaultdict(lambda: [])
@@ -703,6 +768,8 @@ ii_user_perceived_ratios = defaultdict(lambda: defaultdict(lambda: []))
 
 def compute_user_perception_ratio():
     fout = open('../data/log_user_perception_ratio_significance.csv', 'w')
+    fout2 = open('../data/log_user_perception_ratio_analysis.csv', 'w')
+    fout3 = open('../data/log_user_perception_ratio.csv', 'w')
     for time_method in ['segments', 'range', 'relative']:
         for j in ['2', '3', '4', '5']:
             for studentid in validUsers:
@@ -737,6 +804,37 @@ def compute_user_perception_ratio():
                 ii_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(ii_user_perceived_ratios[time_method][studentid], 1)[1]'''
     fout.close()
 
+    # fout3
+    fout3.write('user')
+    for i in range(1, 25):
+        fout3.write(',' + str(i))
+    fout3.write('\n')
+    fout3.write('SG')
+    for i in range(1, 25):
+        studentid = validUsers.keys()[i-1]
+        if stats.ttest_1samp(ri_user_perceived_ratios['segments'][studentid], 0)[1] < 0.05:
+            fout3.write(',' + str(round(np.mean(ri_user_perceived_ratios['segments'][studentid]), 2)) + '*')
+        else:
+            fout3.write(',' + str(round(np.mean(ri_user_perceived_ratios['segments'][studentid]), 2)))
+    fout3.write('\n')
+    fout3.write('BD')
+    for i in range(1, 25):
+        studentid = validUsers.keys()[i-1]
+        if stats.ttest_1samp(ri_user_perceived_ratios['range'][studentid], 0)[1] < 0.05:
+            fout3.write(',' + str(round(np.mean(ri_user_perceived_ratios['range'][studentid]), 2)) + '*')
+        else:
+            fout3.write(',' + str(round(np.mean(ri_user_perceived_ratios['range'][studentid]), 2)))
+    fout3.write('\n')
+    fout3.write('RC')
+    for i in range(1, 25):
+        studentid = validUsers.keys()[i-1]
+        if stats.ttest_1samp(ri_user_perceived_ratios['relative'][studentid], 0)[1] < 0.05:
+            fout3.write(',' + str(round(np.mean(ri_user_perceived_ratios['relative'][studentid]), 2)) + '*')
+        else:
+            fout3.write(',' + str(round(np.mean(ri_user_perceived_ratios['relative'][studentid]), 2)))
+
+    fout3.close()
+
     # plot
     index = np.arange(3)
     bar_width = 1
@@ -766,7 +864,8 @@ def compute_user_perception_ratio():
             plt.annotate(str(round(np.mean(ri_user_perceived_ratios["segments"][studentid]), 2)), xy=(0.8, np.mean(ri_user_perceived_ratios["segments"][studentid])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=10)
         print i, studentid, ",segments,mean:", round(np.mean(ri_user_perceived_ratios["segments"][studentid]), 2)
         for j in ['2', '3', '4', '5']:
-                print j, "dtime:", dwell_time[studentid][j], "sg-etime:", estimated_time['segments'][studentid][j]
+            print j, "dtime:", dwell_time[studentid][j], "sg-etime:", estimated_time['segments'][studentid][j]
+
 
         plt.scatter([2, ], [np.mean(ri_user_perceived_ratios["range"][studentid]), ], 10, color='black')
         if stats.ttest_1samp(ri_user_perceived_ratios["range"][studentid], 0)[1] < 0.05:
@@ -775,7 +874,7 @@ def compute_user_perception_ratio():
             plt.annotate(str(round(np.mean(ri_user_perceived_ratios["range"][studentid]), 2)), xy=(1.8, np.mean(ri_user_perceived_ratios["range"][studentid])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=10)
         print i, studentid, ",range,mean:", round(np.mean(ri_user_perceived_ratios["range"][studentid]), 2)
         for j in ['2', '3', '4', '5']:
-                print j, "dtime:", dwell_time[studentid][j], "rg-etime:", estimated_time['range'][studentid][j]
+            print j, "dtime:", dwell_time[studentid][j], "rg-etime:", estimated_time['range'][studentid][j]
 
         plt.scatter([3, ], [np.mean(ri_user_perceived_ratios["relative"][studentid]), ], 10, color='black')
         if stats.ttest_1samp(ri_user_perceived_ratios["relative"][studentid], 0)[1] < 0.05:
@@ -792,8 +891,9 @@ def compute_user_perception_ratio():
     plt.tight_layout()
     plt.savefig("../data/log_user_perception_ratio.eps")
     plt.show()
+    fout2.close()
 
-#compute_user_perception_ratio()
+# compute_user_perception_ratio()
 
 
 # 每个task的perception_ratio的分布
@@ -857,7 +957,7 @@ def compute_task_perception_ratio():
         plt.ylim(-1.5, 1.5)
         plt.xticks(index + bar_width, ("SG", "BD", "RC"), fontsize=14)
         plt.yticks(fontsize=14)
-        plt.title('TASK '+j, fontdict=font)
+        plt.title('Task ' + str(int(j)-1), fontdict=font)
         plt.scatter([1, ], [np.mean(ri_task_perceived_ratios["segments"][j]), ], 10, color='black')
         if stats.ttest_1samp(ri_task_perceived_ratios["segments"][j], 0)[1] < 0.05:
             plt.annotate(str(round(np.mean(ri_task_perceived_ratios["segments"][j]), 2)) + '*', xy=(0.9, np.mean(ri_task_perceived_ratios["segments"][j])+0.1), xytext=(+10, -3), textcoords='offset points', fontsize=12)
@@ -881,7 +981,7 @@ def compute_task_perception_ratio():
     plt.savefig("../data/log_task_perception_ratio.eps")
     plt.show()
 
-#compute_task_perception_ratio()
+compute_task_perception_ratio()
 
 
 # 用drift
@@ -1236,92 +1336,4 @@ def compute_user_perception_sequence():
     plt.savefig("../data/log_user_perception_ratio.eps")
     plt.show()
 
-# compute_user_perception_ratio()
-
-
-# 每个task的perception_ratio的分布
-rr_task_perceived_ratios = defaultdict(lambda: defaultdict(lambda: []))
-ri_task_perceived_ratios = defaultdict(lambda: defaultdict(lambda: []))
-ii_task_perceived_ratios = defaultdict(lambda: defaultdict(lambda: []))
-
-
-def compute_task_perception_ratio():
-    fout = open('../data/log_task_perception_ratio_significance.csv', 'w')
-    for time_method in ['segments', 'range', 'relative']:
-        for j in ['2', '3', '4', '5']:
-            for studentid in validUsers:
-                # relevant & irrelevant
-                for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
-                    for d2 in range(0, len(irrelevant_doc_ranks[studentid][j])):
-                        doc1 = relevant_doc_ranks[studentid][j][d1]
-                        doc2 = irrelevant_doc_ranks[studentid][j][d2]
-                        perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        ri_task_perceived_ratios[time_method][j].append(math.log(perceived_ratio))
-                # relevant & relevant
-                for d1 in range(0, len(relevant_doc_ranks[studentid][j])):
-                    for d2 in range(d1 + 1, len(relevant_doc_ranks[studentid][j])):
-                        doc1 = relevant_doc_ranks[studentid][j][d1]
-                        doc2 = relevant_doc_ranks[studentid][j][d2]
-                        perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        rr_task_perceived_ratios[time_method][j].append(math.log(perceived_ratio))
-                # irrelevant & irrelevant
-                for d1 in range(0, len(irrelevant_doc_ranks[studentid][j])):
-                    for d2 in range(d1 + 1, len(irrelevant_doc_ranks[studentid][j])):
-                        doc1 = irrelevant_doc_ranks[studentid][j][d1]
-                        doc2 = irrelevant_doc_ranks[studentid][j][d2]
-                        perceived_ratio = (estimated_time[time_method][studentid][j][doc1] / estimated_time[time_method][studentid][j][doc2]) / (dwell_time[studentid][j][doc1] / dwell_time[studentid][j][doc2])
-                        ii_task_perceived_ratios[time_method][j].append(math.log(perceived_ratio))
-            print time_method, j, "ri", np.mean(ri_task_perceived_ratios[time_method][j]), np.std(
-                ri_task_perceived_ratios[time_method][j]), stats.ttest_1samp(ri_task_perceived_ratios[time_method][j], 0)[1]
-            fout.write(time_method + ',' + j + ',ri,mean:' + str(round(np.mean(ri_task_perceived_ratios[time_method][j]), 3)) + ',p-value:' + str(round(stats.ttest_1samp(ri_task_perceived_ratios[time_method][j], 0)[1], 3)) + '\n')
-            '''print time_method, studentid, "rr", np.mean(rr_user_perceived_ratios[time_method][studentid]), np.std(
-                rr_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(rr_user_perceived_ratios[time_method][studentid], 1)[1]
-            print time_method, studentid, "ii", np.mean(ii_user_perceived_ratios[time_method][studentid]), np.std(
-                ii_user_perceived_ratios[time_method][studentid]), stats.ttest_1samp(ii_user_perceived_ratios[time_method][studentid], 1)[1]'''
-
-    fout.close()
-    # plot
-    index = np.arange(3)
-    bar_width = 1
-    font = {
-        'family': 'Times New Roman',
-        'weight': 'normal',
-        'size': 14,
-    }
-    plt.figure(figsize=(8, 8))
-    for j in ['2', '3', '4', '5']:
-        plt.subplot(2, 2, int(j)-1)
-        data = [ri_task_perceived_ratios["segments"][j], ri_task_perceived_ratios["range"][j], ri_task_perceived_ratios["relative"][j]]
-        plt.boxplot(data)
-        if int(j)-1 == 1 or int(j)-1 == 3:
-            plt.ylabel("perceived ratio", fontdict=font)
-        else:
-            plt.yticks([], [])
-        plt.ylim(-1.5, 1.5)
-        plt.xticks(index + bar_width, ("SG", "BD", "RC"), fontsize=14)
-        plt.yticks(fontsize=14)
-        plt.title('task'+j, fontdict=font)
-        plt.scatter([1, ], [np.mean(ri_task_perceived_ratios["segments"][j]), ], 10, color='black')
-        if stats.ttest_1samp(ri_task_perceived_ratios["segments"][j], 0)[1] < 0.05:
-            plt.annotate(str(round(np.mean(ri_task_perceived_ratios["segments"][j]), 2)) + '*', xy=(0.85, np.mean(ri_task_perceived_ratios["segments"][j])+0.07), xytext=(+10, -3), textcoords='offset points', fontsize=12)
-        else:
-            plt.annotate(str(round(np.mean(ri_task_perceived_ratios["segments"][j]), 2)), xy=(0.85, np.mean(ri_task_perceived_ratios["segments"][j])+0.07), xytext=(+10, -3), textcoords='offset points', fontsize=12)
-
-        plt.scatter([2, ], [np.mean(ri_task_perceived_ratios["range"][j]), ], 10, color='black')
-        if stats.ttest_1samp(ri_task_perceived_ratios["range"][j], 0)[1] < 0.05:
-            plt.annotate(str(round(np.mean(ri_task_perceived_ratios["range"][j]), 2)) + '*', xy=(1.85, np.mean(ri_task_perceived_ratios["range"][j])+0.07), xytext=(+10, -3), textcoords='offset points', fontsize=12)
-        else:
-            plt.annotate(str(round(np.mean(ri_task_perceived_ratios["range"][j]), 2)), xy=(1.85, np.mean(ri_task_perceived_ratios["range"][j])+0.07), xytext=(+10, -3), textcoords='offset points', fontsize=12)
-
-        plt.scatter([3, ], [np.mean(ri_task_perceived_ratios["relative"][j]), ], 10, color='black')
-        if stats.ttest_1samp(ri_task_perceived_ratios["relative"][j], 0)[1] < 0.05:
-            plt.annotate(str(round(np.mean(ri_task_perceived_ratios["relative"][j]), 2)) + '*', xy=(2.85, np.mean(ri_task_perceived_ratios["relative"][j])+0.07), xytext=(+10, -3), textcoords='offset points', fontsize=12)
-        else:
-            plt.annotate(str(round(np.mean(ri_task_perceived_ratios["relative"][j]), 2)), xy=(2.85, np.mean(ri_task_perceived_ratios["relative"][j])+0.07), xytext=(+10, -3), textcoords='offset points', fontsize=12)
-
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig("../data/log_task_perception_ratio.eps")
-    plt.show()
-
-# compute_task_perception_ratio()
+# compute_user_perception_sequence()
