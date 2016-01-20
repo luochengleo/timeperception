@@ -11,15 +11,15 @@
             var pass = document.getElementById("password");
             setCookie('studentid', username, '', '/', '', '')
             if (username.value == "") {
-                alert("请输入用户名");
+                alert("Username?");
                 username.focus();
                 return;
             }
             else if (pass.value == "") {
-                alert("请输入密码");
+                alert("Password?");
                 return;
             }
-            else if ((pass.value == "a") && (!isNaN(username.value))) {
+            else if ((!isNaN(username.value))) {
                 obj = document.getElementById("tasktype")
                 var index = obj.selectedIndex;
                 var expType = obj.options[index].value;
@@ -29,7 +29,7 @@
                 return;
             }
             else {
-                alert("登录失败，请检查用户名和密码是否有误！");
+                alert("Login Failure, Check your username and password");
                 alert(username.value);
                 return;
             }
@@ -93,9 +93,8 @@
     </script>
 </head>
 <body>
-<img style="text-align: center" src="http://www.thuir.cn/cms/uploads/images/IR4.png" align="middle">
 
-<h1 style="color:blue; text-align:center">Experiment System of THUIR Group </h1>
+<h1 style="color:blue; text-align:center">Experiment System</h1>
 
 
 <form align=center>
@@ -127,7 +126,7 @@
     </table>
 </form>
 <div style="text-align: center">
-    <p>Please login with your 10-digit Tsinghua ID, the password is 'a'</p>
+    <p>Please login with your 10-digit Experiment ID (for example, 0123456789), the password is 'a'</p>
 </div>
 
 

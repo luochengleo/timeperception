@@ -55,3 +55,14 @@ def import_settings(filename):
 def init_default():
     import_tasks('data/English_tasks.xml')
     import_settings('data/English_settings.xml')
+
+def exportDocs():
+    import sys
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
+    for t in [1,2,3,4,5]:
+        for d in [1,2,4,5]:
+            doc = Document.objects.get(taskid=t,docid=d)
+            open('/Users/luocheng/Documents/coderepo/timeperception/engish/luocheng/docs/'+str(t)+'-'+str(d)+'.txt','w').write(doc.content)
+
+
