@@ -715,7 +715,8 @@ def compute_perception_ratio():
     plt.boxplot(data)
     plt.ylabel("p-ratio", fontdict=font)
     plt.ylim(-1.5, 1.5)
-    plt.xticks(index + bar_width, ("SG", "BD", "RC"), fontsize=16)
+    # plt.xticks(index + bar_width, ("SG", "BD", "RC"), fontsize=16)
+    plt.xticks(index + bar_width, ("", "", ""), fontsize=16)
     plt.yticks(fontsize=16)
     # plt.title("<R, I>", fontdict=font)
     plt.scatter([1, ], [np.mean(ri_perceived_ratios["segments"]), ], 10, color='black')
@@ -725,6 +726,12 @@ def compute_perception_ratio():
     plt.scatter([3, ], [np.mean(ri_perceived_ratios["relative"]), ], 10, color='black')
     plt.annotate(str(round(np.mean(ri_perceived_ratios["relative"]), 2)), xy=(2.9, np.mean(ri_perceived_ratios["relative"]) + 0.05), xytext=(+10, -3), textcoords='offset points', fontsize=18)
 
+    texts = [["-3.979","-3.843","-1.454"],["362","362","362"],["0.209","0.202","0.076"]]
+    rows = ["t-stat.","df","effect size"]
+    from matplotlib.font_manager import FontProperties
+    the_table = plt.table(cellText=texts,rowLabels=rows,colLabels=["SG", "BD", "RC"],loc='bottom',fontsize=16)
+    the_table.auto_set_font_size(False)
+    the_table.set_fontsize(16)
     # for _method in ['segments','range','relative']:
         # print '-----------------------------'
         # print _method
