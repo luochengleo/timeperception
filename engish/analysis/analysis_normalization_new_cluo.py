@@ -730,15 +730,17 @@ def compute_perception_ratio():
     rows = ["t-stat.","df","effect size"]
     from matplotlib.font_manager import FontProperties
     the_table = plt.table(cellText=texts,rowLabels=rows,colLabels=["SG", "BD", "RC"],loc='bottom',fontsize=16)
+    plt.subplots_adjust(left=0.2, bottom=0.2)
+
     the_table.auto_set_font_size(False)
     the_table.set_fontsize(16)
-    # for _method in ['segments','range','relative']:
-        # print '-----------------------------'
-        # print _method
-        # print 'df', len(ri_perceived_ratios[_method])-1
-        # print 'effect size', np.mean(ri_perceived_ratios[_method])/np.std(ri_perceived_ratios[_method])
-        # print 't-statis',stats.ttest_1samp(ri_perceived_ratios[_method], 0)[0]
-        # print 'p-vale',stats.ttest_1samp(ri_perceived_ratios[_method], 0)[1]
+    for _method in ['segments','range','relative']:
+        print '-----------------------------'
+        print _method
+        print 'df', len(ri_perceived_ratios[_method])-1
+        print 'effect size', np.mean(ri_perceived_ratios[_method])/np.std(ri_perceived_ratios[_method])
+        print 't-statis',stats.ttest_1samp(ri_perceived_ratios[_method], 0)[0]
+        print 'p-vale',stats.ttest_1samp(ri_perceived_ratios[_method], 0)[1]
 
 
 
